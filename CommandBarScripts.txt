@@ -1,0 +1,284 @@
+for _, x in pairs(game.Selection:Get()) do
+	for _, v in pairs(x:GetChildren()) do
+		if v.Name == "Barrel" or v.Name == "Handle" then
+			v.Material = Enum.Material.Plastic
+			v.BrickColor = BrickColor.new("Medium stone grey")
+		elseif v:IsA("BasePart") and v.Material == Enum.Material.Wood then
+			v.Color = Color3.fromRGB(57, 23, 23)
+		elseif v:IsA("BasePart") and v.Material == Enum.Material.Metal then
+			v.Color = Color3.fromRGB(57, 54, 56)
+		end
+	end
+end
+
+game.Selection:Get()[1].CFrame = game.Selection:Get()[1].Parent.CFrame:toObjectSpace(game.Selection:Get()[2].Parent.CFrame * game.Selection:Get()[2].CFrame)
+
+Instance.new("LineHandleAdornment", game.Selection:Get()[1]).Adornee = game.Selection:Get()[1]
+
+game.Selection:Get()[1].C0 = game.Selection:Get()[2].CFrame game.Selection:Get()[1].C1 = game.Selection:Get()[3].CFrame
+
+for i = 1, #game.Selection:Get(), 3 do local s = game.Selection:Get()[i] s.Attachment0 = game.Selection:Get()[i + 1] s.Attachment1 = game.Selection:Get()[i + 2] end
+
+local s = game.Selection:Get()[1] local a = game.Selection:Get()[2] local w = Instance.new("Weld", a) w.Part0 = s w.Part1 = a w.C0 = s.CFrame:toObjectSpace(a.CFrame)
+
+for _, v in pairs(game.Selection:Get()) do v.Parent:Destroy() end game.ChangeHistoryService:SetWaypoint("Tree Deletion")
+
+for _, v in pairs(workspace.Buildings:GetChildren()) do if v.Name == "HuntingCabin" then local n = workspace.Buildings.HuntingCabinMain:Clone() n.Parent = v.Parent n.Name = v.Name n:SetPrimaryPartCFrame(v:GetPrimaryPartCFrame()) v:Destroy() end end game.ChangeHistoryService:SetWaypoint("Way")
+
+local s = game.Selection:Get() local a = s[1]:Clone()  a:SetPrimaryPartCFrame(s[2]:GetPrimaryPartCFrame()) a.Parent = s[1].Parent s[2]:Destroy() game.ChangeHistoryService:SetWaypoint("BuildingSwap")
+
+local Offset = CFrame.new(-0.3, -2.3, 0.05, -0.999825656, -0.00964059681, 0.0159903951, 0.0167949945, -0.0901432931, 0.995787144, -0.00815855525, 0.995882034, 0.0902894139)
+for _, v in pairs(game.Selection:Get()[1]:GetChildren()) do
+	if v:FindFirstChild("Torso") then
+		v.Torso["Left Arm"].CFrame = CFrame.new(0, 0, -2, -1, -0, 0, 0, 1, 0, 0, 0, -1) * v.Torso["Right Arm"].CFrame * Offset
+	end
+end
+
+local function Loop(a)
+	for _, v in pairs(a:GetChildren()) do
+		if v:IsA("BasePart") and v.Transparency < 0.00000001 and v.Transparency > -0.00000001 then
+			v.Transparency = 0
+		end
+		Loop(v)
+	end
+end
+Loop(game.Selection:Get()[1])
+
+local function Loop(a)
+	for _, v in pairs(a:GetChildren()) do
+		if v:IsA("BasePart") then
+			v.Anchored = false
+		end
+		Loop(v)
+	end
+end
+Loop(game.Selection:Get()[1])
+
+for i, v in pairs(game.Selection:Get()) do
+	if i ~= 1 then
+		local s = game.Selection:Get()[1]
+		local Anc = s.Anchored
+		s.Anchored = true
+		local w = Instance.new("Weld", v)
+		w.Part0 = s
+		w.Part1 = v
+		w.C0 = s.CFrame:toObjectSpace(v.CFrame)
+		s.Anchored = Anc
+	end
+end
+game.ChangeHistoryService:SetWaypoint("Weld")
+
+local function Loop(Model, Target, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("Model") and v.Name:find(Target) then
+			table.insert(Return, v)
+		end
+		Loop(v, Target, Return)
+	end
+	return Return
+end
+
+local Unique = {}
+local function Loop(Model, Target, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA(Target) then
+			table.insert(Return, v)
+		end
+		Loop(v, Target, Return)
+	end
+	return Return
+end
+for _, v in pairs(Loop(workspace, "MeshPart", {})) do
+	Unique[v.Name] = Unique[v.Name] and Unique[v.Name] + 1 or 1
+end
+for i, v in pairs(Unique) do
+	print(i, v)
+end
+
+local function Loop(Model, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("Texture") and v.Texture == "rbxassetid://566428833" then
+			table.insert(Return, v)
+		end
+		Loop(v, Return)
+	end
+	return Return
+end
+for _, v in pairs(Loop(workspace.Buildings, {})) do
+	v.Texture = "rbxassetid://568484885"
+end
+game.ChangeHistoryService:SetWaypoint("Retexture")
+
+local function Loop(Model, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("BasePart") and v.BrickColor == BrickColor.new("Wheat") and v.Material == Enum.Material.Concrete and not v:FindFirstChild("Texture") then
+			table.insert(Return, v)
+		end
+		Loop(v, Return)
+	end
+	return Return
+end
+for _, v in pairs(Loop(workspace.Buildings, {})) do
+	print(v:GetFullName())
+	local n = Instance.new("Texture", v)
+	n.StudsPerTileU = 1
+	n.StudsPerTileV = 1
+	n.Texture = "rbxassetid://566428833"
+end
+game.ChangeHistoryService:SetWaypoint("Textures")
+
+local function Loop(Model, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("BasePart") and v.BrickColor == BrickColor.new("Earth green") then
+			table.insert(Return, v)
+		end
+		Loop(v, Return)
+	end
+	return Return
+end
+for _, v in pairs(Loop(workspace.Forts.FortRaider1, {})) do
+	v.BrickColor = BrickColor.new("Crimson")
+end
+game.ChangeHistoryService:SetWaypoint("Recolor")
+
+local function Loop(Model, Return)
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("BasePart") and v.BrickColor == BrickColor.new("Earth green") then
+			table.insert(Return, v)
+		end
+		Loop(v, Return)
+	end
+	return Return
+end
+for _, v in pairs(Loop(game.Selection:Get()[1], {})) do
+	v.Name = "PrimaryColor"
+end
+game.ChangeHistoryService:SetWaypoint("Rename")
+
+for i, v in pairs(game.Selection:Get()) do
+	local n = Instance.new("Part")
+	n.Size = v.Size * Vector3.new(1, 1, 0.6)
+	n.CFrame = v.CFrame * CFrame.new(0, 0, -15)
+	n.TopSurface = 0
+	n.BottomSurface = 0
+	n.Anchored = true
+	n.Material = "Slate"
+	n.BrickColor = BrickColor.new("Smoky grey")
+	n.Name = "Cliff"
+	n.Parent = workspace.Cliffs
+end
+game.ChangeHistoryService:SetWaypoint("Cliffs")
+
+for i, v in pairs(game.Selection:Get()) do
+	local n = Instance.new("Part")
+	n.Size = v.Size * Vector3.new(0.8, 0.8, 0.8)
+	n.CFrame = v.CFrame
+	n.TopSurface = 0
+	n.BottomSurface = 0
+	n.Anchored = true
+	n.Material = "Slate"
+	n.BrickColor = BrickColor.new("Smoky grey")
+	n.Name = "Rock"
+	n.Parent = workspace.Cliffs
+end
+game.ChangeHistoryService:SetWaypoint("Rocks")
+
+for i, v in pairs(game.Selection:Get()) do
+	local c, s = v:GetModelCFrame(), v:GetExtentsSize()
+	workspace.Terrain:FillBlock(c, s, Enum.Material.Air)
+	workspace.Terrain:FillBlock(c - Vector3.new(0, s.Y/2 + 4, 0), Vector3.new(s.X, 4.4, s.Z), Enum.Material.Grass)
+end
+game.ChangeHistoryService:SetWaypoint("HouseTerrain")
+
+for i, v in pairs(game.Selection:Get()) do
+	local c, s = v:GetModelCFrame(), v:GetExtentsSize()
+	workspace.Terrain:FillBlock(c, s, Enum.Material.Air)
+	workspace.Terrain:FillBlock(c - Vector3.new(0, s.Y/2 + 4, 0), Vector3.new(s.X, 4.4, s.Z), Enum.Material.Ground)
+end
+game.ChangeHistoryService:SetWaypoint("HouseTerrain")
+
+for _, v in pairs(workspace.Shops:GetChildren()) do local New = workspace[v.Name]:Clone() New.Parent = v.Parent New:SetPrimaryPartCFrame(v:GetPrimaryPartCFrame()) v:Destroy() end game.ChangeHistoryService:SetWaypoint("Change")
+
+local Colors = {"Moss", "Sand green", "Artichoke", "Olivine", "Laurel green"} for _, v in pairs(workspace.Trees:GetChildren()) do v.Leaves.BrickColor = BrickColor.new(Colors[math.random(1, #Colors)]) end
+
+workspace.Floors:ClearAllChildren() for _, v in pairs(game.Selection:Get()[1]:GetChildren()) do if v.Name == "Wall" or v.Name == "WallEdge" or v.Name == "Tower" or v.Name == "Gate" then local a = Instance.new("Part", workspace.Floors) a.Size = Vector3.new((v.Name == "Wall" and 17.5 or v.Name == "Tower" and 17.65 or v.Name == "Gate" and 42.5 or 2.5) + 6,4, 80) a.CFrame = v.PrimaryPart.CFrame * CFrame.new(0, v.Name == "Tower" and -29 + 3.05 or -29, 40) end end
+
+local s = game.Selection:Get()[1].CFrame local x, y, z = s:toEulerAnglesXYZ() local function r(e, t) if t then return math.floor(e) else return math.floor(e * 100 + 0.5)/100 end end local function d(e) return r(math.deg(e), true) end print("CFrame.new("..r(s.X)..", "..r(s.Y)..", "..r(s.Z)..") * CFrame.Angles(math.rad("..d(x).."), math.rad("..d(y).."), math.rad("..d(z).."))")
+
+local Triangles, Parts, Meshes, Unions = 0, 0, 0, 0 local function Loop(Table) for _, v in pairs(Table) do if v:IsA("UnionOperation") then Triangles = Triangles + v.TriangleCount Unions = Unions + 1 elseif v:IsA("Part") then Triangles = Triangles + 12 Parts = Parts + 1 elseif v:IsA("WedgePart") then Triangles = Triangles + 8 Parts = Parts + 1 elseif v:IsA("MeshPart") then Triangles = Triangles + 1500 Meshes = Meshes + 1 end Loop(v:GetChildren()) end end Loop(game.Selection:Get()) print("Triangles "..Triangles) print("Parts "..Parts) print("Meshes "..Meshes) print("Unions "..Unions) print("Total "..(Parts + Meshes + Unions))
+
+local w = Instance.new("Motor6D", workspace.APC) w.Part0 = w.Parent.Main w.Part1 = w.Parent.Turret w.C0 = w.Parent.Main.Turret.CFrame w.C1 = w.Parent.Turret.Main.CFrame w.Name = "GunHinge"
+
+a = 0 function Loop(Object) for _, v in pairs(Object) do Loop(v:GetChildren()) if v:IsA("BasePart") then a = a + v:GetMass() end end end Loop(game.Selection:Get()) print(a)
+
+for _, v in pairs(workspace.APC:GetChildren()) do if v.Name:find("Wheel") and not v.Name:find("Steering") then if v:FindFirstChild("WheelMesh") then v.WheelMesh:Destroy() end local n = workspace.WheelMesh:Clone() n.Parent = v n.Size = Vector3.new(v.Size.Y * (1.416/3.89) + 0.5, v.Size.Y, v.Size.Z) n.CFrame = v.CFrame * CFrame.Angles(0, v.Name:find("Right") and math.pi or 0, 0) * CFrame.new(0.7, 0, 0) v.Transparency = 1 local w = Instance.new("Weld", n) w.Part0 = v w.Part1 = n w.C0 = CFrame.Angles(0, v.Name:find("Right") and math.pi or 0, 0) * CFrame.new(0.7, 0, 0) end end
+
+function Loop(Object)
+	for _, v in pairs(Object:GetChildren()) do
+		Loop(v)
+		if v.Name:find("Back") and not v.Name:find("Backer") then
+			v.Name = v.Name:gsub("Back", "Center")
+		end
+	end
+end
+Loop(workspace.APC)
+
+function Loop(Object)
+	for _, v in pairs(Object:GetChildren()) do
+		Loop(v)
+		if v.Name:find("Backer") then
+			v.Name = v.Name:gsub("Backer", "Back")
+		end
+	end
+end
+Loop(workspace.APC)
+
+
+local a = 0
+function Loop(Object)
+	for _, v in pairs(Object:GetChildren()) do
+		Loop(v)
+		if v:IsA("BasePart") and not v.Anchored then
+			print(v:GetFullName())
+			a = a + 1
+		end
+	end
+end
+Loop(workspace)
+print(a)
+
+
+function Loop(Object)
+	for _, v in pairs(Object:GetChildren()) do
+		Loop(v)
+		if v:IsA("ManualWeld") then
+			v:Destroy()
+		end
+	end
+end
+Loop(workspace)
+
+import bpy
+
+scale = 10
+
+outp_script = """game.Selection:Get()[2].CFrame = game.Selection:Get()[1].CFrame * CFrame.new({:.20f}, {:.20f}, {:.20f}) game.ChangeHistoryService:SetWaypoint("MovedMesh")"""
+
+fx, fy, fz = -999, -999, -999
+for obj in bpy.context.selected_objects:
+    if fx == -999:
+        dims = obj.dimensions
+        mesh = obj.data
+        vertices_world = [(obj.matrix_world * vert.co) for vert in mesh.vertices]
+        fx = (min([vec.x for vec in vertices_world]) + dims.x * .5) * scale
+        fy = (min([vec.y for vec in vertices_world]) + dims.y * .5) * scale
+        fz = (min([vec.z for vec in vertices_world]) + dims.z * .5) * scale
+    else:
+        dims = obj.dimensions
+        mesh = obj.data
+        vertices_world = [(obj.matrix_world * vert.co) for vert in mesh.vertices]
+        offx = (min([vec.x for vec in vertices_world]) + dims.x * .5) * scale
+        offy = (min([vec.y for vec in vertices_world]) + dims.y * .5) * scale
+        offz = (min([vec.z for vec in vertices_world]) + dims.z * .5) * scale
+        # note: blender has the Z-axis pointing up
+        bpy.context.window_manager.clipboard = outp_script.format(offx - fx, -offz + fz, offy - fy)
