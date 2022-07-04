@@ -1,0 +1,13 @@
+for i, v in pairs(game.Selection:Get()) do
+	if i ~= 1 then
+		local s = game.Selection:Get()[1]
+		local Anc = s.Anchored
+		s.Anchored = true
+		local w = Instance.new("Weld", v)
+		w.Part0 = s
+		w.Part1 = v
+		w.C0 = s.CFrame:toObjectSpace(v.CFrame)
+		s.Anchored = Anc
+	end
+end
+game.ChangeHistoryService:SetWaypoint("Weld")

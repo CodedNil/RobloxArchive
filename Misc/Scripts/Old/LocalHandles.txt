@@ -1,0 +1,62 @@
+local function GetChange(Face, Distance)
+	local Offset
+	if Face == Enum.NormalId.Right then
+		Offset = CFrame.new(Distance, 0, 0)
+	elseif Face == Enum.NormalId.Left then
+		Offset = CFrame.new(-Distance, 0, 0)
+	elseif Face == Enum.NormalId.Top then
+		Offset = CFrame.new(0, Distance, 0)
+	elseif Face == Enum.NormalId.Bottom then
+		Offset = CFrame.new(0, -Distance, 0)
+	elseif Face == Enum.NormalId.Back then
+		Offset = CFrame.new(0, 0, Distance)
+	elseif Face == Enum.NormalId.Front then
+		Offset = CFrame.new(0, 0, -Distance)
+	end
+	return Offset
+end
+
+local function CreateLocalHandles(Part, Update)
+	local Selected = false
+	
+	local Sphere = Instance.new("SphereHandleAdornment", CoreGui)
+	Sphere.Adornee = Part
+	Sphere.Radius = 0.2
+	Sphere.Transparency = 0.4
+	table.insert(Objects, Sphere)
+	
+	local Object = Instance.new("Handles", CoreGui)
+	Object.Adornee = Part
+	Object.Transparency = 0.4
+	Object.Visible = false
+	Object.Style = Enum.HandlesStyle.Movement
+	table.insert(Objects, Object)
+	
+	Sphere.MouseButton1Down:connect(function()
+		Selected = not Selected
+		Object.Visible = Active and Selected or false
+		Sphere.Transparency = Selected and 0.2 or 0.4
+	end)
+	
+	table.insert(ActiveFunctions, function()
+		Object.Visible = Active and Selected or false
+	end)
+	
+	local Last, StartCFrame = 0
+	Object.MouseButton1Down:connect(function()
+		StartCFrame = Part.CFrame
+	end)
+	
+	Object.MouseDrag:connect(function(Face, Distance)
+		Distance = Round(Distance)
+		if Last ~= Distance then
+			Part.CFrame = StartCFrame * GetChange(Face, Distance)
+			Update()
+			Last = Distance
+		end
+	end)
+	
+	Object.MouseButton1Up:connect(function()
+		ChangeHistoryService:SetWaypoint("AnimateMoved")
+	end)
+end

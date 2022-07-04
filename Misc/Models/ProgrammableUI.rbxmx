@@ -1,0 +1,1344 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="LocalScript" referent="RBX589D77487D884504A2ED25DA1725F53E">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">ProgrammableUI</string>
+			<string name="ScriptGuid"></string>
+			<ProtectedString name="Source"><![CDATA[local Player = game.Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Character, Humanoid
+local ScreenGui = Instance.new("ScreenGui", Player:WaitForChild("PlayerGui"))
+local ConfigUI = script.ConfigUI
+ConfigUI.Parent = Player.PlayerGui
+
+require(game.ReplicatedStorage:WaitForChild("ModuleUtil"))
+repeat wait() until _G["S20"] and _G.S20["Config"]
+repeat wait() until game.Players.LocalPlayer.Character
+local Core = _G.SRequire("S2.0 Core", "Core")
+
+local UI = {
+	HealthBackground = {
+		Code = [[Type = Frame
+Parent = nil
+Position = 0.05, 0, 0.85, 0
+Size = 0.15, 0, 0.05, 0
+Rotation = -3]]
+	},
+	HealthBar = {
+		Code = [[Type = Frame
+Parent = HealthBackground
+Position = 0, 0, 0, 0
+Size = HealthPercentage, 0, 1, 0
+BackgroundColor3 = 0.2 + 0.6 * (1 - HealthPercentage), 0.2 + 0.6 * HealthPercentage, 0.2
+BorderColor3 = 0.15 + 0.4 * (1 - HealthPercentage), 0.15 + 0.4 * HealthPercentage, 0.2
+BorderSizePixel = (1 - HealthPercentage) * 6]]
+	},
+	HealthReadout = {
+		Code = [[Type = TextLabel
+Parent = HealthBackground
+Position = 0, 0, 0, 0
+Size = 1, 0, 1, 0
+Text = Health/MaxHealth
+ZIndex = 2]]
+	},
+	
+	
+	AmmoBackground = {
+		Code = [[Type = Frame
+Parent = nil
+Position = 0.75, 0, 0.85, 0
+Size = 0.15, 0, 0.05, 0
+Rotation = 3]]
+	},
+	AmmoBar = {
+		Code = [[Type = Frame
+Parent = AmmoBackground
+Position = 1 - AmmoPercentage, 0, 0, 0
+Size = AmmoPercentage, 0, 1, 0
+BackgroundColor3 = 0.4 + 0.6 * AmmoPercentage, 0.4 + 0.6 * AmmoPercentage,  0.4 * AmmoPercentage
+BorderColor3 = 0.35 + 0.4 * AmmoPercentage, 0.35 + 0.4 * AmmoPercentage,  0.3 * AmmoPercentage
+BorderSizePixel = (1 - AmmoPercentage) * 6]]
+	},
+	AmmoReadout = {
+		Code = [[Type = TextLabel
+Parent = AmmoBackground
+Position = 0, 0, 0, 0
+Size = 1, 0, 1, 0
+Text = Ammo/MaxAmmo
+ZIndex = 2]]
+	},
+	AmmoName = {
+		Code = [[Type = TextLabel
+Parent = AmmoBackground
+Position = 0, 0, -0.8, 0
+Size = 1, 0, 0.8, 0
+Text = WeaponName]]
+	},
+	
+	
+	HealthAlert = {
+		Code = [[Type = ImageLabel
+Parent = nil
+Position = 0, 0, 0, 0
+Size = 1, 0, 1, 0
+ImageTransparency = HealthPercentage + 0.8
+Image = rbxassetid://201465124]]
+	},
+}
+
+local InputNames = {
+	"HealthPercentage",
+	"MaxHealth",
+	"Health",
+	"MouseX",
+	"MouseY",
+	"WeaponSelected",
+	"WeaponName",
+	"AmmoPercentage",
+	"MaxAmmo",
+	"Ammo"
+}
+
+local WeaponSelected, WeaponName, StatObj, CurrentAmmo, MaxAmmo = 0, nil, nil, 0, 0
+
+Core.WeaponSelected.Event:connect(function(Stat)
+	WeaponSelected = true
+	StatObj = Stat
+	WeaponName = StatObj.Parent.Name
+	MaxAmmo = Core.GetGunStats(StatObj).MaxAmmo
+	CurrentAmmo = Core.GetAmmo(Core.GetWeapon(StatObj))
+end)
+
+Core.WeaponDeselected.Event:connect(function()
+	WeaponSelected = false
+	StatObj = nil
+	WeaponName = nil
+	MaxAmmo = 0
+	CurrentAmmo = 0
+end)
+
+Core.AmmoChanged.Event:connect(function(StatObj, Ammo)
+	CurrentAmmo = Ammo
+end)
+
+local InputFuncs = {
+	function()
+		return Humanoid and Humanoid.Health/Humanoid.MaxHealth or 0
+	end,
+	function()
+		return Humanoid and Humanoid.MaxHealth or 0
+	end,
+	function()
+		return Humanoid and Humanoid.Health or 0
+	end,
+	function()
+		return Mouse.X
+	end,
+	function()
+		return Mouse.Y
+	end,
+	function()
+		return WeaponSelected
+	end,
+	function()
+		return WeaponName or ""
+	end,
+	function()
+		return CurrentAmmo/MaxAmmo
+	end,
+	function()
+		return MaxAmmo
+	end,
+	function()
+		return CurrentAmmo
+	end
+}
+
+local function stringexplode(str, div)
+	local o = {}
+	while true do
+		local pos1,pos2 = str:find(div)
+		if not pos1 then
+			o[#o+1] = str
+			break
+		end
+		o[#o+1],str = str:sub(1,pos1-1),str:sub(pos2+1)
+	end
+	return o
+end
+
+local LastName
+local function RedrawConfig(Name)
+	if LastName and UI[LastName] then
+		local Code = ""
+		for i = 1, 10 do
+			local Text = ConfigUI.Config[i].Text
+			if Text ~= "" and Text:find("=") then
+				if Code == "" then
+					Code = Text
+				else
+					Code = Code..string.char(10)..Text
+				end
+			end
+		end
+		UI[LastName].Code = Code
+	end
+	local Exploded = stringexplode(UI[Name].Code, string.char(10))
+	for i = 1, 10 do
+		ConfigUI.Config[i].Text = Exploded[i] or ""
+	end
+	LastName = Name
+	RedrawUI()
+end
+
+local function RedrawConfigMain()
+	ConfigUI.Main.ScrollingFrame:ClearAllChildren()
+	local n = 0
+	for i, v in pairs(UI) do
+		local Frame = Instance.new("Frame", ConfigUI.Main.ScrollingFrame)
+		Frame.Position = UDim2.new(0, 0, 0, n * 60)
+		Frame.Size = UDim2.new(1, 0, 0, 60)
+		Frame.Style = Enum.FrameStyle.DropShadow
+		local Label = Instance.new("TextBox", Frame)
+		Label.ClearTextOnFocus = false
+		Label.Size = UDim2.new(0.6, 0, 1, 0)
+		Label.TextScaled = true
+		Label.Font = Enum.Font.SourceSansBold
+		Label.TextXAlignment = Enum.TextXAlignment.Left
+		Label.TextColor3 = Color3.new(1, 1, 1)
+		Label.TextStrokeTransparency = 0.5
+		Label.TextTransparency = 0.2
+		Label.BackgroundTransparency = 1
+		Label.Text = "  "..i
+		Label.FocusLost:connect(function()
+			local Data = UI[i]
+			UI[i] = nil
+			UI[Label.Text] = Data
+			RedrawConfigMain()
+		end)
+		local Setting = Instance.new("ImageButton", Frame)
+		Setting.BackgroundTransparency = 1
+		Setting.Position = UDim2.new(0.6, 0, 0, 0)
+		Setting.Size = UDim2.new(0.2, 0, 1, 0)
+		Setting.Image = "rbxasset://textures/ui/settings/menubaricons/gamesettingstab.png"
+		local Close = Instance.new("ImageButton", Frame)
+		Close.BackgroundTransparency = 1
+		Close.Position = UDim2.new(0.825, 0, 0.125, 0)
+		Close.Size = UDim2.new(0.15, 0, 0.75, 0)
+		Close.Image = "rbxasset://textures/ui/keyboard/close_button_icon.png"
+		Setting.MouseButton1Click:connect(function()
+			RedrawConfig(i)
+		end)
+		Close.MouseButton1Click:connect(function()
+			UI[i] = nil
+			RedrawConfigMain()
+			RedrawUI()
+		end)
+		n = n + 1
+		if n == 1 then
+			RedrawConfig(i)
+		end
+	end
+	local Button = Instance.new("TextButton", ConfigUI.Main.ScrollingFrame)
+	Button.Position = UDim2.new(0, 0, 0, n * 60)
+	Button.Size = UDim2.new(1, 0, 0, 60)
+	Button.TextScaled = true
+	Button.Font = Enum.Font.SourceSansBold
+	Button.Style = Enum.ButtonStyle.RobloxRoundButton
+	Button.TextColor3 = Color3.new(1, 1, 1)
+	Button.TextStrokeTransparency = 0.5
+	Button.TextTransparency = 0.2
+	Button.Text = "Add"
+	Button.MouseButton1Click:connect(function()
+		local N = ""
+		for i = 1, 10 do
+			if not UI["New"..N] then
+				break
+			end
+			N = N == "" and "1" or tonumber(N) + 1
+		end
+		UI["New"..N] = {
+Code = [[Type = Frame
+Parent = nil
+Position = 0, 0, 0, 0
+Size = 0, 0, 0, 0]]
+		}
+		RedrawConfigMain()
+		RedrawUI()
+	end)
+	ConfigUI.Main.ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, (n + 1) * 60)
+end
+
+local Connections = {}
+
+local Syfer = require(script.Syfer).solve
+local function ParseMaths(String)
+	if not String then
+		return 0
+	end
+	if tonumber(String) then
+		return tonumber(String)
+	else
+		for i, v in pairs(InputNames) do
+			if String:find(v) then
+				local Func = InputFuncs[i]()
+				if tostring(Func) == "-1.#IND" then
+					Func = 0
+				end
+				String = String:gsub(v, Func)
+			end
+		end
+		if String:find("1.#INF") then
+			String = String:gsub("1.#INF", "0")
+		end
+		return Syfer(String)
+	end
+end
+
+local function ParseString(String)
+	if not String then
+		return ""
+	end
+	for i, v in pairs(InputNames) do
+		if String:find(v) then
+			local Func = InputFuncs[i]()
+			if type(Func) == "number" then
+				Func = math.floor(Func)
+			end
+			String = String:gsub(v, Func)
+		end
+	end
+	return String
+end
+
+local function ParseUDim(String)
+	if not String then
+		return UDim2.new(0, 0, 0, 0)
+	end
+	local Explode = stringexplode(String, ",")
+	if #Explode == 4 then
+		return UDim2.new(ParseMaths(Explode[1]), ParseMaths(Explode[2]), ParseMaths(Explode[3]), ParseMaths(Explode[4]))
+	else
+		return UDim2.new(0, 0, 0, 0)
+	end
+end
+
+local function ParseColor(String)
+	if not String then
+		return Color3.new()
+	end
+	local Explode = stringexplode(String, ",")
+	if #Explode == 3 then
+		return Color3.new(ParseMaths(Explode[1]), ParseMaths(Explode[2]), ParseMaths(Explode[3]))
+	else
+		return Color3.new()
+	end
+end
+
+local function CreateFrame(i, v)
+	local Code = stringexplode(v.Code, string.char(10))
+	local NewCode = {}
+	for x, y in pairs(Code) do
+		local NoSpaces = y:gsub("%s+", "")
+		local SplitCode = stringexplode(NoSpaces, "=")
+		NewCode[SplitCode[1]] = SplitCode[2]
+	end
+	Code = NewCode
+	NewCode = nil
+	
+	if Code.Type ~= "Frame" and Code.Type ~= "TextLabel" and Code.Type ~= "ImageLabel" then
+		return
+	end
+	local Obj = Instance.new(Code.Type)
+	Obj.Name = i
+	Obj.BorderSizePixel = 0
+	if Code.Type == "Frame" then
+		Obj.Style = Code.BackgroundColor3 and Enum.FrameStyle.Custom or Enum.FrameStyle.DropShadow
+	elseif Code.Type == "TextLabel" then
+		Obj.BackgroundTransparency = 1
+		Obj.TextStrokeTransparency = 0.5
+		Obj.TextColor3 = Color3.new(1, 1, 1)
+		Obj.Font = Enum.Font.SourceSans
+		Obj.TextScaled = true
+	elseif Code.Type == "ImageLabel" then
+		Obj.BackgroundTransparency = 1
+	end
+	Obj.Parent = (Code.Parent and Code.Parent ~= "nil" and ScreenGui:WaitForChild(Code.Parent, 0.2)) or ScreenGui
+	Obj.ZIndex = ParseMaths(Code.ZIndex)
+	
+	local Refreshes = {}
+	local function AddRefresh(Name, Func, String)
+		if not String then
+			return
+		end
+		for i, v in pairs(InputNames) do
+			if String:find(v) then
+				table.insert(Refreshes, {Name, Func, String})
+				break
+			end
+		end
+		Obj[Name] = Func(String)
+	end
+	
+	AddRefresh("Position", ParseUDim, Code.Position)
+	AddRefresh("Size", ParseUDim, Code.Size)
+	AddRefresh("BackgroundColor3", ParseColor, Code.BackgroundColor3)
+	AddRefresh("BorderColor3", ParseColor, Code.BorderColor3)
+	AddRefresh("BorderSizePixel", ParseMaths, Code.BorderSizePixel)
+	AddRefresh("Rotation", ParseMaths, Code.Rotation)
+	if Code.Type == "TextLabel" then
+		AddRefresh("Text", ParseString, Code.Text)
+		AddRefresh("TextTransparency", ParseMaths, Code.TextTransparency)
+	elseif Code.Type == "ImageLabel" then
+		AddRefresh("Image", ParseString, Code.Image)
+		AddRefresh("ImageTransparency", ParseMaths, Code.ImageTransparency)
+	end
+		
+	local function Refresh()
+		for _, v in pairs(Refreshes) do
+			Obj[v[1]] = v[2](v[3])
+		end
+	end
+	Refresh()
+	
+	if v.Code:find("Health") then
+		table.insert(Connections, Humanoid.HealthChanged:connect(Refresh))
+	end
+	if v.Code:find("Mouse") then
+		table.insert(Connections, Mouse.Move:connect(Refresh))
+	end
+	if v.Code:find("WeaponSelected") or v.Code:find("Ammo") then
+		table.insert(Connections, Core.WeaponSelected.Event:connect(function() wait() Refresh() end))
+		table.insert(Connections, Core.WeaponDeselected.Event:connect(function() wait() Refresh() end))
+		table.insert(Connections, Core.AmmoChanged.Event:connect(function() wait() Refresh() end))
+	end
+end
+
+ConfigUI.Close.MouseButton1Click:connect(function()
+	ConfigUI.Main.Visible = false
+	ConfigUI.Config.Visible = false
+	ConfigUI.Close.Visible = false
+	RedrawConfigMain()
+	RedrawUI()
+end)
+
+function RedrawUI()
+	for _, v in pairs(Connections) do
+		v:disconnect()
+	end
+	Connections = {}
+	ScreenGui:ClearAllChildren()
+	for i, v in pairs(UI) do
+		coroutine.wrap(CreateFrame)(i, v)
+	end
+end
+
+Player.Chatted:connect(function(Message, Recipient)
+	if Message == "/ui" and not Recipient then
+		ConfigUI.Main.Visible = true
+		ConfigUI.Config.Visible = true
+		ConfigUI.Close.Visible = true
+		RedrawConfigMain()
+		RedrawUI()
+	end
+end)
+
+local function CharacterAdded(Char)
+	Character = Char
+	Humanoid = Char:WaitForChild("Humanoid")
+	ScreenGui.Parent = Player.PlayerGui
+	ConfigUI.Parent = Player.PlayerGui
+	RedrawUI()
+	RedrawConfigMain()
+end
+
+Player.CharacterRemoving:connect(function()
+	ScreenGui.Parent = script
+	ConfigUI.Parent = script
+end)
+
+Player.CharacterAdded:connect(CharacterAdded)
+if Player.Character then
+	CharacterAdded(Player.Character)
+end]]></ProtectedString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBXE98B01D7B0304E5AACEC6E55EF848638">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Syfer</string>
+				<string name="ScriptGuid"></string>
+				<ProtectedString name="Source"><![CDATA[--------------------------------------------------------------------------------
+--[[
+Syfer Equation Solver
+
+Solves equations in string form.
+
+Includes a full version of the Shunting-Yard Algorithm.
+
+by Caleb Place of Gymbyl Coding
+www.github.com/GymbylCoding
+www.gymbyl.com
+--]]
+--------------------------------------------------------------------------------
+
+local syfer = {}
+
+--------------------------------------------------------------------------------
+-- Localize
+--------------------------------------------------------------------------------
+local tonumber = tonumber
+local type = type
+local pairs = pairs
+local table_insert = table.insert
+local table_remove = table.remove
+local string_rep = string.rep
+
+local word = "[%w%$]"
+local notWord = "[^%w%$]"
+
+-- Each operator in this table gets (1) the precedence, (2) the associativity (1 = left, 2 = right), and (3) the operation that gets executed on the stack.
+local operators = {
+	["^"] = {4, 2, function(a, b) return a ^ b end},
+	["*"] = {3, 1, function(a, b) if type(a) == "string" then return string_rep(a, b) else return a * b end end},
+	["/"] = {3, 1, function(a, b) return a / b end},
+	["+"] = {2, 1, function(a, b) if type(a) == "string" or type(b) == "string" then return a .. b else return a + b end end},
+	["-"] = {2, 1, function(a, b) return a - b end}
+}
+
+-- Each function in this table gets only the operation that gets executed on the stack, because they're all unary and need no associativity or precedence
+local functions = {
+	["neg"] = function(n) return -n end, -- Negate a number
+	["abs"] = math.abs,
+	["sqrt"] = function(n) return n ^ 0.5 end, -- Faster than math.sqrt
+	["cbrt"] = function(n) return n ^ (0.33333333333333) end, -- Cube root
+	["sin"] = math.sin,
+	["sinh"] = math.sinh,
+	["ceil"] = math.ceil,
+	["floor"] = math.floor,
+	["round"] = math.round,
+	["cos"] = math.cos,
+	["cosh"] = math.cosh,
+	["acos"] = math.acos,
+	["atan"] = math.atan,
+	["atan2"] = math.atan2,
+	["log"] = math.log,
+	["log10"] = math.log10,
+	["asin"] = math.asin,
+	["tan"] = math.tan,
+	["deg"] = math.deg,
+	["rad"] = math.rad
+}
+
+--------------------------------------------------------------------------------
+-- Tokenize a String
+--------------------------------------------------------------------------------
+local function tokenize(str)
+	local tokens = {}
+	
+	str = str:gsub("[\n%s\t]", "")
+	str = str:gsub("%-(%b())", "neg%1")
+	str = str:gsub("([%+%-%*%/%(%z])%-", "%1#") -- We have to find negative numbers and change the operator in front of them from a minus, because otherwise the algorithm will treat it as a subtraction symbol
+	str = str:gsub("^%-", "#") -- Check for the first digit also
+	
+	local i = 1
+	while true do
+		local char = str:sub(i, i)
+		if char == "" then break end
+		local s
+		
+		if (char:match("%d")) or (char == "#" and str:sub(i + 1, i + 1):match("%d")) then
+			local f = str:find("[%+%-%*%/%^%z%)]", i)
+			
+			if not f then f = str:len() + 1 end
+			
+			local s = str:sub(i, f - 1)
+			
+			if char == "#" then s = "-" .. s:sub(2) end
+			i = f
+			table_insert(tokens, tonumber(s))
+		else
+			if char:match(word) then
+				local f = str:find(notWord, i)
+				if not f then f = str:len() + 1 end
+				s = str:sub(i, f - 1)
+				i = f
+				table_insert(tokens, s)
+			else
+				--if not operators[char] and not char:match("[%(%)]") then print("Evalutation failed: Unexpected character \"" .. char .. "\" found") error() end
+				table_insert(tokens, char)
+				i = i + 1
+			end
+		end
+	end
+	
+	--print("tokens: " .. table.concat(tokens, "  "))
+	
+	return tokens
+end
+
+--------------------------------------------------------------------------------
+-- Shunting-Yard Algorithm
+--------------------------------------------------------------------------------
+function syfer.shuntingYard(tokens)
+	local output, stack = {}, {}
+	
+	for i = 1, #tokens do
+		local t = tokens[i]
+		
+		if functions[t] then
+			table_insert(stack, t)
+		elseif operators[t] then
+			local o1 = t
+			while true do
+				local o2 = stack[#stack]
+				if (o2 and operators[o2]) and ((operators[o1][2] == 1 and operators[o1][1] == operators[o2][1]) or (operators[o1][1] < operators[o2][1])) then
+					table_insert(output, table_remove(stack))
+				else
+					break
+				end
+			end
+			
+			table_insert(stack, o2)
+			table_insert(stack, o1)
+		elseif t == "(" then
+			table_insert(stack, t)
+		elseif t == ")" then
+			while true do
+				local stackToken = table_remove(stack)
+								
+				if stackToken == "(" or not stackToken then
+					if stackToken then
+						-- It's a left parenthesis; all's well
+					elseif stackToken == nil then
+						print("Evaluation failed: Mismatched parentheses")
+						error()
+					end
+					break
+				elseif functions[stackToken] then
+					table_insert(output, stackToken)
+				else
+					table_insert(output, stackToken)
+				end
+			end
+		else
+			table_insert(output, t)
+		end
+	end
+	
+	while #stack > 0 do
+		if stack[#stack] == "(" or stack[#stack] == ")" then print("Evaluation failed: Mismatched parentheses") error() end
+		table_insert(output, table_remove(stack))
+	end
+	
+	--print("postfix: " .. table.concat(output, "  "))
+	
+	return output
+end
+
+--------------------------------------------------------------------------------
+-- Solve Postfix Equation
+--------------------------------------------------------------------------------
+function syfer.solvePostfix(eq, vars)
+	local stack = {}
+	
+	local i = 1
+	while true do
+		if operators[eq[i] ] then
+			local a, b = table_remove(stack), table_remove(stack)
+			table_insert(stack, operators[eq[i] ][3](b, a))
+		elseif functions[eq[i] ] then
+			local n = table_remove(stack)
+			table_insert(stack, functions[eq[i] ](n))
+		elseif vars[eq[i] ] then
+			table_insert(stack, vars[eq[i] ])
+		elseif eq[i] then
+			table_insert(stack, eq[i])
+		else
+			break
+		end
+
+		--print("stack after iteration " .. i .. ": " .. table.concat(stack, "  "))
+		i = i + 1
+	end
+	
+	return stack[1]
+end
+
+--------------------------------------------------------------------------------
+-- Solve an Equation
+--------------------------------------------------------------------------------
+function syfer.solve(str, vars)
+	local tokens = tokenize(str)
+	local p = syfer.shuntingYard(tokens)
+	local answer = syfer.solvePostfix(p, vars or {})
+	return answer
+end
+
+--------------------------------------------------------------------------------
+-- Finish Up
+--------------------------------------------------------------------------------
+syfer.operators = operators
+syfer.functions = functions
+
+return syfer]]></ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ScreenGui" referent="RBX74E2703428204F0291C9E784B63E983E">
+			<Properties>
+				<string name="Name">ConfigUI</string>
+			</Properties>
+			<Item class="Frame" referent="RBXF9B3A340A657477E8E3BD52FBB6EB0C0">
+				<Properties>
+					<bool name="Active">false</bool>
+					<Color3 name="BackgroundColor3">4294967295</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<Color3 name="BorderColor3">4279970357</Color3>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<string name="Name">Main</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<UDim2 name="Position">
+						<XS>0.200000003</XS>
+						<XO>0</XO>
+						<YS>0.200000003</YS>
+						<YO>0</YO>
+					</UDim2>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<UDim2 name="Size">
+						<XS>0.200000003</XS>
+						<XO>0</XO>
+						<YS>0.600000024</YS>
+						<YO>0</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<token name="Style">6</token>
+					<bool name="Visible">false</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+				<Item class="ScrollingFrame" referent="RBXCE661BD739E64C728AA1110A887CF812">
+					<Properties>
+						<bool name="Active">false</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">0</int>
+						<Content name="BottomImage"><url>rbxasset://textures/ui/Smooth.png</url></Content>
+						<Vector2 name="CanvasPosition">
+							<X>0</X>
+							<Y>0</Y>
+						</Vector2>
+						<UDim2 name="CanvasSize">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>2</YS>
+							<YO>0</YO>
+						</UDim2>
+						<bool name="ClipsDescendants">true</bool>
+						<bool name="Draggable">false</bool>
+						<Content name="MidImage"><url>rbxasset://textures/ui/Smooth.png</url></Content>
+						<string name="Name">ScrollingFrame</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<int name="ScrollBarThickness">12</int>
+						<bool name="ScrollingEnabled">true</bool>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>1</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<Content name="TopImage"><url>rbxasset://textures/ui/Smooth.png</url></Content>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Frame" referent="RBX31EEB5129C9241E39BB72A5D1FB9D74B">
+				<Properties>
+					<bool name="Active">false</bool>
+					<Color3 name="BackgroundColor3">4294967295</Color3>
+					<float name="BackgroundTransparency">0</float>
+					<Color3 name="BorderColor3">4279970357</Color3>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<string name="Name">Config</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<UDim2 name="Position">
+						<XS>0.400000006</XS>
+						<XO>0</XO>
+						<YS>0.200000003</YS>
+						<YO>0</YO>
+					</UDim2>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<UDim2 name="Size">
+						<XS>0.400000006</XS>
+						<XO>0</XO>
+						<YS>0.600000024</YS>
+						<YO>0</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<token name="Style">6</token>
+					<bool name="Visible">false</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+				<Item class="TextBox" referent="RBXFD3CEA2C1E6C47EDA4D81877582D4600">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">1</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBXC674B3DAAA5C4199836969C198706A93">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">2</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBXDB44172D63D34F85AB70D94579C8464A">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">3</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.200000003</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX94AC7935DF154488B5D417D2FA807637">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">4</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.300000012</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX7851F3F35BE4489BBF3C73EEB3B9FFB3">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">5</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.400000006</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBXEBA9362607B04C9DA37A1A1669D11050">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">6</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.5</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX6899FCF620C247C48561BCC1AB5AAD52">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">7</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.600000024</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX5C720A28D21541D982E5E7E35FB28A25">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">8</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.699999988</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX3705F6E7561B42F5B878C9653B7560C5">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">9</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.800000012</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+				<Item class="TextBox" referent="RBX6B5A8D8B60A6437B96F5A854970D8A6A">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Color3 name="BackgroundColor3">4294967295</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">1</int>
+						<bool name="ClearTextOnFocus">false</bool>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="Font">3</token>
+						<token name="FontSize">7</token>
+						<bool name="MultiLine">false</bool>
+						<string name="Name">10</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.899999976</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.100000001</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<string name="Text"></string>
+						<Color3 name="TextColor3">4294967295</Color3>
+						<bool name="TextScaled">false</bool>
+						<Color3 name="TextStrokeColor3">4278190080</Color3>
+						<float name="TextStrokeTransparency">0.5</float>
+						<float name="TextTransparency">0.200000003</float>
+						<bool name="TextWrapped">true</bool>
+						<token name="TextXAlignment">0</token>
+						<token name="TextYAlignment">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="ImageButton" referent="RBXE2B03792B79E4AC2AEDDD598C63BB769">
+				<Properties>
+					<bool name="Active">true</bool>
+					<bool name="AutoButtonColor">true</bool>
+					<Color3 name="BackgroundColor3">4294967295</Color3>
+					<float name="BackgroundTransparency">1</float>
+					<Color3 name="BorderColor3">4279970357</Color3>
+					<int name="BorderSizePixel">1</int>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<Content name="Image"><url>rbxasset://textures/ui/keyboard/close_button_icon.png</url></Content>
+					<Color3 name="ImageColor3">4294967295</Color3>
+					<Vector2 name="ImageRectOffset">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<Vector2 name="ImageRectSize">
+						<X>0</X>
+						<Y>0</Y>
+					</Vector2>
+					<float name="ImageTransparency">0</float>
+					<bool name="Modal">false</bool>
+					<string name="Name">Close</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<UDim2 name="Position">
+						<XS>0.800000012</XS>
+						<XO>-15</XO>
+						<YS>0.200000003</YS>
+						<YO>-15</YO>
+					</UDim2>
+					<float name="Rotation">0</float>
+					<token name="ScaleType">0</token>
+					<bool name="Selectable">true</bool>
+					<bool name="Selected">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<UDim2 name="Size">
+						<XS>0</XS>
+						<XO>30</XO>
+						<YS>0</YS>
+						<YO>30</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<Rect2D name="SliceCenter">
+						<min>
+							<X>0</X>
+							<Y>0</Y>
+						</min>
+						<max>
+							<X>0</X>
+							<Y>0</Y>
+						</max>
+					</Rect2D>
+					<token name="Style">0</token>
+					<bool name="Visible">false</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

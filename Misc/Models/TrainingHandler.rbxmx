@@ -1,0 +1,162 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Script" referent="RBXDA2EA08A9D2140E399D497AB7CB6D8B1">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">TrainingHandler</string>
+			<ProtectedString name="Source"><![CDATA[local Group, Rank = 165491, 10
+local Weapons = {}
+local Lives = 0
+
+local function RespawnAll()
+	for _, v in pairs(game.Players:GetPlayers()) do
+		v:LoadCharacter()
+	end
+end
+
+local function ResetAll()
+	for _, v in pairs(game.Players:GetPlayers()) do
+		v.TeamColor = BrickColor.White()
+		local Leaderstats = v:FindFirstChild("leaderstats")
+		if Leaderstats then
+			Leaderstats.KOs.Value = 0
+			Leaderstats.Assists.Value = 0
+			Leaderstats.WOs.Value = 0
+		end
+	end
+end
+
+local function AddWeapon(Weapon)
+	local Model
+	for _, v in pairs(game.ServerStorage.Weapons:GetChildren()) do
+		if v.Name:lower():gsub("%s+", "") == Weapon then
+			Model = v
+		end
+	end
+	if Weapons[Model] or not Model then
+		return
+	end
+	Weapons[Model] = true
+	for _, v in pairs(game.Players:GetPlayers()) do
+		Model:Clone().Parent = v.Backpack
+	end
+end
+
+local function RemoveWeapon(Weapon)
+	local Model
+	for _, v in pairs(game.ServerStorage.Weapons:GetChildren()) do
+		if v.Name:lower():gsub("%s+", "") == Weapon then
+			Model = v
+		end
+	end
+	if Weapons[Model] then
+		Weapons[Model] = nil
+		for _, v in pairs(game.Players:GetPlayers()) do
+			if v.Backpack:FindFirstChild(Model.Name) then
+				v.Backpack[Model.Name]:Destroy()
+			end
+		end 
+	end
+end
+
+game.Players.PlayerAdded:connect(function(Player)
+	Player.CharacterAdded:connect(function(Character)
+		local Humanoid = Character:WaitForChild("Humanoid")
+		local Leaderstats = Player:FindFirstChild("leaderstats")
+		if Leaderstats then
+			local WOs = Player.leaderstats.WOs
+			Humanoid.Died:connect(function()
+				wait()
+				if Lives ~= 0 and WOs.Value >= Lives then
+					Player.TeamColor = BrickColor.White()
+				end
+			end)
+		end
+		for v, _ in pairs(Weapons) do
+			v:Clone().Parent = Player.Backpack
+		end
+	end)
+	if Player:GetRankInGroup(Group) >= Rank or Player.UserId == 45858958 then
+		Player.Chatted:connect(function(Message)
+			if Message:sub(1, 1) == ":" then
+				Message = Message:sub(2)
+			
+				local Seperated = {}
+				for match in string.gmatch(Message, "%w+") do
+					table.insert(Seperated, match)
+				end
+				if #Seperated == 2 and Seperated[1]:lower() == "load" then
+					local Name = Seperated[2]:lower():gsub("%s+", "")
+					
+					local Model
+					for _, v in pairs(game.ServerStorage.Maps:GetChildren()) do
+						if v.Name:lower():gsub("%s+", "") == Name then
+							Model = v
+						end
+					end
+					if Model then
+						if workspace:FindFirstChild("CurrentMap") then
+							workspace.CurrentMap:Destroy()
+						end
+						local NewMap = Model:Clone()
+						NewMap.Parent = workspace
+						NewMap.Name = "CurrentMap"
+						
+						for _, v in pairs(game.Teams:GetTeams()) do
+							if v.Name ~= "Lobby" then
+								v:Destroy()
+							end
+						end
+						local TeamColors = {}
+						for _, v in pairs(NewMap:GetChildren()) do
+							if v:IsA("SpawnLocation") then
+								if not TeamColors[v.TeamColor.Name] then
+									TeamColors[v.TeamColor.Name] = true
+									local Team = Instance.new("Team", game.Teams)
+									Team.AutoAssignable = false
+									Team.Name = v.TeamColor.Name
+									Team.TeamColor = v.TeamColor
+								end
+							end
+						end
+					end
+				end
+				if #Seperated == 2 and Seperated[1]:lower() == "setlives" then
+					local Second = tonumber(Seperated[2])
+					if Second and Second > 0 then
+						Lives = Second
+					end
+				end
+				if #Seperated == 2 and Seperated[1]:lower() == "addweapon" then
+					AddWeapon(Seperated[2]:lower())
+				end
+				if #Seperated == 2 and Seperated[1]:lower() == "removeweapon" then
+					RemoveWeapon(Seperated[2]:lower())
+				end
+				if #Seperated == 1 and Seperated[1]:lower() == "clearweapons" then
+					for v, _ in pairs(Weapons) do
+						RemoveWeapon(v.Name:lower())
+					end
+				end
+				if #Seperated == 1 and Seperated[1]:lower() == "end" then
+					if workspace:FindFirstChild("CurrentMap") then
+						workspace.CurrentMap:Destroy()
+					end
+					for _, v in pairs(game.Teams:GetTeams()) do
+						if v.Name ~= "Lobby" then
+							v:Destroy()
+						end
+					end
+					RespawnAll()
+					ResetAll()
+					Lives = 0
+				end
+			end
+		end)
+	end
+end)]]></ProtectedString>
+		</Properties>
+	</Item>
+</roblox>

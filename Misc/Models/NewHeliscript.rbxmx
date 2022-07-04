@@ -1,0 +1,746 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX7E13F119923E40B2847753C205D28266">
+		<Properties>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">HelicopterControl</string>
+			<ProtectedString name="Source"><![CDATA[Module = script
+NeutralColor = BrickColor.Gray()
+
+function Weld(x, y)
+	local Weld = Instance.new("Weld", x)
+	Weld.Part0 = x
+	Weld.Part1 = y
+	Weld.C0 = x.CFrame:toObjectSpace(y.CFrame)
+	x.Anchored = false
+end
+
+return function(script)
+	local Engine, VehicleSeat = script.Parent.Engine, script.Parent.VehicleSeat
+	local Running = Engine.EngineLoop
+	local InSeat = 0
+	
+	local BodyVelocity, BodyGyro = Instance.new("BodyVelocity", Engine), Instance.new("BodyGyro", Engine)
+	BodyVelocity.MaxForce = Vector3.new()
+	BodyGyro.MaxTorque = Vector3.new()
+	BodyVelocity.P = 2000
+	BodyGyro.D = 800
+	BodyGyro.P = 3000
+	local EngineActive = false
+	local Gui
+
+	for i, v in pairs(script.Parent:GetChildren()) do
+		if v:IsA("BasePart") and v ~= Engine then
+			Weld(v, Engine)
+		end
+	end
+	Engine.Anchored = false
+	
+	local function ReColor(Color)
+		for _, v in pairs(script.Parent:GetChildren()) do
+			if v:IsA("Model") then
+				for _, x in pairs(v:GetChildren()) do
+					if x.Name == "PrimaryColor" then
+						x.BrickColor = Color
+					end
+				end
+			end
+			if v.Name == "PrimaryColor" then
+				v.BrickColor = Color
+			end
+		end
+		Engine.BrickColor = Color
+	end
+	
+	local function DoSeat(v)
+		v.Changed:connect(function(Property)
+			if Property == "Occupant" then
+				if v.Occupant then
+					local Player = game.Players:GetPlayerFromCharacter(v.Occupant.Parent)
+					if Player then
+						if v:IsA("VehicleSeat") then
+							Engine:SetNetworkOwner(Player)
+							script.Parent.Health.TeamColor.Value = Player.TeamColor
+							ReColor(Player:FindFirstChild("S2Color") and Player.S2Color.Value or Player.TeamColor)
+							Gui = Module.ShipGui:Clone()
+							Gui.LocalShipControl.RemoteEvent.Value = Module.RemoteEvent
+							Gui.LocalShipControl.Engine.Value = Engine
+							Gui.Parent = Player.PlayerGui
+						end
+						if InSeat == 0 then
+							script.Parent.Health.TeamColor.Value = Player.TeamColor
+							ReColor(Player:FindFirstChild("S2Color") and Player.S2Color.Value or Player.TeamColor)
+						end
+						InSeat = InSeat + 1
+					end
+				else
+					if v:IsA("VehicleSeat") then
+						Running:Stop()
+						Engine:SetNetworkOwner()
+						Gui.LocalShipControl.RemoveGui.Value = true
+						BodyVelocity.MaxForce = Vector3.new()
+						BodyGyro.MaxTorque = Vector3.new()
+						EngineActive = false
+					end
+					InSeat = InSeat - 1
+					if InSeat == 0 then
+						script.Parent.Health.TeamColor.Value = NeutralColor
+						ReColor(NeutralColor)
+					end
+				end
+			end
+		end)
+	end
+	script.Parent.Health.TeamColor.Value = NeutralColor
+	ReColor(NeutralColor)
+	
+	for _, v in pairs(script.Parent:GetChildren()) do
+		if v:IsA("Seat") or v:IsA("VehicleSeat") then
+			DoSeat(v)
+		elseif v:IsA("Model") then
+			for _, x in pairs(v:GetChildren()) do
+				if x:IsA("Seat") or x:IsA("VehicleSeat") then
+					DoSeat(x)
+				end
+			end
+		end
+	end
+	
+	Module.RemoteEvent.OnServerEvent:connect(function(Player, Vehicle, Name)
+		if Vehicle == script.Parent and Name == "ToggleEngine" then
+			if EngineActive then
+				BodyVelocity.MaxForce = Vector3.new()
+				BodyGyro.MaxTorque = Vector3.new()
+				Running:Stop()
+			else
+				BodyVelocity.MaxForce = Vector3.new(25000000, 250000000, 25000000)
+				BodyVelocity.Velocity = Vector3.new()
+				BodyGyro.MaxTorque = Vector3.new(400000, 400000, 400000)
+				BodyGyro.CFrame = Engine.CFrame
+				Running:Play()
+			end
+			EngineActive = not EngineActive
+		end
+	end)
+
+	while wait(0.1) do
+		Running.Pitch = 0.9 + Engine.Velocity.magnitude/400
+	end
+end]]></ProtectedString>
+		</Properties>
+		<Item class="RemoteEvent" referent="RBXB470577B7A8B42608EEC0B6137018913">
+			<Properties>
+				<string name="Name">RemoteEvent</string>
+			</Properties>
+		</Item>
+		<Item class="ScreenGui" referent="RBXD084815C3DE5489C82E14FBFCED85A55">
+			<Properties>
+				<string name="Name">ShipGui</string>
+			</Properties>
+			<Item class="LocalScript" referent="RBX09E1D86E29EC457B884D67D3299665A8">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">LocalShipControl</string>
+					<ProtectedString name="Source"><![CDATA[Player = game.Players.LocalPlayer
+Mouse = Player:GetMouse()
+Camera = workspace.CurrentCamera
+
+RemoteEvent = script:WaitForChild("RemoteEvent").Value
+Engine = script.Engine.Value
+ShipModel = Engine.Parent
+Health = Engine.Parent.Health
+BodyVelocity, BodyGyro = Engine.BodyVelocity, Engine.BodyGyro
+
+CFNew, RNew = CFrame.new, Ray.new
+
+RunService = game:GetService("RunService")
+UIS = game:GetService("UserInputService")
+CameraModule = require(script.Camera)()
+xhpi, ynhpi = CFrame.Angles(math.rad(90), 0, 0), CFrame.Angles(0, math.rad(-90), 0)
+max, min, V3N = math.max, math.min, Vector3.new
+OffsetRotation = CFrame.Angles(math.rad(10), 0, 0)
+spawn(function()
+	CameraModule.SetFocalPart(Engine.Parent.CameraPart)
+	CameraModule.AddIgnoreModel(Engine.Parent)
+	CameraModule.SetUpVector((xhpi).lookVector)
+	CameraModule.SetRightVector((ynhpi).lookVector)
+	RunService:BindToRenderStep("ShipCamera", Enum.RenderPriority.Camera.Value, function()
+		CameraModule.Update()
+		BodyGyro.CFrame = Camera.CoordinateFrame * OffsetRotation
+	end)
+	script.RemoveGui.Changed:wait()
+	UIS.MouseIconEnabled = true
+	RunService:UnbindFromRenderStep("ShipCamera")
+	Camera.CameraType = Enum.CameraType.Custom
+	UIS.MouseBehavior = Enum.MouseBehavior.Default
+	script.Parent:Destroy()
+end)
+
+KeyDown = {}
+KeyNameMap = {
+	{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
+	{"A", "S", "D", "F", "G", "H", "J", "K", "L"},
+	{"LeftShift", "Z", "X", "C", "V", "B", "N", "M"},
+	{"LeftControl", "LeftAlt"}
+}
+KeyMap = {
+	{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"},
+	{"A", "S", "D", "F", "G", "H", "J", "K", "L"},
+	{"Shift", "Z", "X", "C", "V", "B", "N", "M"},
+	{"Control", "Alt"}
+}
+Keys = {
+	{0, "Move Forward", 0, "Move Up", 0, "Toggle Engine", 0, 0, 0, 0},
+	{"Move Left", "Move Backward", "Move Right", "Move Down", 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0}
+}
+Buttons = {}
+ControlsGui = script.Parent.Main.Controls
+HealthBar = script.Parent.Main.Info.Health
+
+HealthBar.TextLabel.Text = "Health - "..math.floor((Health.Value/Health.MaxValue) * 100).."%"
+HealthBar.Bar.Size = UDim2.new(Health.Value/Health.MaxValue, 0, 1, 0)
+Health.Changed:connect(function()
+	HealthBar.TextLabel.Text = "Health - "..math.floor((Health.Value/Health.MaxValue) * 100).."%"
+	HealthBar.Bar.Size = UDim2.new(Health.Value/Health.MaxValue, 0, 1, 0)
+end)
+
+for Row, A in pairs(KeyMap) do
+	for B, Key in pairs(A) do
+		local Description = Keys[Row][B]
+		local New = ControlsGui.Default:clone()
+		New.Parent = ControlsGui
+		New.Name = KeyNameMap[Row][B]
+		New.Text = Key
+		New.Size = UDim2.new(1/#A, 0, 1/#KeyMap, 0)
+		New.Position = UDim2.new(1/#A * (B - 1), 0, 1/#KeyMap * (Row - 1), 0)
+		if Description ~= 0 then
+			New.TextTransparency = 0.4
+			table.insert(Buttons, New)
+		end
+	end
+end
+
+KeyCode = Enum.KeyCode
+Speed, Left, Up = 0, 0, 0
+ForwardKey, BackwardKey, LeftKey, RightKey, UpKey, DownKey = KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D, KeyCode.R, KeyCode.F
+spawn(function()
+	while wait() do
+		BodyVelocity.Velocity = Engine.CFrame:vectorToWorldSpace(V3N(-Left * 3, Up * 2, -Speed * 4))
+		if Speed ~= 0 and not KeyDown[ForwardKey] and not KeyDown[BackwardKey] then
+			Speed = Speed < 0 and Speed + 1 or Speed - 1 or Speed
+		end
+		if Left ~= 0 and not KeyDown[LeftKey] and not KeyDown[RightKey] then
+			Left = Left < 0 and Left + 1 or Left - 1
+		end
+		if Up ~= 0 and not KeyDown[UpKey] and not KeyDown[DownKey] then
+			Up = Up < 0 and Up + 1 or Up - 1
+		end
+	end
+end)
+
+function InputChanged(Input)
+	if Input.UserInputType == Enum.UserInputType.Keyboard then
+		local State = Input.UserInputState == Enum.UserInputState.Begin and 1 or 0
+		local Key = Input.KeyCode
+		KeyDown[Key] = Input.UserInputState == Enum.UserInputState.Begin
+		for _, v in pairs(Buttons) do
+			if KeyDown[KeyCode[v.Name]] then
+				v.TextTransparency = 0
+			else
+				v.TextTransparency = 0.4
+			end
+		end
+		
+		if State == 1 then
+			if Key == ForwardKey then
+				repeat
+					Speed = min(Speed + 1, 20)
+					wait()
+				until Speed == 20 or not KeyDown[ForwardKey]
+			elseif Key == BackwardKey then
+				repeat
+					Speed = max(Speed - 1, -5)
+					wait()
+				until Speed == -5 or not KeyDown[BackwardKey]
+			elseif Key == LeftKey then
+				repeat
+					Left = min(Left + 1, 15)
+					wait()
+				until Left == 15 or not KeyDown[LeftKey]
+			elseif Key == RightKey then
+				repeat
+					Left = max(Left - 1, -15)
+					wait()
+				until Left == -15 or not KeyDown[RightKey]
+			elseif Key == UpKey then
+				repeat
+					Up = min(Up + 1, 15)
+					wait()
+				until Up == 15 or not KeyDown[UpKey]
+			elseif Key == DownKey then
+				repeat
+					Up = max(Up - 1, -15)
+					wait()
+				until Up == -15 or not KeyDown[DownKey]
+			elseif Key == Enum.KeyCode.Y then
+				RemoteEvent:FireServer(ShipModel, "ToggleEngine")
+			end
+		end
+	end
+end
+
+UIS.InputBegan:connect(function(Input, GPE)
+	if not GPE then
+		InputChanged(Input)
+	end
+end)
+
+UIS.InputEnded:connect(function(Input, GPE)
+	if not GPE then
+		InputChanged(Input)
+	end
+end)]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBX4A6108A927584DFEB2DF09C62ACAB8CA">
+					<Properties>
+						<string name="Name">RemoteEvent</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+				<Item class="BoolValue" referent="RBX405C81C04A464297B4688237E6CC4F6D">
+					<Properties>
+						<string name="Name">RemoveGui</string>
+						<bool name="Value">false</bool>
+					</Properties>
+				</Item>
+				<Item class="ObjectValue" referent="RBXDE3B9A2F443F4F498629C74EBA76F91E">
+					<Properties>
+						<string name="Name">Engine</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX6D6AB428B4294EB3808BCDE0DBFB8674">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">Camera</string>
+						<ProtectedString name="Source"><![CDATA[max, min, pi = math.max, math.min, math.pi
+ang, v3n, frame = CFrame.Angles, Vector3.new(), CFrame.new
+hpia, nhpia, off = ang(pi/2, 0, 0), ang(-pi/2, 0, 0), CFrame.new(0, 0, -10)
+ZoomLevels = {0.5, 15.63, 19.53, 24.41, 30.52, 38.15, 47.68, 59.6, 74.51, 93.13, 116.42}
+UIS = game:GetService("UserInputService")
+
+return function ()
+	local this = {}
+	
+	local camera = workspace.CurrentCamera
+	camera.CameraType = Enum.CameraType.Scriptable
+	
+	local right, up, back = Vector3.new(0, 0, 1), Vector3.new(0, 1, 0), Vector3.new(1, 0, 0)
+	local IgnoreList = {}
+	local Part = nil
+	local ZoomLevel = 6
+	local Zoom = ZoomLevels[ZoomLevel]
+	local RightMouseDown = true
+	local RotateSpeed = 24
+	local Orientation = CFrame.new()
+	local rotatex, rotatey = 0, 0
+	
+	UIS.MouseIconEnabled = false
+	UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+	
+	local function setCamera(camera, cframe)
+		local cf = frame(v3n, cframe.lookVector):inverse() * cframe
+		camera.Focus = cframe * off
+		camera.CoordinateFrame = cframe
+	end
+	
+	function this.SetUpVector(nup)
+		if right:Cross(nup).magnitude == 0 then
+			right = hpia:vectorToObjectSpace(nup)
+		end
+		up = nup.unit
+		back = right:Cross(up).unit
+		right = up:Cross(back)
+	end
+	
+	function this.SetRightVector(nright)
+		if up:Cross(right).magnitude == 0 then
+			up = nhpia:vectorToObjectSpace(nright)
+		end
+		right = nright.unit
+		back = right:Cross(up).unit
+		up = back:Cross(right)
+	end
+	
+	function this.SetRotate(dx)
+		rotatex = dx
+		Orientation = ang(0, rotatex, 0) * ang(rotatey, 0, 0)
+	end
+	
+	function this.RotateX(dx)
+		rotatex = rotatex + dx
+		Orientation = ang(0, rotatex, 0) * ang(rotatey, 0, 0)
+	end
+	
+	function this.RotateY(dy)
+		rotatey = max(min(pi/2 - 0.05, rotatey + dy), -pi/2 + 0.05)
+		Orientation = ang(0, rotatex, 0) * ang(rotatey, 0, 0)
+	end
+	
+	function this.AddIgnoreModel(m)
+		IgnoreList[#IgnoreList + 1] = m
+	end
+	
+	function this.SetFocalPart(p)
+		Part = p
+	end
+	
+	function this.Update()
+		local upCFrame = frame(Part.Position) * frame(0, 0, 0, right.x, up.x, back.x, right.y, up.y, back.y, right.z, up.z, back.z)
+		setCamera(workspace.CurrentCamera, upCFrame * Orientation * frame(0, 0, Zoom), Part)
+		--[[local part, point
+		repeat
+			if part then
+				IgnoreList[#IgnoreList + 1] = part
+			end
+			part, point = workspace:FindPartOnRayWithIgnoreList(Ray.new(upCFrame.p, (upCFrame * Orientation * frame(0, 0, Zoom).p - upCFrame.p)), IgnoreList)
+		until not part or part.CanCollide
+		local trueDistance = (point - upCFrame.p).magnitude
+		setCamera(workspace.CurrentCamera, upCFrame * Orientation * frame(0, 0, trueDistance), Part)]]
+	end
+	
+	function this.SetDistance(zoom)
+		Zoom = zoom
+		--[[if zoom <= .5 then
+			UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+			UIS.MouseIconEnabled = false
+		else
+			UIS.MouseIconEnabled = true
+			if RightMouseDown then
+				UIS.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+			else
+				UIS.MouseBehavior = Enum.MouseBehavior.Default
+			end
+		end]]
+	end
+	
+	function this.ZoomIn()
+		ZoomLevel = max(1, ZoomLevel - 1)
+		this.SetDistance(ZoomLevels[ZoomLevel])
+	end
+	
+	function this.ZoomOut()
+		ZoomLevel = min(#ZoomLevels, ZoomLevel + 1)
+		this.SetDistance(ZoomLevels[ZoomLevel])
+	end
+	
+	local function Input(inputObject)
+		if inputObject.UserInputType == Enum.UserInputType.MouseMovement then
+			this.RotateX(-inputObject.Delta.x * RotateSpeed / 1000)
+			this.RotateY(-inputObject.Delta.y * RotateSpeed / 1000)
+		--[[elseif inputObject.UserInputType == Enum.UserInputType.MouseButton2 and Zoom > .5 then
+			if inputObject.UserInputState == Enum.UserInputState.Begin then
+				UIS.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+				RightMouseDown = true
+			elseif inputObject.UserInputState == Enum.UserInputState.End then
+				RightMouseDown = false
+				this.SetDistance(Zoom)
+			end]]
+		elseif inputObject.UserInputType == Enum.UserInputType.MouseWheel then
+			if inputObject.Position.z > 0 then
+				for i = 1, math.max(1, inputObject.Position.z / 200) do
+					this.ZoomIn()
+				end
+			else
+				for i = 1, math.max(1, -inputObject.Position.z / 200) do
+					this.ZoomOut()
+				end
+			end
+		end
+	end
+	
+	UIS.InputBegan:connect(Input)
+	UIS.InputChanged:connect(Input)
+	UIS.InputEnded:connect(Input)
+	
+	return this
+end]]></ProtectedString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Frame" referent="RBX7AFEC835A10E410D9BFF1F9E43A0CAD0">
+				<Properties>
+					<bool name="Active">false</bool>
+					<Color3 name="BackgroundColor3">4283256141</Color3>
+					<float name="BackgroundTransparency">0.699999988</float>
+					<Color3 name="BorderColor3">4279970357</Color3>
+					<int name="BorderSizePixel">0</int>
+					<bool name="ClipsDescendants">false</bool>
+					<bool name="Draggable">false</bool>
+					<string name="Name">Main</string>
+					<Ref name="NextSelectionDown">null</Ref>
+					<Ref name="NextSelectionLeft">null</Ref>
+					<Ref name="NextSelectionRight">null</Ref>
+					<Ref name="NextSelectionUp">null</Ref>
+					<UDim2 name="Position">
+						<XS>0</XS>
+						<XO>0</XO>
+						<YS>0.800000012</YS>
+						<YO>0</YO>
+					</UDim2>
+					<float name="Rotation">0</float>
+					<bool name="Selectable">false</bool>
+					<Ref name="SelectionImageObject">null</Ref>
+					<UDim2 name="Size">
+						<XS>1</XS>
+						<XO>0</XO>
+						<YS>0.200000003</YS>
+						<YO>0</YO>
+					</UDim2>
+					<token name="SizeConstraint">0</token>
+					<token name="Style">0</token>
+					<bool name="Visible">true</bool>
+					<int name="ZIndex">1</int>
+				</Properties>
+				<Item class="Frame" referent="RBXA6A5FBAC54C24C3382B46109D5B3D0A9">
+					<Properties>
+						<bool name="Active">false</bool>
+						<Color3 name="BackgroundColor3">4283256141</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">0</int>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<string name="Name">Controls</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0.725000024</XS>
+							<XO>0</XO>
+							<YS>0.200000003</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">false</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>0.25</XS>
+							<XO>0</XO>
+							<YS>0.600000024</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<token name="Style">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+					<Item class="TextButton" referent="RBX44479DB81B3247B19144760687E15A28">
+						<Properties>
+							<bool name="Active">true</bool>
+							<bool name="AutoButtonColor">true</bool>
+							<Color3 name="BackgroundColor3">4288914085</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<token name="Font">4</token>
+							<token name="FontSize">10</token>
+							<bool name="Modal">false</bool>
+							<string name="Name">Default</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0</XS>
+								<XO>0</XO>
+								<YS>0</YS>
+								<YO>0</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">true</bool>
+							<bool name="Selected">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>0</XO>
+								<YS>0</YS>
+								<YO>0</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<token name="Style">0</token>
+							<string name="Text"></string>
+							<Color3 name="TextColor3">4294967295</Color3>
+							<bool name="TextScaled">false</bool>
+							<Color3 name="TextStrokeColor3">4283256141</Color3>
+							<float name="TextStrokeTransparency">0</float>
+							<float name="TextTransparency">0.800000012</float>
+							<bool name="TextWrapped">false</bool>
+							<token name="TextXAlignment">2</token>
+							<token name="TextYAlignment">1</token>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="Frame" referent="RBXBFA28801957241699E79CC2779D9B3BE">
+					<Properties>
+						<bool name="Active">false</bool>
+						<Color3 name="BackgroundColor3">4281413937</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">4279970357</Color3>
+						<int name="BorderSizePixel">0</int>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="Draggable">false</bool>
+						<string name="Name">Info</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0.0250000004</XS>
+							<XO>0</XO>
+							<YS>0.200000003</YS>
+							<YO>0</YO>
+						</UDim2>
+						<float name="Rotation">0</float>
+						<bool name="Selectable">false</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<UDim2 name="Size">
+							<XS>0.25</XS>
+							<XO>0</XO>
+							<YS>0.600000024</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<token name="Style">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+					<Item class="Frame" referent="RBX0B57050CFCFE41C1A153BAE19BF589DF">
+						<Properties>
+							<bool name="Active">true</bool>
+							<Color3 name="BackgroundColor3">4281413937</Color3>
+							<float name="BackgroundTransparency">0.800000012</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">0</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<string name="Name">Health</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0</XS>
+								<XO>2</XO>
+								<YS>0.300000012</YS>
+								<YO>2</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>1</XS>
+								<XO>-4</XO>
+								<YS>0.400000006</YS>
+								<YO>-4</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<token name="Style">0</token>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="Frame" referent="RBXCB29606D6E4C479CBC33A8804745A16E">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4280024171</Color3>
+								<float name="BackgroundTransparency">0.5</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">Bar</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>1</XS>
+									<XO>0</XO>
+									<YS>1</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">2</int>
+							</Properties>
+						</Item>
+						<Item class="TextLabel" referent="RBX9019A48AAA8341FB81619F855DCB22C5">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">6</token>
+								<token name="FontSize">5</token>
+								<string name="Name">TextLabel</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>10</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>1</XS>
+									<XO>-10</XO>
+									<YS>1</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<string name="Text">Health - 100%</string>
+								<Color3 name="TextColor3">4279970357</Color3>
+								<bool name="TextScaled">true</bool>
+								<Color3 name="TextStrokeColor3">4278190080</Color3>
+								<float name="TextStrokeTransparency">1</float>
+								<float name="TextTransparency">0</float>
+								<bool name="TextWrapped">true</bool>
+								<token name="TextXAlignment">0</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">3</int>
+							</Properties>
+						</Item>
+					</Item>
+				</Item>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

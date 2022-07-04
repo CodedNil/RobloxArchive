@@ -1,0 +1,45 @@
+local Plugin = PluginManager():CreatePlugin()
+local Colours = {BrickColor.new("Moss"), BrickColor.new("Artichoke"), BrickColor.new("Medium green"), BrickColor.new("Laurel green"), BrickColor.new("Grime")}
+
+local function CreateModel(i)
+	local New = game.Selection:Get()[1]:Clone()
+	New.Name = "NewLeaves"
+	New.Parent = workspace
+	New:TranslateBy(Vector3.new(0, 0, -i * 25))
+	local Center = Instance.new("Part", workspace)
+	Center.Size = Vector3.new()
+	Center.CFrame = New:GetModelCFrame()
+	Center.Anchored = true
+	Center.Material = Enum.Material.Grass
+	for _, v in pairs(New:GetChildren()) do
+		v.CFrame = v.CFrame + Vector3.new(0, 1000, 0)
+		v.Position = Vector3.new(math.floor(v.Position.X * 10 + 0.5)/10, math.floor(v.Position.Y * 10 + 0.5)/10, math.floor(v.Position.Z * 10 + 0.5)/10)
+		v.Rotation = Vector3.new(math.random(0, 36) * 10, math.random(0, 36) * 10, math.random(0, 36) * 10)
+		local Size = math.random(v.Size.X * 10 - 10, v.Size.X * 10 + 10)/10
+		v.Size = Vector3.new(Size, Size, Size)
+		v.BrickColor = Colours[math.random(1, #Colours)]
+		v.CFrame = v.CFrame - Vector3.new(0, 1000, 0)
+	end
+	return Center, New
+end
+
+for i = 1, 5 do
+	local Success, Times = false, 0
+	local Center, New
+	repeat
+		Times = Times + 1
+		if Center then
+			Center:Destroy()
+			New:Destroy()
+		end
+		Center, New = CreateModel(i)
+		Success, Union = pcall(function() return Plugin:Union({Center, unpack(New:GetChildren())}) end)
+		print("Try", Times, Success)
+		wait(1)
+	until Success or Times == 5
+	wait(2)
+	New:Destroy()
+	if Center then
+		Center:Destroy()
+	end
+end

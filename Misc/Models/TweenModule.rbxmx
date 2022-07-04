@@ -1,0 +1,823 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX4F7E6FADEF51412F8AE9665E68FB0187">
+		<Properties>
+			<string name="Name">TweenModule</string>
+			<ProtectedString name="Source">--[[
+Module made by FromLegoUniverse
+Base tweening by Crazyman32
+Easing methods by Robert Penner
+
+
+---------------Usage:---------------
+&#9;First note is that these modules are not like Frame:TweenPosition, the instance is an arguement
+&#9;Second note is that they will run THEN continue. This is on purpose. A guide for around that will be below.&#9;
+&#9;
+CFrames:   Module:TweenCFrame(Instance Instance, String PropertyName,CFrame EndCFrame,Number Time,Enum Easing)
+--For MODELS, use &quot;SetPrimaryPartCFrame&quot; to use :SetPrimaryPartCFrame
+Vector3s:   Module:TweenVector3(Instance Instance, String PropertyName,Vector3 EndVector3,Number Time,Enum Easing)
+Vector3s:   Module:TweenVector2(Instance Instance, String PropertyName,Vector2 EndVector2,Number Time,Enum Easing)
+Color3s:   Module:TweenColor3(Instance Instance, String PropertyName,Color3 EndColor3,Number Time,Enum Easing)
+Numbers:   Module:TweenNumber(Instance Instance, String PropertyName,Number EndNumber,Number Time,Enum Easing)
+UDims:   Module:TweenUDim(Instance Instance, String PropertyName,UDim EndUDim,Number Time,Enum Easing)
+UDim2s:   Module:TweenUDim2(Instance Instance, String PropertyName,UDim2 EndUDim2,Number Time,Enum Easing)
+&#9;
+&#9;
+&#9;
+&#9;
+Easing Methods:
+
+To index them, you must start with this:
+&#9;Module.Ease
+&#9;
+Next, you need to decide weather it is In, Out, or InOut
+
+&#9;Module.Ease.In
+&#9;Module.Ease.Out
+&#9;Module.Ease.InOut
+&#9;
+Finally, add the method (Replace the [Insert] with the last step)
+
+&#9;Module.Ease.[Inser].Linear
+&#9;Module.Ease.[Inser].Quad
+&#9;Module.Ease.[Inser].Cubic
+&#9;Module.Ease.[Inser].Quart
+&#9;Module.Ease.[Inser].Quint
+&#9;Module.Ease.[Inser].Sine
+&#9;Module.Ease.[Inser].Expo
+&#9;Module.Ease.[Inser].Circ
+&#9;Module.Ease.[Inser].Elastic
+&#9;Module.Ease.[Inser].Back
+&#9;Module.Ease.[Inser].Bounce
+&#9;
+&#9;
+Making them act like Frame:TweenPosition()
+
+A basic method is using spawn(). Cooroutines are more recommended.
+
+
+&#9;local Module = require(game.ServerScriptService.TweenModule)
+&#9;spawn(function()
+&#9;&#9;Module:TweenCFrame(game.Workspace.Weld, &quot;C0&quot;,CFrame.new(),5,Module.Ease.In.Cubic)
+&#9;end)
+&#9;
+&#9;
+&#9;
+&#9;
+&#9;
+&#9;
+&#9;
+&#9;
+&#9;
+--]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+local RenderWait do
+&#9;local rs
+&#9;if game.Players.LocalPlayer then
+&#9;&#9;rs = game:GetService(&quot;RunService&quot;).RenderStepped
+&#9;else
+&#9;&#9;rs = game:GetService(&quot;RunService&quot;).Stepped
+&#9;end
+&#9;function RenderWait()
+&#9;&#9;rs:wait()
+&#9;end
+end
+
+
+
+
+
+
+
+
+function CFrameToVectors(CFrame)
+&#9;local Data = {0,0,0,0,0,0,0,0,0,0,0,0}
+&#9;local i = 0
+&#9;for Number in string.gmatch(tostring(CFrame),&quot;[%d%-.eE]+&quot;) do
+&#9;&#9;i = i + 1
+&#9;&#9;Data[i] = tonumber(Number)
+&#9;end
+&#9;return Vector3.new(Data[1],Data[2],Data[3]),Vector3.new(Data[4],Data[5],Data[6]),Vector3.new(Data[7],Data[8],Data[9]),Vector3.new(Data[10],Data[11],Data[12])
+end
+
+function EncodeVectors(V1,V2,V3,V4)
+&#9;local Data = {}
+&#9;for Number in string.gmatch(tostring(V1),&quot;[%d%-.eE]+&quot;) do
+&#9;&#9;table.insert(Data,tonumber(Number))
+&#9;end
+&#9;for Number in string.gmatch(tostring(V2),&quot;[%d%-.eE]+&quot;) do
+&#9;&#9;table.insert(Data,tonumber(Number))
+&#9;end
+&#9;for Number in string.gmatch(tostring(V3),&quot;[%d%-.eE]+&quot;) do
+&#9;&#9;table.insert(Data,tonumber(Number))
+&#9;end
+&#9;for Number in string.gmatch(tostring(V4),&quot;[%d%-.eE]+&quot;) do
+&#9;&#9;table.insert(Data,tonumber(Number))
+&#9;end
+&#9;return CFrame.new(unpack(Data))
+end
+
+function CFrameLerp(OC,CFrame,LerpNum)
+&#9;local V1,V2,V3,V4 = CFrameToVectors(CFrame)
+&#9;local OV1,OV2,OV3,OV4 = CFrameToVectors(OC)
+&#9;local V1L,V2L,V3L,V4L = OV1:lerp(V1,LerpNum),OV2:lerp(V2,LerpNum),OV3:lerp(V3,LerpNum),OV4:lerp(V4,LerpNum)
+&#9;return EncodeVectors(V1L,V2L,V3L,V4L)
+end
+
+
+
+
+
+
+
+
+function Tween(easingFunc, duration, callbackFunc, breakFunc)
+&#9;local tick = tick
+&#9;local start = tick()
+&#9;local dur = 0
+&#9;local ratio = 0
+&#9;local RW = RenderWait
+&#9;local Broken = false
+&#9;while (dur &lt; duration) do
+&#9;&#9;if breakFunc and breakFunc() then Broken = true break end
+&#9;&#9;ratio = easingFunc(dur, 0, 1, duration)
+&#9;&#9;dur = (tick() - start)
+&#9;&#9;callbackFunc(ratio)
+&#9;&#9;RW()
+&#9;end
+&#9;if not Broken then
+&#9;&#9;callbackFunc(1)
+&#9;end
+end
+
+function CreateTweenValue(Ins, Property)
+&#9;local TweenValue = nil
+&#9;local TweenCode = math.random(-1e9, 1e9)
+&#9;if not Ins:FindFirstChild(&quot;TweenCode&quot;..Property) then
+&#9;&#9;TweenValue = Instance.new(&quot;IntValue&quot;)
+&#9;&#9;TweenValue.Name = &quot;TweenCode&quot;..Property
+&#9;&#9;TweenValue.Value = TweenCode
+&#9;&#9;TweenValue.Parent = Ins
+&#9;else
+&#9;&#9;TweenValue = Ins[&quot;TweenCode&quot;..Property]
+&#9;&#9;TweenValue.Value = TweenCode
+&#9;end
+&#9;return TweenValue, TweenCode
+end
+
+
+API = {}
+
+function API:TweenCFrame(Ins, Property, cframeEnd, duration, easingFunc)
+&#9;local start
+&#9;if Ins.className == &quot;Model&quot; and Property == &quot;SetPrimaryPartCFrame&quot; then
+&#9;&#9;if Ins.PrimaryPart then
+&#9;&#9;&#9;start = Ins:GetPrimaryPartCFrame()
+&#9;&#9;else
+&#9;&#9;&#9;print(&quot;To tween a model, you need a PrimaryPart&quot;)
+&#9;&#9;&#9;return
+&#9;&#9;end
+&#9;else
+&#9;&#9;start = Ins[Property]
+&#9;end
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local cur = start
+&#9;local function Callback(ratio)
+&#9;&#9;cur = CFrameLerp(start,cframeEnd,ratio)
+&#9;&#9;if Ins.className == &quot;Model&quot; and Property == &quot;SetPrimaryPartCFrame&quot; then
+&#9;&#9;&#9;Ins:SetPrimaryPartCFrame(cur)
+&#9;&#9;else
+&#9;&#9;&#9;Ins[Property] = cur
+&#9;&#9;end
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenVector3(Ins, Property, posEnd, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = start:lerp(posEnd,ratio)
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenColor3(Ins, Property, ColorEnd, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local DifR,DifG,DifB = ColorEnd.r - start.r,ColorEnd.g - start.g,ColorEnd.b - start.b
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = Color3.new(start.r + (DifR*ratio),start.g + (DifG*ratio),start.b + (DifB*ratio))
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenNumber(Ins, Property, End, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local Dif = End - start
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = start + (Dif*ratio)
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenVector2(Ins, Property, End, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local Dif = End - start
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = start + (Dif*ratio)
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenUDim2(Ins, Property, End, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local DifX1,DifX2,DifY1,DifY2 = End.X.Scale - start.X.Scale,End.X.Offset - start.X.Offset,End.Y.Scale - start.Y.Scale,End.Y.Offset - start.Y.Offset
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = UDim2.new(start.X.Scale + (DifX1*ratio),start.X.Offset + (DifX2*ratio),start.Y.Scale + (DifY1*ratio),start.Y.Offset + (DifY2*ratio))
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+function API:TweenUDim(Ins, Property, End, duration, easingFunc)
+&#9;local start = Ins[Property]
+&#9;local cur = start
+&#9;local Dif1,Dif2 = End.Scale - start.Scale,End.Offset - start.Offset
+&#9;local TweenValue, TweenCode = CreateTweenValue(Ins, Property)
+&#9;local function Callback(ratio)
+&#9;&#9;cur = UDim2.new(start.Scale + (Dif1*ratio),start.Offset + (Dif2*ratio))
+&#9;&#9;Ins[Property] = cur
+&#9;end
+&#9;local function Break()
+&#9;&#9;if not TweenValue or TweenValue.Value ~= TweenCode then
+&#9;&#9;&#9;return true
+&#9;&#9;end
+&#9;end
+&#9;Tween(easingFunc, duration, Callback, Break)
+&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;TweenValue:Destroy()
+&#9;end
+end
+
+
+--Rest is by Crazyman32 with slight modifications, for &quot;easing&quot; methods
+
+
+API.Ease = (function()
+&#9;local Easing = require(script.Easing)
+&#9;local In, Out, InOut = {}, {}, {}
+&#9;for name,func in pairs(Easing) do&#9;-- &quot;Parse&quot; out the easing functions:
+&#9;&#9;if (name == &quot;linear&quot;) then
+&#9;&#9;&#9;In[&quot;Linear&quot;] = func
+&#9;&#9;&#9;Out[&quot;Linear&quot;] = func
+&#9;&#9;&#9;InOut[&quot;Linear&quot;] = func
+&#9;&#9;else
+&#9;&#9;&#9;local t,n = name:match(&quot;^(inOut)(.+)&quot;)
+&#9;&#9;&#9;if (not t or not n) then t,n = name:match(&quot;^(in)(.+)&quot;) end
+&#9;&#9;&#9;if (not t or not n) then t,n = name:match(&quot;^(out)(.+)&quot;) end
+&#9;&#9;&#9;if (n) then
+&#9;&#9;&#9;&#9;n = (n:sub(1, 1):upper() .. n:sub(2):lower())
+&#9;&#9;&#9;end
+&#9;&#9;&#9;if (t == &quot;inOut&quot;) then
+&#9;&#9;&#9;&#9;InOut[n] = func
+&#9;&#9;&#9;elseif (t == &quot;in&quot;) then
+&#9;&#9;&#9;&#9;In[n] = func
+&#9;&#9;&#9;elseif (t == &quot;out&quot;) then
+&#9;&#9;&#9;&#9;Out[n] = func
+&#9;&#9;&#9;end
+&#9;&#9;end
+&#9;end
+&#9;return {In=In,Out=Out,InOut=InOut}
+end)();
+
+
+return API</ProtectedString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBXE0BC3C5EF0C14FBFB9CA2B1767B15F96">
+			<Properties>
+				<string name="Name">Easing</string>
+				<ProtectedString name="Source">--[[
+&#9;NOTE FROM CRAZYMAN32:
+&#9;
+&#9;The below code was taken from a GitHub project (https://github.com/EmmanuelOga/easing).
+&#9;I do not take credit for any of the code. It was derived from Robert Penner&apos;s easing equations.
+&#9;
+&#9;The only change made to the code was indentation (replaced space indentations with tabs through Sublime Text)
+--]]
+
+
+
+
+
+
+--
+-- Adapted from
+-- Tweener&apos;s easing functions (Penner&apos;s Easing Equations)
+-- and http://code.google.com/p/tweener/ (jstweener javascript version)
+--
+
+--[[
+Disclaimer for Robert Penner&apos;s Easing Equations license:
+
+TERMS OF USE - EASING EQUATIONS
+
+Open source under the BSD License.
+
+Copyright &#169; 2001 Robert Penner
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+&#9;* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+&#9;* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+&#9;* Neither the name of the author nor the names of contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+]]
+
+-- For all easing functions:
+-- t = elapsed time
+-- b = begin
+-- c = change == ending - beginning
+-- d = duration (total time)
+
+local pow = math.pow
+local sin = math.sin
+local cos = math.cos
+local pi = math.pi
+local sqrt = math.sqrt
+local abs = math.abs
+local asin  = math.asin
+
+local function linear(t, b, c, d)
+&#9;return c * t / d + b
+end
+
+local function inQuad(t, b, c, d)
+&#9;t = t / d
+&#9;return c * pow(t, 2) + b
+end
+
+local function outQuad(t, b, c, d)
+&#9;t = t / d
+&#9;return -c * t * (t - 2) + b
+end
+
+local function inOutQuad(t, b, c, d)
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * pow(t, 2) + b
+&#9;else
+&#9;&#9;return -c / 2 * ((t - 1) * (t - 3) - 1) + b
+&#9;end
+end
+
+local function outInQuad(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outQuad (t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inQuad((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inCubic (t, b, c, d)
+&#9;t = t / d
+&#9;return c * pow(t, 3) + b
+end
+
+local function outCubic(t, b, c, d)
+&#9;t = t / d - 1
+&#9;return c * (pow(t, 3) + 1) + b
+end
+
+local function inOutCubic(t, b, c, d)
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * t * t * t + b
+&#9;else
+&#9;&#9;t = t - 2
+&#9;&#9;return c / 2 * (t * t * t + 2) + b
+&#9;end
+end
+
+local function outInCubic(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outCubic(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inCubic((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inQuart(t, b, c, d)
+&#9;t = t / d
+&#9;return c * pow(t, 4) + b
+end
+
+local function outQuart(t, b, c, d)
+&#9;t = t / d - 1
+&#9;return -c * (pow(t, 4) - 1) + b
+end
+
+local function inOutQuart(t, b, c, d)
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * pow(t, 4) + b
+&#9;else
+&#9;&#9;t = t - 2
+&#9;&#9;return -c / 2 * (pow(t, 4) - 2) + b
+&#9;end
+end
+
+local function outInQuart(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outQuart(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inQuart((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inQuint(t, b, c, d)
+&#9;t = t / d
+&#9;return c * pow(t, 5) + b
+end
+
+local function outQuint(t, b, c, d)
+&#9;t = t / d - 1
+&#9;return c * (pow(t, 5) + 1) + b
+end
+
+local function inOutQuint(t, b, c, d)
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * pow(t, 5) + b
+&#9;else
+&#9;&#9;t = t - 2
+&#9;&#9;return c / 2 * (pow(t, 5) + 2) + b
+&#9;end
+end
+
+local function outInQuint(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outQuint(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inQuint((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inSine(t, b, c, d)
+&#9;return -c * cos(t / d * (pi / 2)) + c + b
+end
+
+local function outSine(t, b, c, d)
+&#9;return c * sin(t / d * (pi / 2)) + b
+end
+
+local function inOutSine(t, b, c, d)
+&#9;return -c / 2 * (cos(pi * t / d) - 1) + b
+end
+
+local function outInSine(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outSine(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inSine((t * 2) -d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inExpo(t, b, c, d)
+&#9;if t == 0 then
+&#9;&#9;return b
+&#9;else
+&#9;&#9;return c * pow(2, 10 * (t / d - 1)) + b - c * 0.001
+&#9;end
+end
+
+local function outExpo(t, b, c, d)
+&#9;if t == d then
+&#9;&#9;return b + c
+&#9;else
+&#9;&#9;return c * 1.001 * (-pow(2, -10 * t / d) + 1) + b
+&#9;end
+end
+
+local function inOutExpo(t, b, c, d)
+&#9;if t == 0 then return b end
+&#9;if t == d then return b + c end
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * pow(2, 10 * (t - 1)) + b - c * 0.0005
+&#9;else
+&#9;&#9;t = t - 1
+&#9;&#9;return c / 2 * 1.0005 * (-pow(2, -10 * t) + 2) + b
+&#9;end
+end
+
+local function outInExpo(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outExpo(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inExpo((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inCirc(t, b, c, d)
+&#9;t = t / d
+&#9;return(-c * (sqrt(1 - pow(t, 2)) - 1) + b)
+end
+
+local function outCirc(t, b, c, d)
+&#9;t = t / d - 1
+&#9;return(c * sqrt(1 - pow(t, 2)) + b)
+end
+
+local function inOutCirc(t, b, c, d)
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return -c / 2 * (sqrt(1 - t * t) - 1) + b
+&#9;else
+&#9;&#9;t = t - 2
+&#9;&#9;return c / 2 * (sqrt(1 - t * t) + 1) + b
+&#9;end
+end
+
+local function outInCirc(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outCirc(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inCirc((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+local function inElastic(t, b, c, d, a, p)
+&#9;if t == 0 then return b end
+
+&#9;t = t / d
+
+&#9;if t == 1  then return b + c end
+
+&#9;if not p then p = d * 0.3 end
+
+&#9;local s
+
+&#9;if not a or a &lt; abs(c) then
+&#9;&#9;a = c
+&#9;&#9;s = p / 4
+&#9;else
+&#9;&#9;s = p / (2 * pi) * asin(c/a)
+&#9;end
+
+&#9;t = t - 1
+
+&#9;return -(a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+end
+
+-- a: amplitud
+-- p: period
+local function outElastic(t, b, c, d, a, p)
+&#9;if t == 0 then return b end
+
+&#9;t = t / d
+
+&#9;if t == 1 then return b + c end
+
+&#9;if not p then p = d * 0.3 end
+
+&#9;local s
+
+&#9;if not a or a &lt; abs(c) then
+&#9;&#9;a = c
+&#9;&#9;s = p / 4
+&#9;else
+&#9;&#9;s = p / (2 * pi) * asin(c/a)
+&#9;end
+
+&#9;return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p) + c + b
+end
+
+-- p = period
+-- a = amplitud
+local function inOutElastic(t, b, c, d, a, p)
+&#9;if t == 0 then return b end
+
+&#9;t = t / d * 2
+
+&#9;if t == 2 then return b + c end
+
+&#9;if not p then p = d * (0.3 * 1.5) end
+&#9;if not a then a = 0 end
+
+&#9;if not a or a &lt; abs(c) then
+&#9;&#9;a = c
+&#9;&#9;s = p / 4
+&#9;else
+&#9;&#9;s = p / (2 * pi) * asin(c / a)
+&#9;end
+
+&#9;if t &lt; 1 then
+&#9;&#9;t = t - 1
+&#9;&#9;return -0.5 * (a * pow(2, 10 * t) * sin((t * d - s) * (2 * pi) / p)) + b
+&#9;else
+&#9;&#9;t = t - 1
+&#9;&#9;return a * pow(2, -10 * t) * sin((t * d - s) * (2 * pi) / p ) * 0.5 + c + b
+&#9;end
+end
+
+-- a: amplitud
+-- p: period
+local function outInElastic(t, b, c, d, a, p)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outElastic(t * 2, b, c / 2, d, a, p)
+&#9;else
+&#9;&#9;return inElastic((t * 2) - d, b + c / 2, c / 2, d, a, p)
+&#9;end
+end
+
+local function inBack(t, b, c, d, s)
+&#9;if not s then s = 1.70158 end
+&#9;t = t / d
+&#9;return c * t * t * ((s + 1) * t - s) + b
+end
+
+local function outBack(t, b, c, d, s)
+&#9;if not s then s = 1.70158 end
+&#9;t = t / d - 1
+&#9;return c * (t * t * ((s + 1) * t + s) + 1) + b
+end
+
+local function inOutBack(t, b, c, d, s)
+&#9;if not s then s = 1.70158 end
+&#9;s = s * 1.525
+&#9;t = t / d * 2
+&#9;if t &lt; 1 then
+&#9;&#9;return c / 2 * (t * t * ((s + 1) * t - s)) + b
+&#9;else
+&#9;&#9;t = t - 2
+&#9;&#9;return c / 2 * (t * t * ((s + 1) * t + s) + 2) + b
+&#9;end
+end
+
+local function outInBack(t, b, c, d, s)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outBack(t * 2, b, c / 2, d, s)
+&#9;else
+&#9;&#9;return inBack((t * 2) - d, b + c / 2, c / 2, d, s)
+&#9;end
+end
+
+local function outBounce(t, b, c, d)
+&#9;t = t / d
+&#9;if t &lt; 1 / 2.75 then
+&#9;&#9;return c * (7.5625 * t * t) + b
+&#9;elseif t &lt; 2 / 2.75 then
+&#9;&#9;t = t - (1.5 / 2.75)
+&#9;&#9;return c * (7.5625 * t * t + 0.75) + b
+&#9;elseif t &lt; 2.5 / 2.75 then
+&#9;&#9;t = t - (2.25 / 2.75)
+&#9;&#9;return c * (7.5625 * t * t + 0.9375) + b
+&#9;else
+&#9;&#9;t = t - (2.625 / 2.75)
+&#9;&#9;return c * (7.5625 * t * t + 0.984375) + b
+&#9;end
+end
+
+local function inBounce(t, b, c, d)
+&#9;return c - outBounce(d - t, 0, c, d) + b
+end
+
+local function inOutBounce(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return inBounce(t * 2, 0, c, d) * 0.5 + b
+&#9;else
+&#9;&#9;return outBounce(t * 2 - d, 0, c, d) * 0.5 + c * .5 + b
+&#9;end
+end
+
+local function outInBounce(t, b, c, d)
+&#9;if t &lt; d / 2 then
+&#9;&#9;return outBounce(t * 2, b, c / 2, d)
+&#9;else
+&#9;&#9;return inBounce((t * 2) - d, b + c / 2, c / 2, d)
+&#9;end
+end
+
+return {
+&#9;linear = linear,
+&#9;inQuad = inQuad,
+&#9;outQuad = outQuad,
+&#9;inOutQuad = inOutQuad,
+&#9;outInQuad = outInQuad,
+&#9;inCubic  = inCubic ,
+&#9;outCubic = outCubic,
+&#9;inOutCubic = inOutCubic,
+&#9;outInCubic = outInCubic,
+&#9;inQuart = inQuart,
+&#9;outQuart = outQuart,
+&#9;inOutQuart = inOutQuart,
+&#9;outInQuart = outInQuart,
+&#9;inQuint = inQuint,
+&#9;outQuint = outQuint,
+&#9;inOutQuint = inOutQuint,
+&#9;outInQuint = outInQuint,
+&#9;inSine = inSine,
+&#9;outSine = outSine,
+&#9;inOutSine = inOutSine,
+&#9;outInSine = outInSine,
+&#9;inExpo = inExpo,
+&#9;outExpo = outExpo,
+&#9;inOutExpo = inOutExpo,
+&#9;outInExpo = outInExpo,
+&#9;inCirc = inCirc,
+&#9;outCirc = outCirc,
+&#9;inOutCirc = inOutCirc,
+&#9;outInCirc = outInCirc,
+&#9;inElastic = inElastic,
+&#9;outElastic = outElastic,
+&#9;inOutElastic = inOutElastic,
+&#9;outInElastic = outInElastic,
+&#9;inBack = inBack,
+&#9;outBack = outBack,
+&#9;inOutBack = inOutBack,
+&#9;outInBack = outInBack,
+&#9;inBounce = inBounce,
+&#9;outBounce = outBounce,
+&#9;inOutBounce = inOutBounce,
+&#9;outInBounce = outInBounce,
+}</ProtectedString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

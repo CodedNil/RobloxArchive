@@ -1,0 +1,3960 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX7FC509B0C5D64DF1A9C2641F412DB20F">
+		<Properties>
+			<string name="Name">VehicleControl</string>
+		</Properties>
+		<Item class="ModuleScript" referent="RBX41FFA1BEFCF94DD1ADBCD22647F0A311">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">MainModule</string>
+				<string name="ScriptGuid">{586F6B25-D099-476F-BF00-9CF8CF1E87B9}</string>
+				<ProtectedString name="Source"><![CDATA[local CFAng, V3New = CFrame.Angles, Vector3.new
+local abs, min, max, floor, sin, cos, atan2, pi2, hpi = math.abs, math.min, math.max, math.floor, math.sin, math.cos, math.atan2, math.pi * 2, math.pi/2
+
+script.LocalControl:Clone().Parent = game.StarterPlayer.StarterPlayerScripts
+for _, v in pairs(game.Players:GetPlayers()) do
+	script.LocalControl:Clone().Parent = v.PlayerScripts
+end
+local LocalEvent = game.ReplicatedStorage:FindFirstChild("VehicleLocalEvent") or Instance.new("RemoteEvent", game.ReplicatedStorage)
+LocalEvent.Name = "VehicleLocalEvent"
+
+local RS, RF = game:GetService("ReplicatedStorage"), game:GetService("ReplicatedFirst")
+
+require(game.ReplicatedStorage:WaitForChild("ModuleUtil"))
+local Core = _G.SRequire("S2.0 Core", "Core")
+
+local DebrisTime = 20
+local MinimumFall, MaximumFall = 40, 60
+
+local UpVector = CFrame.new(0, 1, 0)
+
+do
+	local cycleAtLastSet = 0
+	local tickAtLastSet = 0
+	local speedAtLastSet = 0
+	
+	function GetWaterWaveCycle()
+		return pi2 * ((cycleAtLastSet + (tick() - tickAtLastSet) * workspace.Terrain.WaterWaveSpeed / 85) % 1)
+	end
+	
+	workspace.Terrain.Changed:connect(function(prop)
+		if prop == "WaterWaveSpeed" then
+			cycleAtLastSet = (cycleAtLastSet + (tick() - tickAtLastSet) * speedAtLastSet / 85)%  1
+			tickAtLastSet = tick()
+			speedAtLastSet = workspace.Terrain.WaterWaveSpeed
+		end
+	end)
+	
+	local waveHeight = workspace.Terrain.WaterWaveSize * 2
+	local waveWidth = 85
+	
+	function GetWaterHeight(p)
+		return waveHeight * sin(pi2 * p.x/waveWidth + GetWaterWaveCycle() + hpi) * sin(pi2 * p.z/waveWidth)
+	end
+	
+	workspace.Terrain.WaterWaveSpeed = 10
+end
+
+local CavePos, CaveSize = workspace.CaveNoWater.Position, workspace.CaveNoWater.Size
+return function(Model, Type)
+	local Self = {}
+	local MainPart = Model.Main
+	
+	local WheelParticles = {}
+	
+	if Type == "Helicopter" then
+		local Sound = Instance.new("Sound", MainPart)
+		Sound.SoundId = "rbxassetid://165113352"
+		Sound.Looped = true
+		local Hydraulic = Instance.new("Sound", Model.Gun1)
+		Hydraulic.SoundId = "rbxassetid://133116870"
+		Hydraulic.Pitch = 0.7
+		Hydraulic.Volume = 0.35
+		Hydraulic.Looped = true
+		
+		local Gun1CF = Instance.new("CFrameValue", Model)
+		Gun1CF.Value = Model.Gun1Hinge.C1
+		Gun1CF.Name = "Gun1CF"
+		local Gun2CF = Instance.new("CFrameValue", Model)
+		Gun2CF.Value = Model.Gun2Hinge.C1
+		Gun2CF.Name = "Gun2CF"
+		
+		local AutocannonAmmo = Instance.new("IntConstrainedValue", Model)
+		AutocannonAmmo.MaxValue = 250
+		AutocannonAmmo.Value = AutocannonAmmo.MaxValue
+		AutocannonAmmo.Name = "AutocannonAmmo"
+		local MissileAmmo = Instance.new("IntConstrainedValue", Model)
+		MissileAmmo.MaxValue = 8
+		MissileAmmo.Value = MissileAmmo.MaxValue
+		MissileAmmo.Name = "MissileAmmo"
+		local RocketPodAmmo = Instance.new("IntConstrainedValue", Model)
+		RocketPodAmmo.MaxValue = 20
+		RocketPodAmmo.Value = RocketPodAmmo.MaxValue
+		RocketPodAmmo.Name = "RocketPodAmmo"
+		
+		MissileAmmo.Changed:connect(function(Value)
+			Model.MissilesUpper.Transparency = Value > 4 and 0 or 1
+			Model.MissilesLower.Transparency = Value > 0 and 0 or 1
+		end)
+		
+		RocketPodAmmo.Changed:connect(function(Value)
+			Model.Rockets1.Transparency = Value > 0 and 0 or 1
+			Model.Rockets2.Transparency = Value > 6 and 0 or 1
+			Model.Rockets3.Transparency = Value > 12 and 0 or 1
+		end)
+		
+		spawn(function()
+			while wait(0.1) do
+				if Model:FindFirstChild("Health") and Model.Health.Value > 0 and MainPart then
+					if (MainPart.CFrame * UpVector).Y <= MainPart.Position.Y then
+						Model.Health.Value = 0
+					elseif MainPart.Position.Y < 1 and not (MainPart.Position.X > CavePos.X - CaveSize.X/2 and MainPart.Position.X < CavePos.X + CaveSize.X/2 and MainPart.Position.Z > CavePos.Z - CaveSize.Z/2 and MainPart.Position.Z < CavePos.Z + CaveSize.Z/2) then
+						Model.Health.Value = 0
+					end
+				end
+			end
+		end)
+	elseif Type == "Car" then
+		local Sound = Instance.new("Sound", MainPart)
+		Sound.SoundId = "rbxassetid://170319334"
+		Sound.Looped = true
+		
+		local Horn = Instance.new("Sound", MainPart)
+		Horn.Name = "HornSound"
+		Horn.SoundId = "rbxassetid://190239965"
+		
+		for _, v in pairs(Model:GetChildren()) do
+			if v.Name:find("Wheel") and not v.Name:find("Steering") then
+				local New = Instance.new("Part")
+				New.Name = "WheelParticle"
+				New.Size = Vector3.new(v.Size.X, 0.2, 0.2)
+				New.CanCollide = false
+				New.TopSurface = 0
+				New.BottomSurface = 0
+				New.Transparency = 1
+				local Weld = Instance.new("Weld")
+				Weld.Part0 = MainPart
+				Weld.Part1 = New
+				Weld.C0 = MainPart.CFrame:toObjectSpace(v.CFrame) + Vector3.new(0, -v.Size.Y/2, v.Size.Z/3)
+				Weld.Parent = New
+				New.Parent = Model
+				local Particle = script.ParticleEmitter:Clone()
+				Particle.Parent = New
+				table.insert(WheelParticles, Particle)
+			end
+		end
+		
+		local FlipDebounce = false
+		local function Flip()
+			if not FlipDebounce then
+				FlipDebounce = true
+				wait(0.2)
+				if MainPart then
+					local RX, RY, RZ = MainPart.CFrame:toEulerAnglesXYZ()
+					local Rotation = RX > math.pi/2 and -RY + math.pi or RY
+					
+					local BodyPos = Instance.new("BodyPosition", MainPart)
+					BodyPos.MaxForce = Vector3.new(0, 100000, 0)
+					BodyPos.Position = MainPart.Position + Vector3.new(0, 1, 0)
+					local BodyGyro = Instance.new("BodyGyro", MainPart)
+					BodyGyro.MaxTorque = Vector3.new(1000000, 1000000, 1000000)
+					BodyGyro.CFrame = CFrame.Angles(0, Rotation, 0)
+					for i = 1, 60 do
+						if MainPart and (MainPart.CFrame * UpVector).Y - 0.75 > MainPart.Position.Y then
+							break
+						end
+						wait()
+					end
+					if BodyPos then
+						BodyPos:Destroy()
+						BodyGyro:Destroy()
+					end
+				end
+				FlipDebounce = false
+			end
+		end
+		
+		local ModelSizeY = Model:GetExtentsSize().Y
+		spawn(function()
+			while wait(0.1) do
+				if MainPart and (MainPart.CFrame * UpVector).Y - 0.5 <= MainPart.Position.Y then
+					Flip()
+				end
+				if Model:FindFirstChild("Health") and Model.Health.Value > 0 and MainPart and MainPart.Position.Y - (ModelSizeY > 10 and 4 or 0) < -8 and not (MainPart.Position.X > CavePos.X - CaveSize.X/2 and MainPart.Position.X < CavePos.X + CaveSize.X/2 and MainPart.Position.Z > CavePos.Z - CaveSize.Z/2 and MainPart.Position.Z < CavePos.Z + CaveSize.Z/2) then
+					Model.Health.Value = 0
+				end
+				for _, v in pairs(WheelParticles) do
+					v.Rate = max(floor(MainPart.Velocity.magnitude * 0.5) - 1, 0)
+				end
+			end
+		end)
+	elseif Type == "Boat" then
+		local Sound = Instance.new("Sound", MainPart)
+		Sound.SoundId = "rbxassetid://282537104"
+		Sound.Looped = true
+	end
+
+	local ParticleSize = Model.ParticleBase.Size.magnitude
+	
+	for _, v in pairs(Model:GetChildren()) do
+		if v:IsA("BasePart") then
+			v.Anchored = false
+		end
+		for _, x in pairs(v:GetChildren()) do
+			if x:IsA("BasePart") then
+				x.Anchored = false
+			end
+		end
+	end
+	
+	local ExtraScripts = {}
+	
+	local function Destroy()
+		for _, v in pairs(ExtraScripts) do
+			if v:FindFirstChild("Model") then
+				v.Model.Value = nil
+			end
+		end
+		local NewMain = Model:FindFirstChild("MeshMain") or Model:FindFirstChild("MeshMainNoPen") or MainPart
+		NewMain.Parent = workspace
+		NewMain.TextureID = "rbxassetid://486032509"
+		NewMain.CanCollide = true
+		NewMain.CustomPhysicalProperties = PhysicalProperties.new(20, 0.35, 0.05, 1, 1)
+		NewMain:ClearAllChildren()
+		for _, v in pairs(Model:GetChildren()) do
+			if v:IsA("Seat") or v:IsA("VehicleSeat") then
+				local Weld = v:FindFirstChild("SeatWeld")
+				if Weld and Weld.Part1 and Weld.Part1.Parent:FindFirstChild("Humanoid") then
+					local Explosion = Instance.new("Explosion")
+					Explosion.Position = v.Position
+					Explosion.BlastPressure = 0
+					Explosion.ExplosionType = Enum.ExplosionType.NoCraters
+					Explosion.Parent = workspace
+					local Humanoid = Weld.Part1.Parent:FindFirstChild("Humanoid")
+					local Dmgs = Model.Health:FindFirstChild("Dmgs")
+					if Dmgs and Humanoid:FindFirstChild("Dmgs") then
+						local Players = {}
+						for _, v in pairs(Dmgs:GetChildren()) do
+							Players[v.Name] = Players[v.Name] and Players[v.Name] + v.Value or v.Value
+						end
+						for i, v in pairs(Players) do
+							local New = Instance.new("NumberValue", Dmgs)
+							New.Name = i
+							New.Value = (v/Model.Health.MaxValue) * (Humanoid.Health/Humanoid.MaxHealth)
+						end
+					end
+					Humanoid.Health = 0
+				end
+			end
+		end
+		if Model:FindFirstChild("Inside") then
+			Model.Inside.TextureID = "rbxassetid://486032509"
+			Model.Inside.CustomPhysicalProperties = PhysicalProperties.new(20, 0.35, 0.05, 1, 1)
+			Model.Inside.Parent = NewMain
+		end
+		if Model:FindFirstChild("InsideNoPen") then
+			Model.InsideNoPen.TextureID = "rbxassetid://486032509"
+			Model.InsideNoPen.CustomPhysicalProperties = PhysicalProperties.new(20, 0.35, 0.05, 1, 1)
+			Model.InsideNoPen.Parent = NewMain
+		end
+		Model.ParticleBase.Parent = NewMain
+		Model:Destroy()
+		for i = 1, ParticleSize * 0.15 do
+			local Explosion = Instance.new("Explosion")
+			Explosion.Position = (NewMain.ParticleBase.CFrame * CFrame.new(NewMain.ParticleBase.Size * Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5))).p
+			Explosion.BlastPressure = 0
+			Explosion.ExplosionType = Enum.ExplosionType.NoCraters
+			Explosion.Parent = workspace
+			if math.random() <= 0.6 then
+				wait(math.random())
+			end
+		end
+		wait(DebrisTime)
+		if NewMain:FindFirstChild("ParticleBase") then
+			NewMain.ParticleBase:Destroy()
+		end
+		for i = 1, 70 do
+			NewMain.CFrame = NewMain.CFrame - Vector3.new(0, 0.2, 0)
+			wait()
+		end
+		NewMain:Destroy()
+	end
+	
+	local ColorParts = {}
+	for _, x in pairs(Model:GetChildren()) do
+		if x:IsA("BasePart") and x.BrickColor == BrickColor.new("Earth green") then
+			table.insert(ColorParts, x)
+		end
+	end
+	
+	local Colors = {Yellow = BrickColor.new("Gold"), Red = BrickColor.new("Crimson"), Green = BrickColor.new("Earth green"), Grey = BrickColor.new("Dark stone grey")}
+	
+	local ModelTextures
+	local function TextureMeshes(Id)
+		if ModelTextures then
+			for i, v in pairs(ModelTextures) do
+				for _, x in pairs(Model:GetChildren()) do
+					if x.Name:find(i) and x:IsA("MeshPart") then
+						x.TextureID = "rbxassetid://"..v[Id]
+					end
+				end
+			end
+		else
+			for _, x in pairs(ColorParts) do
+				x.BrickColor = Colors[Id]
+			end
+		end
+	end
+	
+	local TeamColors = {}
+	function Self.SetTextures(Textures)
+		ModelTextures = Textures
+		TextureMeshes("Grey")
+		return Self
+	end
+	
+	local function SetParticles(Stage)
+		Model.ParticleBase.Smoke.Enabled = Stage > 0
+		Model.ParticleBase.Fire.Enabled = Stage > 1
+		Model.ParticleBase.Embers.Enabled = Stage > 1
+		
+		Model.ParticleBase.Smoke.Rate = ParticleSize * (Stage == 4 and 1 or Stage > 1 and 0.7 or 0.4)
+		Model.ParticleBase.Fire.Rate = ParticleSize * (Stage == 4 and 1 or Stage > 1 and 0.6 or 0)
+		Model.ParticleBase.Embers.Rate = ParticleSize * (Stage == 4 and 0.7 or Stage > 1 and 0.4 or 0)
+	end
+	
+	function Self.SetHealth(Amount)
+		local Value = Instance.new("DoubleConstrainedValue", Model)
+		Value.Name = "Health"
+		Value.MaxValue = Amount
+		Value.Value = Amount
+		local Resistances = Instance.new("Folder", Value)
+		Resistances.Name = "Resistances"
+		local Fire = Instance.new("NumberValue", Resistances)
+		Fire.Name = "Fire"
+		Fire.Value = 0.2
+		local Explosive = Instance.new("NumberValue", Resistances)
+		Explosive.Name = "Explosive"
+		Explosive.Value = 2
+		local TeamColorValue = Instance.new("BrickColorValue", Value)
+		TeamColorValue.Name = "TeamColor"
+		TeamColorValue.Value = BrickColor.Gray()
+		table.insert(TeamColors, TeamColorValue)
+		local Stage = 0
+		Value.Changed:connect(function(New)
+			if New == Amount then
+				Stage = 0
+				SetParticles(Stage)
+			elseif New < Amount * 0.6 and New > Amount * 0.3 and Stage ~= 1 then
+				Stage = 1
+				SetParticles(Stage)
+				Model.ParticleBase.Smoke.Rate = ParticleSize * 0.6
+			elseif New < Amount * 0.3 and New > Amount * 0.15 and Stage ~= 2 then
+				Stage = 2
+				SetParticles(Stage)
+			elseif New <= Amount * 0.15 and New > 0 and Stage ~= 3 then
+				Stage = 3
+				SetParticles(Stage)
+			elseif New == 0 and Stage ~= 4 then
+				Stage = 4
+				SetParticles(Stage)
+				Destroy()
+			end
+		end)
+		Self.ChangeHealth = Value
+		return Self
+	end
+	
+	function Self.SetDespawn(Time)
+		local UID = 0
+		Model:WaitForChild("VehicleSeat").ChildAdded:connect(function(Child)
+			if Child.Name == "SeatWeld" then
+				UID = UID + 1
+			end
+		end)
+		Model.VehicleSeat.ChildRemoved:connect(function(Child)
+			if Model:FindFirstChild("VehicleSeat") and Child.Name == "SeatWeld" then
+				local ID = UID
+				wait(Time)
+				if Model:FindFirstChild("VehicleSeat") and UID == ID and not Model.VehicleSeat:FindFirstChild("SeatWeld") then
+					Self.ChangeHealth.Value = 0
+				end
+			end
+		end)
+	end
+	
+	function Self.SetGlassHealth(Amount)
+		local Glass = Model.Glass
+		Glass.Name = "GlassNoPen"
+		local Value = Instance.new("DoubleConstrainedValue", Glass)
+		Value.Name = "Health"
+		Value.MaxValue = Amount
+		Value.Value = Amount
+		local TeamColorValue = Instance.new("BrickColorValue", Value)
+		TeamColorValue.Name = "TeamColor"
+		TeamColorValue.Value = BrickColor.Gray()
+		table.insert(TeamColors, TeamColorValue)
+		local Sound = Instance.new("Sound", Glass)
+		Sound.SoundId = "rbxassetid://156444949"
+		Sound.Volume = 1
+		local Stage = 0
+		Value.Changed:connect(function(New)
+			if New == Amount then
+				Stage = 0
+				Glass.Name = "GlassNoPen"
+				Glass.TextureID = ""
+				Glass.Transparency = 0.5
+			elseif New < Amount * 0.4 and New > 0 and Stage < 1 then
+				Stage = 1
+				Glass.TextureID = "rbxassetid://485996105"
+				Glass.Transparency = 0.001
+			elseif New == 0 and Stage < 2 then
+				Stage = 2
+				Glass.Name = "Glass"
+				Glass.TextureID = ""
+				Glass.Transparency = 1
+				Glass.Sound:Play()
+			end
+		end)
+		return Self
+	end
+	
+	local function Recolor()
+		local Color
+		for _, v in pairs(Model:GetChildren()) do
+			if v:IsA("VehicleSeat") and v:FindFirstChild("SeatWeld") then
+				local Player = game.Players:GetPlayerFromCharacter(v.SeatWeld.Part1.Parent)
+				if Player then
+					Color = Player.TeamColor
+				end
+			elseif v:IsA("Seat") and v:FindFirstChild("SeatWeld") and not Color then
+				local Player = game.Players:GetPlayerFromCharacter(v.SeatWeld.Part1.Parent)
+				if Player then
+					Color = Player.TeamColor
+				end
+			end
+		end
+		if Color then
+			local RGB = Color.Color
+			if RGB.r > 0.7 and RGB.g < RGB.r - 0.1 and RGB.b < RGB.r/2 then
+				TextureMeshes("Yellow")
+			elseif RGB.g < RGB.r and RGB.b < RGB.r then
+				TextureMeshes("Red")
+			elseif RGB.r < RGB.g and RGB.b < RGB.g then
+				TextureMeshes("Green")
+			end
+			for _, v in pairs(TeamColors) do
+				v.Value = Color
+			end
+		else
+			TextureMeshes("Grey")
+			for _, v in pairs(TeamColors) do
+				v.Value = BrickColor.Gray()
+			end
+		end
+	end
+	
+	function Self.SetWaterHeight(Height, Mass)
+		local BodyPosition = Instance.new("BodyPosition", MainPart)
+		BodyPosition.MaxForce = Vector3.new(0, 99999999999, 0)
+		BodyPosition.Position = Vector3.new(0, Height, 0)
+		
+		local BodyGyro = Instance.new("BodyGyro", MainPart)
+		BodyGyro.CFrame = MainPart.CFrame
+		BodyGyro.D = 800
+		BodyGyro.MaxTorque = Vector3.new(50000, 0, 50000)
+		
+		local BodyVelocity = Instance.new("BodyVelocity", MainPart)
+		BodyVelocity.MaxForce = Vector3.new(400000 * Mass, 0, 400000 * Mass)
+		BodyVelocity.Velocity = Vector3.new()
+		
+		local BodyAngularVelocity = Instance.new("BodyAngularVelocity", MainPart)
+		BodyAngularVelocity.MaxTorque = Vector3.new(0, 8000000 * Mass, 0)
+		BodyAngularVelocity.AngularVelocity = Vector3.new()
+		
+		local Size = Model:GetExtentsSize()
+		local LastBob = 0
+		local BobDir = false
+		local LastBob = 0
+		
+		spawn(function()
+			while wait() do
+				local HCenter = Height + GetWaterHeight(MainPart.Position)
+				local HBack = Height + GetWaterHeight(MainPart.Position + MainPart.CFrame.lookVector * -Size.Z/2)
+				local HFront = Height + GetWaterHeight(MainPart.Position + MainPart.CFrame.lookVector * Size.Z/2)
+				
+				local Speed = MainPart.Velocity.magnitude
+				
+				if Model:FindFirstChild("WaterParticles") then
+					if Speed > 3 then
+						Model.WaterParticles.SideParticle.Rate = Speed * 0.7 * Mass
+					else
+						Model.WaterParticles.SideParticle.Rate = 0
+					end
+				end
+				
+				local Bob = -(HFront - HBack)/(Size.Z)
+				if Bob < LastBob and not BobDir then
+					BobDir = true
+					if Speed > 3 and Bob > 0.01 and tick() - LastBob > 0.2 then
+						local SplashSound = Instance.new("Sound", MainPart)
+						SplashSound.SoundId = "rbxassetid://137304720"
+						SplashSound.Volume = Bob * Speed * Mass * 0.6
+						SplashSound.MinDistance = 15 * Mass
+						SplashSound.MaxDistance = 90 * Mass
+						SplashSound.PlayOnRemove = true
+						SplashSound:Destroy()
+						
+						if Model:FindFirstChild("WaterParticles") then
+							Model.WaterParticles.ParticleEmitter:Emit(8 * Mass)
+							Model.WaterParticles.ParticleEmitter.EmissionDirection = Enum.NormalId.Front
+							Model.WaterParticles.ParticleEmitter:Emit(8 * Mass)
+							Model.WaterParticles.ParticleEmitter.EmissionDirection = Enum.NormalId.Left
+							Model.WaterParticles.ParticleEmitter:Emit(8 * Mass)
+							Model.WaterParticles.ParticleEmitter.EmissionDirection = Enum.NormalId.Right
+							Model.WaterParticles.ParticleEmitter:Emit(8 * Mass)
+							Model.WaterParticles.ParticleEmitter.EmissionDirection = Enum.NormalId.Back
+						end
+						
+						LastBob = tick()
+					end
+				elseif Bob > LastBob and BobDir then
+					BobDir = false
+				end
+				
+				local Direction = MainPart.CFrame.lookVector
+				BodyGyro.CFrame = CFAng(0, atan2(Direction.x, Direction.z), 0) * CFAng(Bob, 0, 0)
+				BodyPosition.Position = V3New(0, HCenter, 0)
+				LastBob = Bob
+			end
+		end)
+		
+		return Self
+	end
+	
+	local MainSeat = false
+	local function CreateSeat(Seat, SeatOffset, IsTurret)
+		local Player, ExtraScript
+		local Connections = {}
+		local IsMain = not MainSeat
+		MainSeat = true
+		
+		local function Break()
+			if Player then
+				local Plr = Player.Name
+				Player = nil
+				
+				if ExtraScript and ExtraScript:FindFirstChild("Model") then
+					ExtraScript.Model.Value = nil
+				end
+				
+				if IsMain and MainPart:FindFirstChild("HornSound") then
+					MainPart.HornSound:Stop()
+				end
+				
+				Recolor()
+				
+				if IsMain and Type == "Helicopter" then
+					Model.Mouth.Transparency = 1
+					local StartHeight = MainPart.Position.Y
+					local Ended = false
+					local Con = MainPart.Touched:connect(function(Part)
+						if not Part.Parent:FindFirstChild("Humanoid") and not Part.Parent.Parent:FindFirstChild("Humanoid") then
+							Ended = true
+						end
+					end)
+					local Con1, Con2
+					if Model:FindFirstChild("Support1") then
+						Con1 = Model.Support1.Touched:connect(function(Part)
+							if not Part.Parent:FindFirstChild("Humanoid") and not Part.Parent.Parent:FindFirstChild("Humanoid") then
+								Ended = true
+							end
+						end)
+					end
+					if Model:FindFirstChild("Support2") then
+						Con2 = Model.Support2.Touched:connect(function(Part)
+							if not Part.Parent:FindFirstChild("Humanoid") and not Part.Parent.Parent:FindFirstChild("Humanoid") then
+								Ended = true
+							end
+						end)
+					end
+					local Start = time()
+					repeat
+						wait()
+					until Ended or Model.Health.Value == 0 or time() - Start > 10
+					Con:disconnect()
+					if Con1 then
+						Con1:disconnect()
+					end
+					if Con2 then
+						Con2:disconnect()
+					end
+					local Distance = StartHeight - MainPart.Position.Y - MinimumFall
+					if Distance > 0 then
+						Model.Health.Value = Model.Health.Value - Distance * (Model.Health.MaxValue/MaximumFall)
+					end
+				end
+				
+				wait(2)
+				if IsMain and not MainPart.Anchored then
+					MainPart:SetNetworkOwnershipAuto()
+				end
+			end
+		end
+		
+		Seat.ChildAdded:connect(function(Child)
+			if Child.Name == "SeatWeld" then
+				Player = game.Players:GetPlayerFromCharacter(Child.Part1.Parent)
+				if Player then
+					Child.C0 = SeatOffset
+					if Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") then
+						Player.Character.HumanoidRootPart.Velocity = Vector3.new()
+						Player.Character.HumanoidRootPart.RotVelocity = Vector3.new()
+					end
+					
+					Recolor()
+					if IsMain then
+						MainPart:SetNetworkOwner(Player)
+						
+						if Type == "Car" and RS:FindFirstChild("CType") then
+							if MainPart:FindFirstChild("HornSound") then
+								local Obj = RS.CType:Invoke(RS.Players:FindFirstChild(Player.Name):WaitForChild("Cosmetic").Horn)
+								if Obj then
+									MainPart.HornSound.SoundId = Obj.SoundId
+									MainPart.HornSound.Looped = Obj.Looped
+								end
+							end
+							local ParticleColour = RS.CType:Invoke(RS.Players:FindFirstChild(Player.Name):WaitForChild("Cosmetic").TrailColour)
+							local ParticleType = RS.CType:Invoke(RS.Players:FindFirstChild(Player.Name):WaitForChild("Cosmetic").Trail)
+							for _, v in pairs(WheelParticles) do
+								if ParticleColour then
+									v.Color = ParticleColour.Color
+								end
+								if ParticleType then
+									v.LightEmission = ParticleType.LightEmission
+									v.Texture = ParticleType.Texture
+									v.Transparency = ParticleType.Transparency
+								end
+							end
+						end
+					end
+					
+					if IsMain and Type == "Helicopter" then
+						ExtraScript = script.Helicopter:Clone()
+						ExtraScript.Model.Value = Model
+						ExtraScript.Parent = Player.PlayerGui
+						local Temp = ExtraScript
+						spawn(function()
+							if Player:IsInGroup(1059575) or Player:GetRankInGroup(165491) >= 13 then
+								if ExtraScript == Temp then
+									Model.Mouth.Transparency = 0
+								end
+							end
+						end)
+					elseif Type == "Helicopter" then
+						ExtraScript = script.HelicopterGunner:Clone()
+						ExtraScript.Model.Value = Model
+						ExtraScript.Parent = Player.PlayerGui
+						
+						local Gun1Hinge, Gun2Hinge, GunHydraulic = Model.Gun1Hinge, Model.Gun2Hinge, Model.Gun1.Sound
+						
+						ExtraScript.RemoteEvent.OnServerEvent:connect(function(Player, Number, New1, New2, New3)
+							if Number == 1 then
+								for _, v in pairs(game.Players:GetPlayers()) do
+									if v ~= Player then
+										LocalEvent:FireClient(v, Model, New1, New2)
+									end
+								end
+							elseif Number == 2 then
+								Model.AutocannonAmmo.Value = New1
+							elseif Number == 3 then
+								Model.MissileAmmo.Value = New1
+							elseif Number == 4 then
+								Model.RocketPodAmmo.Value = New1
+							elseif Number == 5 then
+								local Stats = {BulletType = {Name = "Explosive", BlastRadius = New2, BlastPressure = 0, ExplosionType = Enum.ExplosionType.NoCraters}, Damage = New3}
+								Core.BulletTypes.Explosive.Func(Model.GunStat, Stats, Player, nil, Model.Barrel, New1)
+								for _, v in pairs(game.Players:GetPlayers()) do
+									if v ~= Player then
+										LocalEvent:FireClient(v, New1, New2)
+									end
+								end
+							elseif Number == 6 then
+								for _, v in pairs(game.Players:GetPlayers()) do
+									if v ~= Player then
+										LocalEvent:FireClient(v, nil, New1, New2, New3)
+									end
+								end
+							end
+						end)
+					elseif IsMain and Type == "Car" then
+						ExtraScript = script.Car:Clone()
+						ExtraScript.Model.Value = Model
+						ExtraScript.Parent = Player.PlayerGui
+					elseif IsMain and Type == "Boat" then
+						ExtraScript = script.Boat:Clone()
+						ExtraScript.Model.Value = Model
+						ExtraScript.Parent = Player.PlayerGui
+					elseif Type == "Car" and IsTurret then
+						ExtraScript = script.CarGunner:Clone()
+						ExtraScript.Model.Value = Model
+						ExtraScript.Parent = Player.PlayerGui
+						
+						ExtraScript.RemoteEvent.OnServerEvent:connect(function(Player, X, Y)
+							for _, v in pairs(game.Players:GetPlayers()) do
+								if v ~= Player then
+									LocalEvent:FireClient(v, Model, X, Y)
+								end
+							end
+						end)
+					end
+					table.insert(ExtraScripts, ExtraScript)
+				else
+					wait()
+					Seat.SeatWeld:Destroy()
+				end
+			end
+		end)
+		
+		Seat.ChildRemoved:connect(function(Child)
+			if Child.Name == "SeatWeld" then
+				Break()
+			end
+		end)
+	end
+	
+	function Self.CreateSeat(Name, IsTurret)
+		for _, v in pairs(Model:GetChildren()) do
+			if (v:IsA("Seat") or v:IsA("VehicleSeat")) and v.Name == Name then
+				local Attachment
+				for _, a in pairs(MainPart:GetChildren()) do
+					if a:IsA("Attachment") and a.Name == Name then
+						if not Attachment then
+							Attachment = a
+						else
+							local D1, D2 = (v.Position - a.WorldPosition).magnitude, (v.Position - Attachment.WorldPosition).magnitude
+							if D1 < D2 then
+								Attachment = a
+							end
+						end
+					end
+				end
+				CreateSeat(v, Attachment and v.CFrame:toObjectSpace(MainPart.CFrame * Attachment.CFrame) * CFrame.Angles(-math.pi/2, 0, 0) or CFrame.Angles(-math.pi/2, 0, 0), IsTurret)
+			end
+		end
+		return Self
+	end
+	
+	return Self
+end]]></ProtectedString>
+			</Properties>
+			<Item class="LocalScript" referent="RBXC679CD6866354299B57914BD5C5409D3">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">HelicopterGunner</string>
+					<string name="ScriptGuid">{30936521-41EE-44FC-9D6D-51E16B96CFEE}</string>
+					<ProtectedString name="Source"><![CDATA[local ContextActionService = game:GetService("ContextActionService")
+local UserInputService = game:GetService("UserInputService")
+local Model = script:WaitForChild("Model").Value
+local MainPart = Model:WaitForChild("Main")
+
+local Player = game.Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Character = Player.Character
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local Active = true
+
+local CFNew, CFAng, V3New, V3N, Dot, RNew = CFrame.new, CFrame.Angles, Vector3.new, Vector3.new(), Vector3.new().Dot, Ray.new
+local floor, sin, abs, acos, max, min, random = math.floor, math.sin, math.abs, math.acos, math.max, math.min, math.random
+local wrap = coroutine.wrap
+local FindPartOnRay = workspace.FindPartOnRay
+local Camera = workspace.CurrentCamera
+Camera.CameraType = Enum.CameraType.Scriptable
+
+local Weapon = "Autocannon"
+
+local RadialFrame = script.RadialMenu.Frame
+
+local MouseSensitivity = Vector3.new(math.pi * 4 / 1920, math.pi * 1.9 / 1200, 0) * 2
+local RedFrameColor, OrangeFrameColor, WhiteFrameColor = Color3.new(1, 0.2, 0.2), Color3.new(1, 0.6, 0.2), Color3.new(1, 1, 1)
+
+local Angle1 = math.rad(120)
+
+local Hinge1Max, Hinge1Min = math.rad(110), math.rad(-110)
+local Hinge2Max, Hinge2Min = math.rad(90), 0
+
+local Rocket1Max, Rocket1Min = math.rad(70), math.rad(-70)
+local Rocket2Max, Rocket2Min = math.rad(15), math.rad(-40)
+
+local LastSend, LastSentX, LastSentY = 0, 0, 0
+local LastDelta, LastMove = 0, 0
+
+local RocketCameraX, RocketCameraY = 0, 0
+local MissileLife, MissileTimer = 13
+local LastRocketFire = 0
+
+local Gun1, Gun2 = Model.Gun1, Model.Gun2
+local CannonCamera, GunHydraulic = CFrame.new(Gun2.Camera.Position), Gun1.Sound
+local MissileCamera = CFrame.new(0, 0, -2.1)
+
+require(game.ReplicatedStorage:WaitForChild("ModuleUtil"))
+local Core = _G.SRequire("S2.0 Core", "Core")
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+local Values = Core.Setup(Model.GunStat)
+Core.PlayerToUser(Values, Player)
+Core.WeaponSelected:Fire(Model.GunStat, Values.User)
+
+local Gun1Hinge, Gun2Hinge = Model.Gun1Hinge, Model.Gun2Hinge
+local Gun1CF, Gun2CF = Model.Gun1CF.Value, Model.Gun2CF.Value
+local Gun1Rotation, Gun2Rotation = 0, 0
+
+local MissileAmmo, RocketPodAmmo = Model.MissileAmmo.Value, Model.RocketPodAmmo.Value
+local AutocannonAmmoMax, MissileAmmoMax, RocketPodAmmoMax = Model.AutocannonAmmo.MaxValue, Model.MissileAmmo.MaxValue, Model.RocketPodAmmo.MaxValue
+Values.Ammo = Model.AutocannonAmmo.Value
+
+local AmmoText, Crosshair = script:WaitForChild("ScreenGui").TextLabel, script.ScreenGui.Crosshair
+
+local Last, RadialVisible = "Center"
+
+local MouseDown = false
+local MissileInProgress = false
+local MissileSide = true
+local RocketSide = true
+
+local CurrentMissile
+local MissileRotationFunction
+local RayPart, RayPosition
+
+UserInputService.MouseIconEnabled = false
+Core.ShowCursor = false
+
+AmmoText.TextLabel.Text = Values.Ammo == 0 and "EMPTY" or Values.Ammo or ""
+
+local function FireEvent(Name, ...)
+	if Name == "TurretEvent" then
+		script.RemoteEvent:FireServer(1, ...)
+	elseif Name == "AutocannonAmmo" then
+		script.RemoteEvent:FireServer(2, Values.Ammo)
+	elseif Name == "MissileAmmo" then
+		script.RemoteEvent:FireServer(3, MissileAmmo)
+	elseif Name == "RocketPodAmmo" then
+		script.RemoteEvent:FireServer(4, RocketPodAmmo)
+	elseif Name == "Explosion" then
+		script.RemoteEvent:FireServer(5, ...)
+	elseif Name == "UpdateMissile" then
+		script.RemoteEvent:FireServer(6, ...)
+	end
+end
+
+Model.AutocannonAmmo.Changed:connect(function(New)
+	if New == AutocannonAmmoMax then
+		Values.Ammo = New
+		
+	end
+end)
+
+Model.MissileAmmo.Changed:connect(function(New)
+	if New == MissileAmmoMax then
+		MissileAmmo = New
+	end
+end)
+
+Model.RocketPodAmmo.Changed:connect(function(New)
+	if New == RocketPodAmmoMax then
+		RocketPodAmmo = New
+	end
+end)
+
+script.Model.Changed:connect(function()
+	if Active then
+		Active = false 
+		wait()
+		Camera.CameraType = Enum.CameraType.Custom
+		GunHydraulic:Stop()
+		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+		UserInputService.MouseIconEnabled = true
+		Core.ShowCursor = true
+		
+		FireEvent("TurretEvent", 0, 0)
+		Gun1Hinge.C1 = Gun1CF
+		Gun2Hinge.C1 = Gun2CF
+		
+		FireEvent("AutocannonAmmo")
+		FireEvent("MissileAmmo")
+		FireEvent("RocketPodAmmo")
+		
+		if Model:FindFirstChild("GunStat") then
+			local StatObj = Model.GunStat
+			StatObj.Parent = nil
+			Core.Destroy(Values)
+			StatObj.Parent = Model
+		end
+		
+		wait(0.2)
+		script:Destroy()
+	end
+end)
+if not script.Model.Value then
+	script.Model.Value = script
+end
+
+Humanoid.Died:Connect(function()
+	script.Model.Value = nil
+end)
+
+Model.Health.Changed:connect(function(Value)
+	if Value <= 0 then
+		Active = false
+		script.Model.Value = script
+	end
+end)
+
+local function CreateExplosion(Position, Radius, Damage)
+	game.ReplicatedStorage.Shared.Visuals.BulletArrived:Fire({Name = "Explosive", BlastRadius = Radius}, nil, Position)
+	FireEvent("Explosion", Position, Radius, Damage)
+end
+
+local GUID = math.floor(math.random() * 1000)/1000
+local function SyncMissile(Missile)
+	local UID = GUID
+	GUID = GUID + 1
+	local Start = time()
+	FireEvent("UpdateMissile", UID, Missile.CFrame, {Missile.Size, Missile.ParticleEmitter.Color})
+	repeat
+		FireEvent("UpdateMissile", UID, Missile.CFrame)
+		wait()
+	until not Missile or not Missile.Parent or Missile.Transparency == 1 or time() - Start > 30
+	FireEvent("UpdateMissile", UID)
+end
+
+local function CreateMissile(Size)
+	local NewMissile = script.Missile:Clone()
+	NewMissile.Parent = Camera
+	local Texture = Model:FindFirstChild("MissilesLower") or Model:FindFirstChild("MissilesUpper") or Model:FindFirstChild("Rockets1") or Model:FindFirstChild("Rockets2") or Model:FindFirstChild("Rockets3")
+	if Texture then
+		NewMissile.TextureID = Texture.TextureID
+	end
+	NewMissile.Size = NewMissile.Size * (Size or 1)
+	NewMissile.Name = "UsedMissile"
+	NewMissile.ParticleEmitter.Color = ColorSequence.new(Player.TeamColor.Color)
+	local Velocity, Gyro = Instance.new("BodyVelocity", NewMissile), Instance.new("BodyGyro", NewMissile)
+	Velocity.MaxForce, Gyro.MaxTorque = V3New(100000, 100000, 100000), V3New(100000, 100000, 100000)
+	Velocity.Velocity = V3New(0, 0, 0)
+	local Sound = Instance.new("Sound", NewMissile)
+	Sound.SoundId = "rbxassetid://153230666"
+	Sound.Pitch = 1.2
+	Sound.Volume = 0.6
+	Sound:Play()
+	local EngineSound = Instance.new("Sound", NewMissile)
+	EngineSound.SoundId = "rbxassetid://134073443"
+	EngineSound.Name = "EngineSound"
+	EngineSound.Pitch = 1.5
+	EngineSound.Volume = 0.2
+	EngineSound.Looped = true
+	EngineSound:Play()
+	wrap(SyncMissile)(NewMissile)
+	return NewMissile, Velocity, Gyro
+end
+
+local function FireRocket()
+	local AimPos = RayPosition
+	
+	RocketPodAmmo = RocketPodAmmo - 1
+	FireEvent("RocketPodAmmo")
+	local NewRocket, Velocity, Gyro = CreateMissile(0.6)
+	NewRocket.CFrame = MainPart.CFrame * (RocketSide and MainPart.RocketLeft.CFrame or MainPart.RocketRight.CFrame)
+	Gyro.CFrame = NewRocket.CFrame
+	
+	RocketSide = not RocketSide
+	Gyro.D = min(max((AimPos - NewRocket.Position).magnitude * 3, 150), 1000)
+	
+	local Touched = false
+	spawn(function()
+		NewRocket.Touched:connect(function(Part)
+			if not Part:IsDescendantOf(Model) and Part.CanCollide then
+				Touched = true
+			end
+		end)
+	end)
+	
+	Velocity.Velocity = NewRocket.CFrame.lookVector * 200
+	wait(0.3)
+	Gyro.CFrame = CFNew(NewRocket.Position, AimPos)
+	local Time = time()
+	repeat
+		Gyro.CFrame = CFNew(NewRocket.Position, AimPos)
+		Velocity.Velocity = NewRocket.CFrame.lookVector * 200
+		wait()
+	until Touched or not Active or time() - Time > MissileLife
+	Time = nil
+	CreateExplosion(NewRocket.Position, 6, 90)
+	
+	NewRocket.Anchored = true
+	NewRocket.Transparency = 1
+	NewRocket.ParticleEmitter.Rate = 0
+	NewRocket.EngineSound:Stop()
+	wait(5)
+	NewRocket:Destroy()
+end
+
+local function Fire(InputState)
+	MouseDown = InputState
+	if MouseDown then
+		if Weapon == "Missile" and not MissileInProgress then
+			AmmoText.Visible = false
+			MissileInProgress = true
+			
+			MissileAmmo = MissileAmmo - 1
+			FireEvent("MissileAmmo")
+			local NewMissile, Velocity, Gyro = CreateMissile()
+			NewMissile.CFrame = MainPart.CFrame * (MissileSide and MainPart.MissileLeft.CFrame or MainPart.MissileRight.CFrame)
+			Gyro.CFrame = NewMissile.CFrame
+			CurrentMissile = NewMissile
+			Gyro.D = 150
+			
+			MissileSide = not MissileSide
+			
+			AmmoText.TextLabel.Text = MissileAmmo == 0 and "EMPTY" or MissileAmmo or ""
+			
+			MissileTimer = time()
+			local Touched = false
+			spawn(function()
+				NewMissile.Touched:connect(function(Part)
+					if not Part:IsDescendantOf(Model) and Part.CanCollide and time() - MissileTimer > 0.3 then
+						Touched = true
+					end
+				end)
+			end)
+			Velocity.Velocity = NewMissile.CFrame.lookVector * 60
+			local MDown = false
+			Crosshair.Time.TextColor3 = Color3.new(1, 1, 1)
+			MissileRotationFunction = function(Delta)
+				if Delta == true then
+					MDown = true
+					Crosshair.Time.TextColor3 = Color3.new(1, 0.1, 0.1)
+					Velocity.Velocity = Gyro.CFrame.lookVector * 90
+				elseif Delta == false then
+					MDown = false
+					Crosshair.Time.TextColor3 = Color3.new(1, 1, 1)
+					Velocity.Velocity = Gyro.CFrame.lookVector * 60
+				else
+					Gyro.CFrame = NewMissile.CFrame * CFAng(0, 0, min(-Delta.X * 3, 0.4)) * CFAng(min(-Delta.Y * 2, 0.4), 0, 0)
+					Velocity.Velocity = Gyro.CFrame.lookVector * (MDown and 180 or 100)
+				end
+			end
+			repeat
+				local s = wait()
+				if MDown then
+					MissileTimer = MissileTimer - s
+				end
+			until Touched or not Active or time() - MissileTimer > MissileLife or Weapon ~= "Missile"
+			MissileTimer = nil
+			MissileRotationFunction = nil
+			CreateExplosion(NewMissile.Position, 16, 200)
+			CurrentMissile = nil
+			NewMissile.Anchored = true
+			NewMissile.Transparency = 1
+			NewMissile.ParticleEmitter.Rate = 0
+			NewMissile.EngineSound:Stop()
+			delay(5, function()
+				NewMissile:Destroy()
+			end)
+			
+			AmmoText.Visible = RadialVisible and false or true
+			
+			MissileInProgress = false
+			if MissileAmmo == 0 then
+				Weapon = "Autocannon"
+				Values.Selected = true
+				AmmoText.Text = "AUTOCANNON"
+				AmmoText.TextLabel.Text = Values.Ammo == 0 and "EMPTY" or Values.Ammo or ""
+				Crosshair.Visible = false
+			end
+		elseif Weapon == "RocketPod" and RayPart and time() - LastRocketFire > 0.7 then
+			repeat
+				if RayPart then
+					wrap(FireRocket)()
+					LastRocketFire = time()
+					AmmoText.TextLabel.Text = RocketPodAmmo or ""
+				end
+				wait(0.5)
+			until not MouseDown or RocketPodAmmo == 0 or not Active
+			if RocketPodAmmo == 0 then
+				Weapon = "Autocannon"
+				Values.Selected = true
+				AmmoText.Text = "AUTOCANNON"
+				AmmoText.TextLabel.Text = Values.Ammo == 0 and "EMPTY" or Values.Ammo or ""
+				Crosshair.Visible = false
+			end
+		end
+	end
+end
+
+local function RadialMenu(Began, Handled)
+	if Handled or not Active then
+		return
+	end
+	if Began then
+		Crosshair.Visible = false
+		AmmoText.Visible = false
+		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+		UserInputService.MouseIconEnabled = true
+		local Pos = V3New(Mouse.ViewSizeX/2, 0, Mouse.ViewSizeY/2)
+		Last = "Center"
+		RadialVisible = true
+		RadialFrame.Visible = true
+		RadialFrame.Position = UDim2.new(0, Pos.X, 0, Pos.Z)
+		RadialFrame.Top.Icon.ImageColor3 = Values.Ammo == 0 and RedFrameColor or Values.Ammo <= AutocannonAmmoMax/3 and OrangeFrameColor or WhiteFrameColor
+		RadialFrame.Left.Icon.ImageColor3 = MissileAmmo == 0 and RedFrameColor or MissileAmmo <= MissileAmmoMax/2 and OrangeFrameColor or WhiteFrameColor
+		RadialFrame.Right.Icon.ImageColor3 = RocketPodAmmo == 0 and RedFrameColor or RocketPodAmmo <= RocketPodAmmoMax/2 and OrangeFrameColor or WhiteFrameColor
+		RadialFrame.Right.Icon2.ImageColor3 = RocketPodAmmo == 0 and RedFrameColor or RocketPodAmmo <= RocketPodAmmoMax/2 and OrangeFrameColor or WhiteFrameColor
+		RadialFrame.Right.Icon3.ImageColor3 = RocketPodAmmo == 0 and RedFrameColor or RocketPodAmmo <= RocketPodAmmoMax/2 and OrangeFrameColor or WhiteFrameColor
+		
+		for _, v in pairs(RadialFrame:GetChildren()) do
+			if v:IsA("Frame") then
+				v.Image.Image = "rbxasset://textures/ui/Settings/Radial/Top.png"
+			else
+				v.Image = "rbxassetid://450463239"
+			end
+		end
+		
+		spawn(function()
+			while RadialVisible and wait() do
+				local MousePos = V3New(Mouse.X, 0, Mouse.Y)
+				local Distance = floor((MousePos - Pos).magnitude)
+				local Diff = (MousePos - Pos).unit
+				local Angle = acos(Dot(V3New(0, 0, 1), Diff))
+				Angle = Diff.X > 0 and Angle or -Angle
+				local IsOne = Angle < -Angle1 or Angle > Angle1
+				local Current = Distance < 80 and "Center" or IsOne and "Top" or (not IsOne and Angle < 0) and "Left" or "Right"
+				if Current ~= Last then
+					if Last == "Center" then
+						RadialFrame.Center.Image = "rbxassetid://450466620"
+					else
+						RadialFrame[Last].Image.Image = "rbxasset://textures/ui/Settings/Radial/Top.png"
+					end
+					if Current == "Center" then
+						RadialFrame.Center.Image = "rbxassetid://450463239"
+					else
+						RadialFrame[Current].Image.Image = "rbxasset://textures/ui/Settings/Radial/TopSelected.png"
+					end
+					Last = Current
+				end
+			end
+			if Last == "Top" and Weapon ~= "Autocannon" then
+				Weapon = "Autocannon"
+				Values.Selected = true
+				AmmoText.Text = "AUTOCANNON"
+				AmmoText.TextLabel.Text = Values.Ammo == 0 and "EMPTY" or Values.Ammo or ""
+				Crosshair.Visible = false
+				Core.ShowCursor = false
+			elseif Last == "Left" and Weapon ~= "Missile" and MissileAmmo ~= 0 then
+				Weapon = "Missile"
+				Values.MouseDown = false
+				Values.Selected = false
+				GunHydraulic:Stop()
+				AmmoText.Text = "MISSILES"
+				AmmoText.TextLabel.Text = MissileAmmo or ""
+				Crosshair.Visible = true
+				Crosshair.Distance.Visible = true
+				Crosshair.Time.Visible = true
+				Core.ShowCursor = true
+			elseif Last == "Right" and Weapon ~= "RocketPod" and RocketPodAmmo ~= 0 then
+				Weapon = "RocketPod"
+				Values.MouseDown = false
+				Values.Selected = false
+				GunHydraulic:Stop()
+				AmmoText.Text = "ROCKETS"
+				AmmoText.TextLabel.Text = RocketPodAmmo or ""
+				Crosshair.Visible = true
+				Crosshair.Distance.Visible = false
+				Crosshair.Time.Visible = false
+				Core.ShowCursor = true
+			end
+		end)
+	else
+		RadialVisible = false
+		RadialFrame.Visible = false
+		if Weapon ~= "Autocannon" then
+			Crosshair.Visible = true
+		end
+		AmmoText.Visible = true
+		UserInputService.MouseIconEnabled = false
+		wait()
+		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+	end
+end
+
+game:GetService("RunService"):BindToRenderStep("HelicopterGunner", Enum.RenderPriority.Camera.Value, function()
+	if Active then
+		if Weapon == "Autocannon" then
+			Camera.CFrame = Gun2:GetRenderCFrame() * CannonCamera
+		elseif Weapon == "Missile" then
+			if CurrentMissile then
+				Camera.CFrame = CurrentMissile:GetRenderCFrame() * MissileCamera
+			else
+				Camera.CFrame = MainPart:GetRenderCFrame() * (MissileSide and MainPart.MissileLeft.CFrame or MainPart.MissileRight.CFrame)
+			end
+		elseif Weapon == "RocketPod" then
+			Camera.CFrame = MainPart:GetRenderCFrame() * MainPart.Camera.CFrame * CFAng(0, RocketCameraX, 0) * CFAng(RocketCameraY, 0, 0)
+		end
+	end
+end)
+
+UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+UserInputService.InputChanged:connect(function(Input, GPE)
+	if not GPE and Input.UserInputType == Enum.UserInputType.MouseMovement and Active then
+		if Weapon == "Autocannon" then
+			local Delta = Input.Delta * MouseSensitivity
+			Gun1Rotation = min(max(Gun1Rotation - Delta.X, Hinge1Min), Hinge1Max)
+			Gun2Rotation = min(max(Gun2Rotation + Delta.Y, Hinge2Min), Hinge2Max)
+			Gun1Hinge.C1 = Gun1CF * CFAng(0, 0, Gun1Rotation)
+			Gun2Hinge.C1 = Gun2CF * CFAng(0, 0, Gun2Rotation)
+			
+			LastDelta, LastMove = Delta, time()
+		elseif Weapon == "Missile" and MissileRotationFunction then
+			MissileRotationFunction(Input.Delta * MouseSensitivity)
+		elseif Weapon == "RocketPod" then
+			local Delta = Input.Delta * MouseSensitivity
+			RocketCameraX = min(max(RocketCameraX - Delta.X, Rocket1Min), Rocket1Max)
+			RocketCameraY = min(max(RocketCameraY - Delta.Y, Rocket2Min), Rocket2Max)
+		end
+	end
+end)
+
+UserInputService.InputBegan:connect(function(Input, GPE)
+	if Input.UserInputType == Enum.UserInputType.MouseButton1 and Active then
+		if Weapon == "Missile" and MissileRotationFunction then
+			MissileRotationFunction(true)
+		elseif not GPE then
+			Fire(true)
+		end
+	end
+end)
+
+UserInputService.InputEnded:connect(function(Input, GPE)
+	if Input.UserInputType == Enum.UserInputType.MouseButton1 and Active then
+		if Weapon == "Missile" and MissileRotationFunction then
+			MissileRotationFunction(false)
+		elseif not GPE then
+			Fire(false)
+		end
+	end
+end)
+
+spawn(function()
+	while Active and wait() do
+		if Weapon == "Autocannon" then
+			local TrueDelta = (time() - LastMove > 0.1) and V3N or LastDelta * 50
+			local Speed = abs(TrueDelta.X) + abs(TrueDelta.Y)
+			GunHydraulic.Volume = Speed/10 + 0.4
+			if GunHydraulic.IsPlaying and Speed == 0 and GunHydraulic.TimePosition > 0.3 then
+				GunHydraulic:Stop()
+			elseif not GunHydraulic.IsPlaying and Speed > 0 then
+				GunHydraulic:Play()
+			end
+			
+			if time() - LastSend > 0.25 and (abs(LastSentX - Gun1Rotation) > 0.15 or abs(LastSentY - Gun2Rotation) > 0.15) then
+				LastSend = time()
+				LastSentX, LastSentY = Gun1Rotation, Gun2Rotation
+				FireEvent("TurretEvent", LastSentX, LastSentY)
+			end
+			AmmoText.TextLabel.Text = Values.Ammo == 0 and "EMPTY" or Values.Ammo or ""
+		end
+		if Weapon ~= "Autocannon" then
+			RayPart, RayPosition = FindPartOnRay(workspace, RNew(Camera.CFrame.p, Camera.CFrame.lookVector * 750), Model)
+			for _, v in pairs(Crosshair:GetChildren()) do
+				if v:IsA("Frame") then
+					if RayPart then
+						v.BackgroundColor3 = RedFrameColor
+					else
+						v.BackgroundColor3 = WhiteFrameColor
+					end
+				end
+			end
+			if Weapon == "Missile" then
+				local Distance = floor((Camera.CFrame.p - RayPosition).magnitude + 0.5)
+				Crosshair.Distance.Text = Distance < 500 and Distance.." studs" or "--- studs"
+				Crosshair.Time.Text = MissileTimer and (MissileLife - floor(time() - MissileTimer + 0.5)) or ""
+			end
+		end
+	end
+end)
+
+if not KeybindUtil.GetBind("heli_Radial") then
+	KeybindUtil.AddBind("heli_Radial", function() end, Enum.KeyCode.G, nil, nil, nil, nil, true, false)
+end
+KeybindUtil.GetBind("heli_Radial").Callback = RadialMenu]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBXF1BE4543F8EE4C009179F33FA24F37A2">
+					<Properties>
+						<string name="Name">Model</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+				<Item class="ScreenGui" referent="RBXD6C8858D5226460E809C92363F84E57A">
+					<Properties>
+						<bool name="Enabled">true</bool>
+						<string name="Name">RadialMenu</string>
+						<bool name="ResetOnSpawn">true</bool>
+					</Properties>
+					<Item class="Frame" referent="RBX6C3829FA26A54054A1B9A71FAA355F1B">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Color3 name="BackgroundColor3">4294967295</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<string name="Name">Frame</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0.5</XS>
+								<XO>0</XO>
+								<YS>0.5</YS>
+								<YO>0</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>0</XO>
+								<YS>0</YS>
+								<YO>0</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<token name="Style">0</token>
+							<bool name="Visible">false</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="Frame" referent="RBX60A07D0B4FDD4423A444AB84BA103EE1">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">Top</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>75</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+							<Item class="ImageLabel" referent="RBXECB60B0D39AE4075A182974ED3C9F3A7">
+								<Properties>
+									<bool name="Active">true</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxasset://textures/ui/Settings/Radial/Top.png</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<float name="ImageTransparency">0</float>
+									<string name="Name">Image</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-300</XO>
+										<YS>0</YS>
+										<YO>-237</YO>
+									</UDim2>
+									<float name="Rotation">0</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>600</XO>
+										<YS>0</YS>
+										<YO>475</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBX857BA8F10112413EAD996C0E495DAA18">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-25</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">55</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBXE06FF7166729479F8F3328F6DF7B4AF5">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-60</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">55</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBX09E1691E501546EAB2110AC2F38D8DE6">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>10</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">55</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+						</Item>
+						<Item class="Frame" referent="RBXA00D515AB5FA4A33B07668659D772585">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">Left</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>65</XO>
+									<YS>0</YS>
+									<YO>-38</YO>
+								</UDim2>
+								<float name="Rotation">240</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+							<Item class="ImageLabel" referent="RBXA8E8033B84CB4DE8AC13A3E7FBD0B476">
+								<Properties>
+									<bool name="Active">true</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxasset://textures/ui/Settings/Radial/Top.png</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<float name="ImageTransparency">0</float>
+									<string name="Name">Image</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-300</XO>
+										<YS>0</YS>
+										<YO>-237</YO>
+									</UDim2>
+									<float name="Rotation">0</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>600</XO>
+										<YS>0</YS>
+										<YO>475</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBXAF6B31898F1B4DB8A87C266758CA0612">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>355</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-25</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">-185</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+						</Item>
+						<Item class="Frame" referent="RBX617D3490B1CC42C9BFF180A23C8D4C5A">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">Right</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>-65</XO>
+									<YS>0</YS>
+									<YO>-38</YO>
+								</UDim2>
+								<float name="Rotation">120</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+							<Item class="ImageLabel" referent="RBXDC7E174F16CC41CFBF8C4D1329813CF9">
+								<Properties>
+									<bool name="Active">true</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxasset://textures/ui/Settings/Radial/Top.png</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>0</X>
+										<Y>0</Y>
+									</Vector2>
+									<float name="ImageTransparency">0</float>
+									<string name="Name">Image</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-300</XO>
+										<YS>0</YS>
+										<YO>-237</YO>
+									</UDim2>
+									<float name="Rotation">0</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>600</XO>
+										<YS>0</YS>
+										<YO>475</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBXBAC00A6AC13E470CBC9BFED025EDCCBA">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>710</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-25</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">-65</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBX13CED61259984B99966CD03D64F08D5D">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>710</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon2</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>-60</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">-65</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+							<Item class="ImageLabel" referent="RBXD9E2AE2C77F44DDAABAC2B6D181CAE34">
+								<Properties>
+									<bool name="Active">false</bool>
+									<Color3 name="BackgroundColor3">4294967295</Color3>
+									<float name="BackgroundTransparency">1</float>
+									<Color3 name="BorderColor3">4279970357</Color3>
+									<int name="BorderSizePixel">1</int>
+									<bool name="ClipsDescendants">false</bool>
+									<bool name="Draggable">false</bool>
+									<Content name="Image"><url>rbxassetid://450307496</url></Content>
+									<Color3 name="ImageColor3">4294967295</Color3>
+									<Vector2 name="ImageRectOffset">
+										<X>0</X>
+										<Y>710</Y>
+									</Vector2>
+									<Vector2 name="ImageRectSize">
+										<X>512</X>
+										<Y>310</Y>
+									</Vector2>
+									<float name="ImageTransparency">0.300000012</float>
+									<string name="Name">Icon3</string>
+									<Ref name="NextSelectionDown">null</Ref>
+									<Ref name="NextSelectionLeft">null</Ref>
+									<Ref name="NextSelectionRight">null</Ref>
+									<Ref name="NextSelectionUp">null</Ref>
+									<UDim2 name="Position">
+										<XS>0</XS>
+										<XO>10</XO>
+										<YS>0</YS>
+										<YO>-220</YO>
+									</UDim2>
+									<float name="Rotation">-65</float>
+									<token name="ScaleType">0</token>
+									<bool name="Selectable">false</bool>
+									<Ref name="SelectionImageObject">null</Ref>
+									<UDim2 name="Size">
+										<XS>0</XS>
+										<XO>50</XO>
+										<YS>0</YS>
+										<YO>50</YO>
+									</UDim2>
+									<token name="SizeConstraint">0</token>
+									<Rect2D name="SliceCenter">
+										<min>
+											<X>0</X>
+											<Y>0</Y>
+										</min>
+										<max>
+											<X>0</X>
+											<Y>0</Y>
+										</max>
+									</Rect2D>
+									<bool name="Visible">true</bool>
+									<int name="ZIndex">1</int>
+								</Properties>
+							</Item>
+						</Item>
+						<Item class="ImageLabel" referent="RBX1AFF7245EB83476080CA487BAF24070D">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<Content name="Image"><url>rbxassetid://450466620</url></Content>
+								<Color3 name="ImageColor3">4294967295</Color3>
+								<Vector2 name="ImageRectOffset">
+									<X>0</X>
+									<Y>0</Y>
+								</Vector2>
+								<Vector2 name="ImageRectSize">
+									<X>0</X>
+									<Y>0</Y>
+								</Vector2>
+								<float name="ImageTransparency">0</float>
+								<string name="Name">Center</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>-80</XO>
+									<YS>0</YS>
+									<YO>-70</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<token name="ScaleType">0</token>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>160</XO>
+									<YS>0</YS>
+									<YO>160</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<Rect2D name="SliceCenter">
+									<min>
+										<X>0</X>
+										<Y>0</Y>
+									</min>
+									<max>
+										<X>0</X>
+										<Y>0</Y>
+									</max>
+								</Rect2D>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="RemoteEvent" referent="RBXE069898D505844D08BDB8736A64CF624">
+					<Properties>
+						<string name="Name">RemoteEvent</string>
+					</Properties>
+				</Item>
+				<Item class="ScreenGui" referent="RBXCB25A0F326044DC285CEFD7601738FB2">
+					<Properties>
+						<bool name="Enabled">true</bool>
+						<string name="Name">ScreenGui</string>
+						<bool name="ResetOnSpawn">true</bool>
+					</Properties>
+					<Item class="TextLabel" referent="RBXEDDC1ED9A6D24C79A93DFC0D22E05CD3">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Color3 name="BackgroundColor3">4294967295</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<token name="Font">4</token>
+							<token name="FontSize">8</token>
+							<string name="Name">TextLabel</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0.5</XS>
+								<XO>-100</XO>
+								<YS>0.800000012</YS>
+								<YO>-25</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>200</XO>
+								<YS>0</YS>
+								<YO>50</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<string name="Text">AUTOCANNON</string>
+							<Color3 name="TextColor3">4294967295</Color3>
+							<bool name="TextScaled">false</bool>
+							<float name="TextSize">36</float>
+							<Color3 name="TextStrokeColor3">4278190080</Color3>
+							<float name="TextStrokeTransparency">0.600000024</float>
+							<float name="TextTransparency">0</float>
+							<bool name="TextWrapped">false</bool>
+							<token name="TextXAlignment">2</token>
+							<token name="TextYAlignment">1</token>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="TextLabel" referent="RBX0FB67A4857224FB9AB51C294F64E5A0F">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">4</token>
+								<token name="FontSize">8</token>
+								<string name="Name">TextLabel</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0.600000024</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>200</XO>
+									<YS>0</YS>
+									<YO>50</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<string name="Text">250</string>
+								<Color3 name="TextColor3">4294967295</Color3>
+								<bool name="TextScaled">false</bool>
+								<float name="TextSize">36</float>
+								<Color3 name="TextStrokeColor3">4278190080</Color3>
+								<float name="TextStrokeTransparency">0.699999988</float>
+								<float name="TextTransparency">0</float>
+								<bool name="TextWrapped">false</bool>
+								<token name="TextXAlignment">2</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+					</Item>
+					<Item class="Frame" referent="RBXD9FCD4FF15F94B3CBC40A64AFB8D5A3C">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Color3 name="BackgroundColor3">4294967295</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<string name="Name">Crosshair</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0.5</XS>
+								<XO>-20</XO>
+								<YS>0.5</YS>
+								<YO>-56</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>40</XO>
+								<YS>0</YS>
+								<YO>40</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<token name="Style">0</token>
+							<bool name="Visible">false</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="Frame" referent="RBX3ECCBE4593D94EDDB10ACFFF20DA393A">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">TopLeft</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>10</XO>
+									<YS>0</YS>
+									<YO>5</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX4B8A9A396E0E4933A21F6BDE10B2D9E3">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">TopLeft</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>0</YS>
+									<YO>15</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX1691A8502D4D464EAE152E4EAEB99B51">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">TopRight</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>1</XS>
+									<XO>-5</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>0</YS>
+									<YO>15</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX400C7AAA0DB04F3DA8A5FD931C46EC35">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">TopRight</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>1</XS>
+									<XO>-15</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>10</XO>
+									<YS>0</YS>
+									<YO>5</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX560252767DA2443D9028D2D730CBEA7D">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">BottomRight</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>1</XS>
+									<XO>-5</XO>
+									<YS>1</YS>
+									<YO>-15</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>0</YS>
+									<YO>15</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX4245B84A92BE4EF5B1E5566518A264A6">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">BottomRight</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>1</XS>
+									<XO>-15</XO>
+									<YS>1</YS>
+									<YO>-5</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>10</XO>
+									<YS>0</YS>
+									<YO>5</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBX295839727374464BAED5054CD22CF9A1">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">BottomLeft</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>1</YS>
+									<YO>-15</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>0</YS>
+									<YO>15</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="Frame" referent="RBXBC8F8B06F956437BA0FE071249056069">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">0.200000003</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<string name="Name">BottomLeft</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>5</XO>
+									<YS>1</YS>
+									<YO>-5</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>10</XO>
+									<YS>0</YS>
+									<YO>5</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<token name="Style">0</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="TextLabel" referent="RBX6AC434E733EC4922B9E6E1F617911440">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">4</token>
+								<token name="FontSize">7</token>
+								<string name="Name">Distance</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>1</XS>
+									<XO>5</XO>
+									<YS>0.5</YS>
+									<YO>-10</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>50</XO>
+									<YS>0</YS>
+									<YO>20</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<string name="Text">20 studs</string>
+								<Color3 name="TextColor3">4294967295</Color3>
+								<bool name="TextScaled">false</bool>
+								<float name="TextSize">24</float>
+								<Color3 name="TextStrokeColor3">4278190080</Color3>
+								<float name="TextStrokeTransparency">1</float>
+								<float name="TextTransparency">0</float>
+								<bool name="TextWrapped">false</bool>
+								<token name="TextXAlignment">0</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="TextLabel" referent="RBX8F64695E51CF4E8298A6BB0E39CB27E7">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">4</token>
+								<token name="FontSize">7</token>
+								<string name="Name">Time</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>-55</XO>
+									<YS>0.5</YS>
+									<YO>-10</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>50</XO>
+									<YS>0</YS>
+									<YO>20</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<string name="Text"></string>
+								<Color3 name="TextColor3">4294967295</Color3>
+								<bool name="TextScaled">false</bool>
+								<float name="TextSize">24</float>
+								<Color3 name="TextStrokeColor3">4278190080</Color3>
+								<float name="TextStrokeTransparency">1</float>
+								<float name="TextTransparency">0</float>
+								<bool name="TextWrapped">false</bool>
+								<token name="TextXAlignment">1</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="MeshPart" referent="RBX5E02C485EDEC45C786F566D74A05F83F">
+					<Properties>
+						<bool name="Anchored">false</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>-3.34074869e-022</R12>
+							<R20>0</R20>
+							<R21>-3.34074869e-022</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>1.38813019</X>
+							<Y>1.38813019</Y>
+							<Z>7.71715164</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">256</token>
+						<Content name="MeshID"><url>rbxassetid://480027155</url></Content>
+						<string name="Name">Missile</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><url>rbxassetid://480028408</url></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>1.38813019</X>
+							<Y>1.38813019</Y>
+							<Z>7.71715164</Z>
+						</Vector3>
+					</Properties>
+					<Item class="ParticleEmitter" referent="RBX6B212406430D443D875E0F8F397F06EB">
+						<Properties>
+							<Vector3 name="Acceleration">
+								<X>0</X>
+								<Y>1</Y>
+								<Z>0</Z>
+							</Vector3>
+							<ColorSequence name="Color">0 1 1 1 0 1 1 1 1 0 </ColorSequence>
+							<float name="Drag">0</float>
+							<token name="EmissionDirection">2</token>
+							<bool name="Enabled">true</bool>
+							<NumberRange name="Lifetime">2 2 </NumberRange>
+							<float name="LightEmission">0.100000001</float>
+							<bool name="LockedToPart">false</bool>
+							<string name="Name">ParticleEmitter</string>
+							<float name="Rate">100</float>
+							<NumberRange name="RotSpeed">0 0 </NumberRange>
+							<NumberRange name="Rotation">0 0 </NumberRange>
+							<NumberSequence name="Size">0 1 0 0.375312 1.75 0 0.65586 4.25 0 1 5.125 0 </NumberSequence>
+							<NumberRange name="Speed">3 4 </NumberRange>
+							<Content name="Texture"><url>rbxasset://textures/particles/smoke_main.dds</url></Content>
+							<NumberSequence name="Transparency">0 1 0 0.1 0.3 0 0.9 0.3 0 1 1 0 </NumberSequence>
+							<float name="VelocityInheritance">0</float>
+							<float name="VelocitySpread">0</float>
+							<float name="ZOffset">0</float>
+						</Properties>
+					</Item>
+				</Item>
+			</Item>
+			<Item class="LocalScript" referent="RBX5E8474195004406C8666C7AA16A64AE9">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Helicopter</string>
+					<string name="ScriptGuid"></string>
+					<ProtectedString name="Source"><![CDATA[local UserInputService = game:GetService("UserInputService")
+local Model = script:WaitForChild("Model").Value
+local MainPart = Model:WaitForChild("Main")
+
+repeat wait() until _G.SRequire
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+
+local Player = game.Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local Character = Player.Character
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local Active = true
+
+local RX, RY, RZ = MainPart.CFrame:toEulerAnglesXYZ()
+local Rotation = RX > math.pi/2 and -RY + math.pi or RY
+local RotorHinge, RotorBackHinge = Model.RotorHinge, Model.RotorBackHinge
+
+local CFAng, V3New = CFrame.Angles, Vector3.new
+local floor, sin, abs = math.floor, math.sin, math.abs
+
+local Rotor = Model.Rotor
+
+local BodyGyro = Instance.new("BodyGyro", MainPart)
+BodyGyro.CFrame = CFrame.Angles(0, Rotation, 0)
+BodyGyro.MaxTorque = Vector3.new(50000, 50000, 50000)
+local BodyVelocity = Instance.new("BodyVelocity", MainPart)
+BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+BodyVelocity.MaxForce = Vector3.new(1000000, 50000000, 1000000)
+
+local EngineSound = MainPart.Sound
+EngineSound.Volume = 0
+EngineSound:Play()
+
+script.Model.Changed:connect(function()
+	if Active then
+		Active = false
+		BodyVelocity.Velocity = Vector3.new()
+		EngineSound:Stop()
+		RotorHinge.AngularVelocity = 0
+		RotorBackHinge.AngularVelocity = 0
+		BodyGyro:Destroy()
+		BodyVelocity:Destroy()
+		script:Destroy()
+	end
+end)
+if not script.Model.Value then
+	script.Model.Value = script
+end
+
+Humanoid.Died:Connect(function()
+	script.Model.Value = nil
+end)
+
+for i = 0, 100, 5 do
+	EngineSound.Volume = i/100
+	RotorHinge.AngularVelocity = i
+	RotorBackHinge.AngularVelocity = i
+	wait()
+end
+
+local MoveX, MoveY, MoveZ = 0, 0, 0
+
+local function Round(N)
+	return N > 0.3 and -1 or N < -0.3 and 1 or 0
+end
+
+spawn(function()
+	while wait() do
+		local Current = Camera.CFrame:pointToObjectSpace(Camera.CFrame.p + Humanoid.MoveDirection)
+		if Round(Current.Z) ~= MoveX then
+			MoveX = Round(Current.Z)
+		end
+		if Round(Current.X) ~= MoveZ then
+			MoveZ = Round(Current.X)
+		end
+	end
+end)
+
+local function HelicopterUpMovement(Began, Handled)
+	if not Handled then
+		if Began then
+			MoveY = 1
+		else
+			if MoveY == 1 then
+				MoveY = 0
+			end
+		end
+	end
+end
+
+local function HelicopterDownMovement(Began, Handled)
+	if not Handled then
+		if Began then
+			MoveY = -1
+		else
+			if MoveY == -1 then
+				MoveY = 0
+			end
+		end
+	end
+end
+
+local function Tween(A, B)
+	if A < B then
+		A = A + 0.05
+	elseif A > B then
+		A = A - 0.05
+	end
+	return floor(A * 100 + 0.5)/100
+end
+
+local TrueX, TrueY, TrueZ = 0, 0, 0
+spawn(function()
+	while Active and wait() do
+		if MoveY > 0 and MainPart.Position.Y > 250 then
+			MoveY = 0
+		end
+		
+		TrueX = Tween(TrueX, MoveX)
+		TrueY = Tween(TrueY, MoveY)
+		TrueZ = Tween(TrueZ, MoveZ)
+		
+		local Vec = MainPart.CFrame.lookVector
+		BodyVelocity.Velocity = V3New(Vec.X, 0, Vec.Z) * TrueX * 60 + V3New(0, TrueY * 40, 0)
+		
+		local t = time() * 2
+		
+		Rotation = Rotation + TrueZ/30
+		BodyGyro.CFrame = CFAng(sin(t)/25, Rotation + sin(t + 1)/25, sin(t + 2)/25) * CFAng(TrueX/-3, 0, 0)
+	end
+end)
+
+if not KeybindUtil.GetBind("heli_Up") then
+	KeybindUtil.AddBind("heli_Up", function() end, Enum.KeyCode.E, nil, nil, nil, nil, true, false)
+end
+if not KeybindUtil.GetBind("heli_Down") then
+	KeybindUtil.AddBind("heli_Down", function() end, Enum.KeyCode.Q, nil, nil, nil, nil, true, false)
+end
+KeybindUtil.GetBind("heli_Up").Callback = HelicopterUpMovement
+KeybindUtil.GetBind("heli_Down").Callback = HelicopterDownMovement]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBX076B6AF06776428D9F3734606FB69EE6">
+					<Properties>
+						<string name="Name">Model</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="LocalScript" referent="RBX70EAF5980F984B6BB6DB7EF5CF6787E3">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">CarGunner</string>
+					<string name="ScriptGuid"></string>
+					<ProtectedString name="Source"><![CDATA[local i = 0
+script:WaitForChild("Model")
+repeat wait() i = i + 1 until script.Model.Value or i > 100
+local Model = script.Model.Value
+if not Model then
+	script:Destroy()
+	return
+end
+
+local MainPart = Model:WaitForChild("Main")
+local Seat = Model:WaitForChild("TurretSeat")
+local Turret = Model:WaitForChild("Turret")
+local SeatWeld = Seat:WaitForChild("SeatWeld")
+local SeatStart = SeatWeld.C1
+local UserInputService = game:GetService("UserInputService")
+
+local Player = game.Players.LocalPlayer
+local Character = Player.Character
+local LeftShoulder, RightShoulder, Neck = Character.Torso:FindFirstChild("Left Shoulder"), Character.Torso:FindFirstChild("Right Shoulder"), Character.Torso:FindFirstChild("Neck")
+local LShoulderStart, RShoulderStart, NeckStart
+if LeftShoulder then
+	LShoulderStart = LeftShoulder.C1
+end
+if RightShoulder then
+	RShoulderStart = RightShoulder.C1
+end
+if Neck then
+	NeckStart = Neck.C1
+end
+local Humanoid = Character:WaitForChild("Humanoid")
+local Mouse = Player:GetMouse()
+Mouse.TargetFilter = Model
+
+local Active = true
+
+local CFNew, CFAng, V3New, V3N, Flatten = CFrame.new, CFrame.Angles, Vector3.new, Vector3.new(), Vector3.new(1, 0, 1)
+local min, max, abs, pi, hpi, random, atan2 = math.min, math.max, math.abs, math.pi, math.pi/2, math.random, math.atan2
+
+local LastMoveX, LastMoveY = 0, 0
+local LastSend, LastSentX, LastSentY = 0, 0, 0
+
+local HingeYMax, HingeYMin = math.rad(15), math.rad(-40)
+
+local Hinge = Model.Main.Turret
+local GunHinge = Model.GunHinge
+local GunCF = Model.Turret.Main.CFrame
+local GunCF2 = Model.Turret.Hinge.CFrame
+local GunCF3 = GunCF * Model.Turret.Hinge.CFrame:inverse()
+
+local GunShake = CFNew()
+
+local AmmoText = script.ScreenGui.TextLabel.TextLabel
+
+local Obj = Instance.new("Animation")
+Obj.AnimationId = "rbxassetid://"..493167765
+local MainAnimation = Player.Character.Humanoid:LoadAnimation(Obj)
+MainAnimation:Play()
+
+local Obj = Instance.new("Animation")
+Obj.AnimationId = "rbxassetid://"..493167624
+local ShakeAnimation = Player.Character.Humanoid:LoadAnimation(Obj)
+
+require(game.ReplicatedStorage:WaitForChild("ModuleUtil"))
+local Core = _G.SRequire("S2.0 Core", "Core")
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+local Values = Core.Setup(Model.GunStat)
+Core.PlayerToUser(Values, Player)
+Core.WeaponSelected:Fire(Model.GunStat, Values.User)
+
+script.Model.Changed:connect(function()
+	if Active then
+		Active = false
+		wait()
+		script.RemoteEvent:FireServer(0, 0)
+		GunHinge.C1 = GunCF
+		
+		MainAnimation:Stop()
+		ShakeAnimation:Stop()
+		
+		local StatObj = Model:FindFirstChild("GunStat")
+		if StatObj then
+			StatObj.Parent = nil
+			Core.Destroy(Values)
+			StatObj.Parent = Model
+		end
+		
+		if Neck then
+			Neck.C1 = NeckStart
+		end
+		if LeftShoulder then
+			LeftShoulder.C1 = LShoulderStart
+		end
+		if RightShoulder then
+			RightShoulder.C1 = RShoulderStart
+		end
+		
+		wait(0.2)
+		script:Destroy()
+	end
+end)
+
+Humanoid.Died:Connect(function()
+	script.Model.Value = nil
+end)
+
+game:GetService("RunService"):BindToRenderStep("CarGunner", Enum.RenderPriority.Input.Value, function()
+	if Active and MainPart then
+		local Start, End = Hinge.WorldPosition, Mouse.Hit.p
+		local Heading =  atan2(Start.Z - End.Z, Start.X - End.X) - hpi
+		local Dist = ((End - Start) * Flatten).magnitude
+		local Y = min(max(atan2(Start.Y - End.Y, Dist), HingeYMin), HingeYMax)
+		local CF = MainPart.CFrame
+		local StartCF = CF - CF.p
+		GunHinge.C1 = GunCF2 * CFAng(Y, 0, 0) * GunCF3 * StartCF * CFAng(0, Heading, 0) * GunShake
+		SeatWeld.C1 = StartCF * SeatStart * CFAng(0, 0, Heading)
+		if Neck then
+			Neck.C1 = NeckStart * CFAng(-Y, 0, 0)
+		end
+		
+		LastMoveX, LastMoveY = Heading, Y
+	end
+end)
+
+local LastAmmo = Values.Ammo
+AmmoText.Text = Values.Reloading and "RELOADING" or Values.Ammo
+spawn(function()
+	while Active and wait() do
+		if time() - LastSend > 0.25 and (abs(LastSentX - LastMoveX) > 0.15 or abs(LastSentY - LastMoveY) > 0.15) then
+			LastSend = time()
+			LastSentX, LastSentY = LastMoveX, LastMoveY
+			script.RemoteEvent:FireServer(GunHinge.C1, SeatWeld.C1)
+		end
+		AmmoText.Text = Values.Reloading and "RELOADING" or Values.Ammo or ""
+		if Values.Ammo and LastAmmo > Values.Ammo then
+			if not ShakeAnimation.IsPlaying then
+				ShakeAnimation:Play()
+			end
+			GunShake = CFAng(random(-20, 20)/1000, random(-20, 20)/1000, random(-20, 20)/1000)
+		end
+		LastAmmo = Values.Ammo
+	end
+end)]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBX696DA52867874E0C9E916F45AF46A962">
+					<Properties>
+						<string name="Name">Model</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+				<Item class="RemoteEvent" referent="RBX8AD24C6AEF4C4326A315BDD4D2651B83">
+					<Properties>
+						<string name="Name">RemoteEvent</string>
+					</Properties>
+				</Item>
+				<Item class="ScreenGui" referent="RBX7F72A810170341F4911482688D3E8F63">
+					<Properties>
+						<bool name="Enabled">true</bool>
+						<string name="Name">ScreenGui</string>
+						<bool name="ResetOnSpawn">true</bool>
+					</Properties>
+					<Item class="TextLabel" referent="RBXF93A063561B140D9B3FB6F22E0819A2D">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Color3 name="BackgroundColor3">4294967295</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">4279970357</Color3>
+							<int name="BorderSizePixel">1</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<token name="Font">4</token>
+							<token name="FontSize">8</token>
+							<string name="Name">TextLabel</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0.5</XS>
+								<XO>-100</XO>
+								<YS>0.800000012</YS>
+								<YO>-25</YO>
+							</UDim2>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>200</XO>
+								<YS>0</YS>
+								<YO>50</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<string name="Text">MACHINE GUN</string>
+							<Color3 name="TextColor3">4294967295</Color3>
+							<bool name="TextScaled">false</bool>
+							<float name="TextSize">36</float>
+							<Color3 name="TextStrokeColor3">4278190080</Color3>
+							<float name="TextStrokeTransparency">0.600000024</float>
+							<float name="TextTransparency">0</float>
+							<bool name="TextWrapped">false</bool>
+							<token name="TextXAlignment">2</token>
+							<token name="TextYAlignment">1</token>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="TextLabel" referent="RBX75479C385EF24CC7AD6EE2755EAC9C85">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Color3 name="BackgroundColor3">4294967295</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">4279970357</Color3>
+								<int name="BorderSizePixel">1</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">4</token>
+								<token name="FontSize">8</token>
+								<string name="Name">TextLabel</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0.600000024</YS>
+									<YO>0</YO>
+								</UDim2>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>200</XO>
+									<YS>0</YS>
+									<YO>50</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<string name="Text">250</string>
+								<Color3 name="TextColor3">4294967295</Color3>
+								<bool name="TextScaled">false</bool>
+								<float name="TextSize">36</float>
+								<Color3 name="TextStrokeColor3">4278190080</Color3>
+								<float name="TextStrokeTransparency">0.699999988</float>
+								<float name="TextTransparency">0</float>
+								<bool name="TextWrapped">false</bool>
+								<token name="TextXAlignment">2</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="BodyVelocity" referent="RBX095AE31B5747460BB38C8D5F5441EDBA">
+					<Properties>
+						<Vector3 name="MaxForce">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>200000</Z>
+						</Vector3>
+						<string name="Name">BodyVelocity</string>
+						<float name="P">1250</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>80</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="LocalScript" referent="RBX435545E960494ABDB97C30B7DAFC97CA">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">LocalControl</string>
+					<string name="ScriptGuid">{73C7D08B-0553-4AB4-9924-B0A8FB1F5BD5}</string>
+					<ProtectedString name="Source"><![CDATA[for _, v in pairs(require(script.CachedAssets)) do
+	game:GetService("ContentProvider"):Preload(v)
+end
+
+repeat wait() until _G.SRequire
+local Core = _G.SRequire("S2.0 Core", "Core")
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+
+KeybindUtil.AddBind("heli_Up", function() end, Enum.KeyCode.E, nil, nil, nil, nil, true, false)
+KeybindUtil.AddBind("heli_Down", function() end, Enum.KeyCode.Q, nil, nil, nil, nil, true, false)
+KeybindUtil.AddBind("heli_Radial", function() end, Enum.KeyCode.G, nil, nil, nil, nil, true, false)
+KeybindUtil.AddBind("vehicle_Horn", function() end, Enum.KeyCode.F, nil, nil, nil, nil, true, false)
+
+local Player = game.Players.LocalPlayer
+repeat wait() until Player.Character
+local Character = Player.Character
+
+local function NewCharacter(Character)
+	local Humanoid = Character:WaitForChild("Humanoid")
+	Humanoid.Died:connect(function()
+		wait(0.1)
+		workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+		game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
+		game:GetService("UserInputService").MouseIconEnabled = true
+		Core.ShowCursor = true
+	end)
+end
+
+NewCharacter(Character)
+Player.CharacterAdded:connect(NewCharacter)
+
+local Tween = require(script.TweenModule)
+
+local Camera = workspace.CurrentCamera
+
+local CFAng = CFrame.Angles
+local wrap = coroutine.wrap
+
+local Missiles = {}
+local LastFires = {}
+local function SyncMissile(UID, CFrame, Data)
+	if CFrame then
+		if not Missiles[UID] then
+			Missiles[UID] = script.Missile:Clone()
+			Missiles[UID].Parent = Camera
+			game.Debris:AddItem(Missiles[UID], 30)
+		end
+		if Data then
+			Missiles[UID].Size = Data[1]
+			Missiles[UID].ParticleEmitter.Color = Data[2]
+		end
+		if LastFires[UID] then
+			Tween(Missiles[UID], "CFrame", CFrame, time() - LastFires[UID] + 0.05)
+		else
+			Missiles[UID].CFrame = CFrame
+		end
+		LastFires[UID] = time()
+	elseif Missiles[UID] then
+		local Missile = Missiles[UID]
+		Missiles[UID] = nil
+		Missile.Transparency = 1
+		Missile.ParticleEmitter.Rate = 0
+		wait(5)
+		Missile:Destroy()
+	end
+end
+
+local TurretEvent = game.ReplicatedStorage:FindFirstChild("VehicleLocalEvent") or Instance.new("RemoteEvent", game.ReplicatedStorage)
+TurretEvent.Name = "VehicleLocalEvent"
+TurretEvent.OnClientEvent:connect(function(Model, New1, New2, New3)
+	if New2 and Model then
+		if Model:FindFirstChild("GunHinge") then
+			if (Model.Turret.Position - Camera.CFrame.p).magnitude < 100 then
+				wrap(Tween)(Model.GunHinge, "C1", New1, 0.25)
+				if Model:FindFirstChild("TurretSeat") and Model.TurretSeat:FindFirstChild("SeatWeld") then
+					Tween(Model.TurretSeat.SeatWeld, "C1", New2, 0.25)
+				end
+			end
+		else
+			if Model:FindFirstChild("Gun1") and (Model.Gun1.Position - Camera.CFrame.p).magnitude < 100 then
+				wrap(Tween)(Model.Gun1Hinge, "C1", Model.Gun1CF.Value * CFAng(0, 0, New1), 0.25)
+				Tween(Model.Gun2Hinge, "C1", Model.Gun2CF.Value * CFAng(0, 0, New2), 0.25)
+			end
+		end
+	elseif Model then
+		game.ReplicatedStorage.Shared.Visuals.BulletArrived:Fire({Name = "Explosive", BlastRadius = New1}, nil, Model)
+	else
+		SyncMissile(New1, New2, New3)
+	end
+end)
+
+local CFNew = CFrame.new
+local FlameThrowerOffset = CFrame.new(0, 0.582, -3.06)
+local UIDs = {}
+local BarrelWelds = {}
+Core.SharedVisuals.Event:connect(function(StatObj, User, Barrel, Hit, End, Normal, Material, Offset, BulNum)
+	if StatObj and StatObj.Parent and StatObj.Parent.Name == "Flamethrower" then
+		local UID = UIDs[StatObj] or 0
+		UIDs[StatObj] = UID + 1
+		Barrel.Fire.Enabled = true
+		Barrel.Smoke.Enabled = true
+		local Distance = (Barrel.Position - End).magnitude
+		local Speed = (Barrel.Fire.Speed.Min + Barrel.Fire.Speed.Max)/2
+		Barrel.Fire.Lifetime = NumberRange.new(Distance/Speed * 0.8, Distance/Speed * 1.2)
+		if StatObj.Parent:FindFirstChild("LightPart") then
+			StatObj.Parent.LightPart.PointLight.Enabled = true
+		end
+		if not Barrel.FireSound.IsPlaying then
+			Barrel.FireSound:Play()
+		end
+		local Handle = StatObj.Parent.Handle
+		local BarrelWeld = BarrelWelds[StatObj]
+		if not BarrelWeld then
+			repeat
+				wait()
+				for _, v in pairs(Handle:GetChildren()) do
+					if v:IsA("Weld") and v.Part1 == Barrel then
+						BarrelWeld = v
+						break
+					end
+				end
+			until BarrelWeld
+			BarrelWelds[StatObj] = BarrelWeld
+			BarrelWeld.C1 = CFNew()
+		end
+		BarrelWeld.C0 = Handle.CFrame:toObjectSpace(CFNew((Handle.CFrame * FlameThrowerOffset).p, End))
+		wait(0.2)
+		if not StatObj or not StatObj.Parent then
+			return
+		end
+		if UID + 1 == UIDs[StatObj] then
+			Barrel.Fire.Enabled = false
+			Barrel.Smoke.Enabled = false
+			if StatObj.Parent:FindFirstChild("LightPart") then
+				StatObj.Parent.LightPart.PointLight.Enabled = false
+			end
+			if Barrel.FireSound.IsPlaying then
+				Barrel.FireSound:Stop()
+			end
+		end
+	end
+end)]]></ProtectedString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX8E400FCEDA534A1AAD56968F1B0E9C91">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">TweenModule</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[local Module, Tweening = { }, { }
+
+local CFrameLerp = CFrame.new().lerp
+
+local RS = game:GetService("RunService").Heartbeat
+local RSWait = RS.wait
+local sin, hpi = math.sin, math.pi/2
+
+local function outSine(t)
+	return sin(t * hpi)
+end
+
+return function(Obj, Type, End, Speed)
+	if type(End) == "number" then
+		return
+	end
+	local Start = Obj[Type]
+	if Start == End then
+		return
+	end
+	local Cur = tick()
+	Tweening[Obj] = Tweening[Obj] or {}
+	Tweening[Obj][Type] = Cur
+	if not Speed then
+		Speed = (Start.p - End.p).magnitude/8
+	end
+	Speed = Speed * 60
+	for a = 1, Speed do
+		if Tweening[Obj][Type] ~= Cur then
+			return
+		end
+		Obj[Type] = CFrameLerp(Start, End, outSine(a/Speed))
+		RSWait(RS)
+	end
+	if Tweening[Obj][Type] == Cur then
+		Tweening[Obj][Type] = nil
+	end
+end]]></ProtectedString>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX9890A5249C7E491399E09922568D0DB1">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>-3.34074869e-022</R12>
+							<R20>0</R20>
+							<R21>-3.34074869e-022</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>false</CustomPhysics>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>1.38813019</X>
+							<Y>1.38813019</Y>
+							<Z>7.71715164</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">256</token>
+						<Content name="MeshID"><url>rbxassetid://480027155</url></Content>
+						<string name="Name">Missile</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><url>rbxassetid://480028408</url></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>1.38813019</X>
+							<Y>1.38813019</Y>
+							<Z>7.71715164</Z>
+						</Vector3>
+					</Properties>
+					<Item class="ParticleEmitter" referent="RBX0E93569D89504D338855AFE639489D73">
+						<Properties>
+							<Vector3 name="Acceleration">
+								<X>0</X>
+								<Y>1</Y>
+								<Z>0</Z>
+							</Vector3>
+							<ColorSequence name="Color">0 1 1 1 0 1 1 1 1 0 </ColorSequence>
+							<float name="Drag">0</float>
+							<token name="EmissionDirection">2</token>
+							<bool name="Enabled">true</bool>
+							<NumberRange name="Lifetime">2 2 </NumberRange>
+							<float name="LightEmission">0.100000001</float>
+							<bool name="LockedToPart">false</bool>
+							<string name="Name">ParticleEmitter</string>
+							<float name="Rate">100</float>
+							<NumberRange name="RotSpeed">0 0 </NumberRange>
+							<NumberRange name="Rotation">0 0 </NumberRange>
+							<NumberSequence name="Size">0 1 0 0.375312 1.75 0 0.65586 4.25 0 1 5.125 0 </NumberSequence>
+							<NumberRange name="Speed">3 4 </NumberRange>
+							<Content name="Texture"><url>rbxasset://textures/particles/smoke_main.dds</url></Content>
+							<NumberSequence name="Transparency">0 1 0 0.1 0.3 0 0.9 0.3 0 1 1 0 </NumberSequence>
+							<float name="VelocityInheritance">0</float>
+							<float name="VelocitySpread">0</float>
+							<float name="ZOffset">0</float>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="ModuleScript" referent="RBXCB403D2A41EB4FBCA0F855D43C386172">
+					<Properties>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">CachedAssets</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[return {
+
+--==Workspace [2] ==-- 
+	-- MeshPart(s) --
+		"rbxassetid://503012777",
+
+	------------------
+	-- ImageLabel(s) --
+		"rbxassetid://232889086",
+
+	--------------------
+------------------------
+ 
+--==ReplicatedStorage [15] ==-- 
+	-- Sound(s) --
+		"rbxassetid://95309699",
+"rbxassetid://264187739",
+"rbxassetid://132455852",
+"rbxassetid://132455857",
+"rbxassetid://94125590",
+
+		"rbxassetid://131108069",
+"rbxassetid://132455793",
+"rbxassetid://146830885",
+"rbxassetid://132258172",
+"rbxassetid://132455829",
+
+		"rbxassetid://132456279",
+"rbxassetid://132455864",
+"rbxassetid://131073013",
+"rbxassetid://180955656",
+"rbxassetid://346067083",
+
+	---------------
+---------------------------------
+ 
+--==ServerScriptService [93] ==-- 
+	-- ParticleEmitter(s) --
+		"rbxassetid://291880914",
+"rbxassetid://248294226",
+
+	-------------------------
+	-- Animation(s) --
+		"rbxassetid://168160500",
+
+	-------------------
+	-- Script(s) --
+		"rbxassetid://138210320",
+"rbxassetid://161164363",
+"rbxassetid://192712402",
+"rbxassetid://486108815",
+"rbxassetid://444695525",
+
+		"rbxassetid://476145730",
+"rbxassetid://486109809",
+"rbxassetid://486108831",
+"rbxassetid://444698453",
+"rbxassetid://476145752",
+
+		"rbxassetid://486109690",
+"rbxassetid://486668719",
+"rbxassetid://476081984",
+"rbxassetid://476144966",
+"rbxassetid://486668299",
+
+		"rbxassetid://493971567",
+"rbxassetid://493971281",
+"rbxassetid://493976587",
+"rbxassetid://493977599",
+"rbxassetid://493084416",
+
+		"rbxassetid://493085175",
+"rbxassetid://493084736",
+"rbxassetid://493084193",
+"rbxassetid://503012554",
+"rbxassetid://503012473",
+
+		"rbxassetid://503012552",
+"rbxassetid://493864968",
+"rbxassetid://493863346",
+"rbxassetid://493863428",
+"rbxassetid://476897080",
+
+		"rbxassetid://475913815",
+"rbxassetid://476143446",
+"rbxassetid://476897516",
+"rbxassetid://476897247",
+"rbxassetid://476143309",
+
+		"rbxassetid://476897361",
+"rbxassetid://480028003",
+"rbxassetid://480028286",
+"rbxassetid://480028150",
+
+	----------------
+	-- ModuleScript(s) --
+		"rbxassetid://6744856",
+"rbxassetid://503791",
+"rbxassetid://165113352",
+"rbxassetid://133116870",
+"rbxassetid://170319334",
+
+		"rbxassetid://486032509",
+"rbxassetid://156444949",
+"rbxassetid://485996105",
+"rbxassetid://357774702",
+"rbxassetid://329667719",
+
+		"rbxassetid://466383262",
+
+	----------------------
+	-- LocalScript(s) --
+		"rbxassetid://169309483",
+"rbxassetid://160247625",
+"rbxassetid://269463144",
+"rbxassetid://153230666",
+"rbxassetid://134073443",
+
+		"rbxassetid://450463239",
+"rbxassetid://450466620",
+"rbxassetid://493167765",
+"rbxassetid://493167624",
+"rbxassetid://493097141",
+
+		"rbxassetid://493136342",
+"rbxassetid://493126440",
+"rbxassetid://493145823",
+"rbxassetid://493145452",
+"rbxassetid://493146628",
+
+		"rbxassetid://493146860",
+"rbxassetid://195879271",
+"rbxassetid://456267525",
+
+	---------------------
+	-- MeshPart(s) --
+		"rbxassetid://480028408",
+"rbxassetid://444698387",
+"rbxassetid://444696014",
+"rbxassetid://444696082",
+"rbxassetid://493311463",
+
+		"rbxassetid://493749483",
+"rbxassetid://503012253",
+"rbxassetid://493760177",
+"rbxassetid://445539062",
+"rbxassetid://445539043",
+
+		"rbxassetid://445539086",
+"rbxassetid://446647780",
+"rbxassetid://445532576",
+"rbxassetid://445539078",
+"rbxassetid://497042184",
+
+	------------------
+	-- Sound(s) --
+		"rbxassetid://326088041",
+"rbxassetid://344814778",
+"rbxassetid://419968202",
+"rbxassetid://231438675",
+"rbxassetid://262562442",
+
+		"rbxassetid://192104941",
+
+	---------------
+	-- ImageLabel(s) --
+		"rbxassetid://450307496",
+
+	--------------------
+-----------------------------------
+ 
+--==ServerStorage [33] ==-- 
+	-- Script(s) --
+		"rbxassetid://279289836",
+"rbxassetid://497422623",
+"rbxassetid://166423113",
+"rbxassetid://162194585",
+"rbxassetid://336376948",
+
+		"rbxassetid://496817272",
+"rbxassetid://496816882",
+"rbxassetid://39450855",
+
+	----------------
+	-- MeshPart(s) --
+		"rbxassetid://496820505",
+"rbxassetid://496817406",
+"rbxassetid://513481866",
+"rbxassetid://513482075",
+"rbxassetid://510685794",
+
+		"rbxassetid://510685440",
+"rbxassetid://510685785",
+"rbxassetid://510685823",
+"rbxassetid://510685689",
+"rbxassetid://497850127",
+
+		"rbxassetid://497846198",
+"rbxassetid://502066801",
+"rbxassetid://497846188",
+"rbxassetid://497845096",
+"rbxassetid://497846169",
+
+		"rbxassetid://502112124",
+"rbxassetid://502111825",
+"rbxassetid://497846160",
+"rbxassetid://497845136",
+"rbxassetid://497850130",
+
+		"rbxassetid://497850123",
+
+	------------------
+	-- Sound(s) --
+		"rbxassetid://132758217",
+"rbxassetid://144938083",
+"rbxassetid://417764013",
+"rbxassetid://391263180",
+
+	---------------
+-----------------------------
+ 
+--==StarterPlayer [1] ==-- 
+	-- ModuleScript(s) --
+		"rbxassetid://183837794",
+
+	----------------------
+----------------------------
+ 
+-- Total unique IDs: 144 --
+}]]></ProtectedString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="LocalScript" referent="RBXECC32B4662AA4DF2951B27FF41467B5C">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Car</string>
+					<string name="ScriptGuid">{9B2CF65C-5639-4C5E-9DF6-22C373E2C38D}</string>
+					<ProtectedString name="Source"><![CDATA[local i = 0
+script:WaitForChild("Model")
+repeat wait() i = i + 1 until script.Model.Value or i > 100
+local Model = script.Model.Value
+if not Model then
+	script:Destroy()
+	return
+end
+
+local MainPart = Model:WaitForChild("Main")
+local Seat = Model:WaitForChild("VehicleSeat")
+
+local Camera = workspace.CurrentCamera
+local Player = game.Players.LocalPlayer
+local Character = Player.Character
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local Active = true
+
+local V3New = Vector3.new
+local floor, abs, min = math.floor, math.abs, math.min
+
+require(game.ReplicatedStorage:WaitForChild("ModuleUtil"))
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+
+local EngineSound = MainPart.Sound
+EngineSound.Volume = 1
+EngineSound:Play()
+
+local Speed, Steer = Seat.MaxSpeed * 0.7875 * (1/Model.FrontLeftWheel.Size.X), 20
+
+local FrontLeftAttach, FrontRightAttach = MainPart.FrontLeftWheel, MainPart.FrontRightWheel
+local FrontLeftMotor, FrontRightMotor = Model.FrontLeftMotor, Model.FrontRightMotor
+local BackLeftMotor, BackRightMotor = Model.BackLeftMotor, Model.BackRightMotor
+local CenterLeftMotor, CenterRightMotor = Model:FindFirstChild("CenterLeftMotor"), Model:FindFirstChild("CenterRightMotor")
+local HandleHinge = Model:FindFirstChild("HandleHinge")
+
+local Animations = {}
+local ATVAnimations = {
+	Main = 493097141,
+	Left = 493136342,
+	Right = 493126440,
+	Forward = 493145823,
+	Back = 493145452,
+	LeftBack = 493146628,
+	RightBack = 493146860,
+}
+
+local MainAnimation
+if Model.Name == "ATV" then
+	for i, v in pairs(ATVAnimations) do
+		local Obj = Instance.new("Animation")
+		Obj.AnimationId = "rbxassetid://"..v
+		if i == "Main" then
+			local Obj = Instance.new("Animation")
+			Obj.AnimationId = "rbxassetid://"..v
+			MainAnimation = Player.Character.Humanoid:LoadAnimation(Obj)
+			MainAnimation:Play()
+		else
+			local Obj = Instance.new("Animation")
+			Obj.AnimationId = "rbxassetid://"..v
+			Animations[i] = Player.Character.Humanoid:LoadAnimation(Obj)
+		end
+	end
+end
+
+local CurrentAnim
+local function PlayAnimation(New)
+	if New == CurrentAnim then
+		return
+	end
+	CurrentAnim = New
+	for i, v in pairs(Animations) do
+		if i ~= New then
+			if v.IsPlaying then
+				v:Stop()
+			end
+		end
+	end
+	for i, v in pairs(Animations) do
+		if i == New then
+			if not v.IsPlaying then
+				v:Play(0.2)
+			end
+		end
+	end
+end
+
+script.Model.Changed:connect(function()
+	if Active then
+		Active = false
+		FrontLeftAttach.Rotation = V3New(0, 0, -90)
+		FrontRightAttach.Rotation = V3New(0, 180, -90)
+		FrontLeftMotor.AngularVelocity = 0
+		FrontRightMotor.AngularVelocity = 0
+		BackLeftMotor.AngularVelocity = 0
+		BackRightMotor.AngularVelocity = 0
+		if CenterLeftMotor then
+			CenterLeftMotor.AngularVelocity = 0
+			CenterRightMotor.AngularVelocity = 0
+		end
+		PlayAnimation()
+		if MainAnimation then
+			MainAnimation:Stop()
+		end
+		EngineSound:Stop()
+		script:Destroy()
+	end
+end)
+
+Humanoid.Died:Connect(function()
+	script.Model.Value = nil
+end)
+
+local MoveX, MoveZ = 0, 0
+local function UpdateAnimations()
+	if HandleHinge then
+		HandleHinge.TargetAngle = MoveZ == 1 and HandleHinge.UpperAngle or MoveZ == -1 and HandleHinge.LowerAngle or 0
+	end
+	if MoveZ == -1 then
+		if MoveX == -1 then
+			PlayAnimation("RightBack")
+		else
+			PlayAnimation("Right")
+		end
+	elseif MoveZ == 0 then
+		if MoveX == -1 then
+			PlayAnimation("Back")
+		else
+			PlayAnimation("Forward")
+		end
+	elseif MoveZ == 1 then
+		if MoveX == -1 then
+			PlayAnimation("LeftBack")
+		else
+			PlayAnimation("Left")
+		end
+	end
+end
+
+local function Round(N)
+	return N > 0.3 and -1 or N < -0.3 and 1 or 0
+end
+
+spawn(function()
+	while wait() do
+		local Current = Camera.CFrame:pointToObjectSpace(Camera.CFrame.p + Humanoid.MoveDirection)
+		if Round(Current.Z) ~= MoveX then
+			MoveX = Round(Current.Z)
+			UpdateAnimations()
+		end
+		if Round(Current.X) ~= MoveZ then
+			MoveZ = Round(Current.X)
+			UpdateAnimations()
+		end
+	end
+end)
+
+local function Tween(A, B, C)
+	if A < B then
+		A = A + C
+	elseif A > B then
+		A = A - C
+	end
+	return floor(A * 100 + 0.5)/100
+end
+
+local function Horn(Began, Handled)
+	if Active and not Handled then
+		if Began then
+			MainPart.HornSound:Play()
+		elseif not Began and MainPart.HornSound.Looped then
+			MainPart.HornSound:Stop()
+		end
+	end
+end
+
+if not KeybindUtil.GetBind("vehicle_Horn") then
+	KeybindUtil.AddBind("vehicle_Horn", function() end, Enum.KeyCode.F, nil, nil, nil, nil, true, false)
+end
+KeybindUtil.GetBind("vehicle_Horn").Callback = Horn
+
+wait(0.2)
+
+local LastX, LastZ = 0, 0
+local TrueZ = 0, 0
+spawn(function()
+	while Active and wait() do
+		TrueZ = Tween(TrueZ, MoveZ, 0.25)
+		
+		if LastX ~= MoveX or LastZ ~= TrueZ then
+			LastX, LastZ = MoveX, TrueZ
+			
+			FrontLeftAttach.Rotation = V3New(0, TrueZ * Steer, -90)
+			FrontRightAttach.Rotation = V3New(0, 180 + TrueZ * Steer, -90)
+			FrontLeftMotor.AngularVelocity = -MoveX * Speed
+			FrontRightMotor.AngularVelocity = MoveX * Speed
+			BackLeftMotor.AngularVelocity = -MoveX * Speed
+			BackRightMotor.AngularVelocity = MoveX * Speed
+			if CenterLeftMotor then
+				CenterLeftMotor.AngularVelocity = -MoveX * Speed
+				CenterRightMotor.AngularVelocity = MoveX * Speed
+			end
+		end
+		
+		EngineSound.Pitch = 0.8 + MainPart.Velocity.magnitude/100
+	end
+end)]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBXEC59667C5B7A45DD885FF76EF4AE5462">
+					<Properties>
+						<string name="Name">Model</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="ParticleEmitter" referent="RBX60F12D07C4664E85ADFD762D731EDFB2">
+				<Properties>
+					<Vector3 name="Acceleration">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<ColorSequence name="Color">0 0.227451 0.227451 0.227451 0 1 0.227451 0.227451 0.227451 0 </ColorSequence>
+					<float name="Drag">0</float>
+					<token name="EmissionDirection">2</token>
+					<bool name="Enabled">true</bool>
+					<NumberRange name="Lifetime">1.2 1.4 </NumberRange>
+					<float name="LightEmission">0</float>
+					<bool name="LockedToPart">false</bool>
+					<string name="Name">ParticleEmitter</string>
+					<float name="Rate">0</float>
+					<NumberRange name="RotSpeed">-20 20 </NumberRange>
+					<NumberRange name="Rotation">0 360 </NumberRange>
+					<NumberSequence name="Size">0 2 1 0.643392 1.6875 0.875 1 0 0 </NumberSequence>
+					<NumberRange name="Speed">2 2 </NumberRange>
+					<Content name="Texture"><url>rbxasset://textures/particles/smoke_main.dds</url></Content>
+					<NumberSequence name="Transparency">0 0 0 1 0 0 </NumberSequence>
+					<float name="VelocityInheritance">0</float>
+					<float name="VelocitySpread">0</float>
+					<float name="ZOffset">0</float>
+				</Properties>
+			</Item>
+			<Item class="LocalScript" referent="RBXF666FEBAA8DE4C1B9365E730B1F6BA86">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Boat</string>
+					<string name="ScriptGuid">{BC191631-FD71-4BF2-9CD3-AB94F102123B}</string>
+					<ProtectedString name="Source"><![CDATA[local Model = script:WaitForChild("Model").Value
+local MainPart = Model:WaitForChild("Main")
+local Seat = Model:WaitForChild("VehicleSeat")
+
+local Camera = workspace.CurrentCamera
+local Player = game.Players.LocalPlayer
+local Character = Player.Character
+local Humanoid = Character:WaitForChild("Humanoid")
+
+local BodyVelocity = MainPart.BodyVelocity
+BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+local BodyAngularVelocity = MainPart.BodyAngularVelocity
+BodyAngularVelocity.AngularVelocity = Vector3.new(0, 0, 0)
+
+local Active = true
+
+local EngineSound = MainPart.Sound
+EngineSound.Volume = 1
+EngineSound:Play()
+
+local Speed, TurnSpeed = -Seat.MaxSpeed, Seat.TurnSpeed * -1
+local V3New = Vector3.new
+local abs = math.abs
+
+script.Model.Changed:connect(function()
+	if Active then
+		Active = false
+		EngineSound:Stop()
+		BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+		BodyAngularVelocity.AngularVelocity = Vector3.new(0, 0, 0)
+		script:Destroy()
+	end
+end)
+
+Humanoid.Died:Connect(function()
+	script.Model.Value = nil
+end)
+
+spawn(function()
+	while Active and wait() do
+		local Current = Camera.CFrame:pointToObjectSpace(Camera.CFrame.p + Humanoid.MoveDirection)
+		BodyVelocity.Velocity = MainPart.CFrame.lookVector * Current.Z * Speed
+		BodyAngularVelocity.AngularVelocity = V3New(0, Current.X * TurnSpeed * (MainPart.Velocity.magnitude/-Speed), 0)
+		EngineSound.Pitch = 0.8 + MainPart.Velocity.magnitude/100
+	end
+end)]]></ProtectedString>
+				</Properties>
+				<Item class="ObjectValue" referent="RBX60F89D6272E44B669E53F032BBD585BF">
+					<Properties>
+						<string name="Name">Model</string>
+						<Ref name="Value">null</Ref>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

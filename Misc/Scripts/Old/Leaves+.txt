@@ -1,0 +1,22 @@
+local Plugin = PluginManager():CreatePlugin()
+local Colours = {BrickColor.new("Moss"), BrickColor.new("Artichoke"), BrickColor.new("Medium green"), BrickColor.new("Laurel green"), BrickColor.new("Grime")}
+local Start = workspace.Leaf
+for i = 1, 5 do
+	local Leaves = {}
+	for a = 1, 10 do
+		local New = Start:Clone()
+		New.Name = "Union"
+		New.Parent = workspace
+		local Size = math.random(Start.Size.X * 10 - 10, Start.Size.X * 10 + 10)/10
+		New.Size = Vector3.new(Size, Size, Size)
+		New.BrickColor = Colours[math.random(1, #Colours)]
+		New.CFrame = New.CFrame * CFrame.new(math.random(-50, 50)/10, math.random(-10, 10)/10, -i * 15 + math.random(-20, 20)/10) * CFrame.Angles(math.rad(math.random(0, 36) * 10), math.rad(math.random(0, 36) * 10), math.rad(math.random(0, 36) * 10))
+		game.Debris:AddItem(New, 5)
+	end
+	--local Center = Instance.new("Part", workspace)
+	--Center.Size = Vector3.new()
+	--Center.CFrame = New:GetModelCFrame()
+	--Center.Anchored = true
+	--Center.Material = Enum.Material.Grass
+	--Plugin:Union({Center, unpack(Leaves)}).Parent = workspace
+end

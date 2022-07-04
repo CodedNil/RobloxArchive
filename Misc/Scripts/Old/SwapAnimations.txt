@@ -1,0 +1,12 @@
+local Anims = game.ReplicatedStorage.Assets.Animations
+Anims.Sword:ClearAllChildren()
+Anims.Musket:ClearAllChildren()
+for _, v in pairs(workspace:GetChildren()) do
+	if v:IsA("Model") and v:FindFirstChild("Part") then
+		if v.Part.Position.Z == -10 then
+			v:Clone().Parent = Anims.Sword
+		elseif v.Part.Position.Z == -20 then
+			v:Clone().Parent = Anims.Musket
+		end
+	end
+end

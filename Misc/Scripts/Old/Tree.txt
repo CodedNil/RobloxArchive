@@ -1,0 +1,60 @@
+local Folder = game.ServerScriptService.TreePlugin.TreePlugin
+
+local Model = Instance.new("Model", workspace)
+Model.Name = "Tree"
+local Trunk = Folder.SmallTrunk:Clone()
+Trunk.Parent = Model
+Trunk.CFrame = workspace.TreeSpawn.CFrame * CFrame.Angles(0, math.rad(math.random(0, 36) * 10), 0) + Vector3.new(0, Trunk.Size.Y/2, 0)
+local Number = math.random(2, 3)
+for i = 1, Number do
+	local Branch = Folder.SmallBranch:Clone()
+	Branch.Parent = Model
+	local Rotation = math.rad(Number == 2 and (i == 1 and math.random(-20, 20) or math.random(160, 200)) or (i == 1 and math.random(-20, 20) or i == 2 and math.random(100, 140) or math.random(220, 260)))
+	local UpRotation = math.rad(math.random(60, 75))
+	Branch.CFrame = Trunk.CFrame * CFrame.new(0, math.random(-2, 4), 0) * CFrame.Angles(0, Rotation, UpRotation) * CFrame.new(0, Branch.Size.Y/2, 0)
+	
+	local Leaf1 = Folder.Leaves:GetChildren()[math.random(1, #Folder.Leaves:GetChildren())]:Clone()
+	Leaf1.Parent = Model
+	Leaf1.CFrame = Branch.CFrame * CFrame.new(0, Branch.Size.Y * 0.6, 0) * CFrame.Angles(0, 0, -UpRotation)
+
+	local Leaf2 = Folder.Leaves:GetChildren()[math.random(1, #Folder.Leaves:GetChildren())]:Clone()
+	Leaf2.Parent = Model	
+	Leaf2.CFrame = Branch.CFrame * CFrame.new(0, Branch.Size.Y * 0.2, 0) * CFrame.Angles(math.rad(math.random(20, 30) * (math.random(0, 1) * 2 - 1)), 0, -UpRotation)
+end
+
+for i = 1, 2 do
+	local Branch = Folder.LargeBranch:Clone()
+	Branch.Parent = Model
+	local Rotation = math.rad(i == 1 and math.random(-20, 20) or math.random(160, 200))
+	local HeightOffset = math.random(0, 40)/10
+	Branch.CFrame = Trunk.CFrame * CFrame.new(0, Trunk.Size.Y * 0.25 + HeightOffset, 0) * CFrame.Angles(0, Rotation, math.rad(20 + HeightOffset * 7)) * CFrame.new(0, Branch.Size.Y/2, 0)
+end
+
+for i = -10, 10, 10 do
+	local TrueI = (i + 10)/10
+	local Leaf = Folder.Leaves:GetChildren()[math.random(1, #Folder.Leaves:GetChildren())]:Clone()
+	Leaf.Parent = Model
+	Leaf.Size = Leaf.Size * (math.random(16, 18)/10 + (1 - math.abs(TrueI - 1)) * 0.2)
+	local Rotation = (i == 10 or i == -10) and 0.3 or 1
+	Leaf.CFrame = Trunk.CFrame * CFrame.new(i * 0.6 + math.random(-20, 20)/10, Trunk.Size.Y * 0.65, 0) * CFrame.Angles(0, math.rad(math.random(20, 30) * (math.random(0, 1) * 2 - 1)) * Rotation, 0)
+end
+
+for i = -10, 10, 10 do
+	local TrueI = (i + 10)/10
+	local Leaf = Folder.Leaves:GetChildren()[math.random(1, #Folder.Leaves:GetChildren())]:Clone()
+	Leaf.Parent = Model
+	Leaf.Size = Leaf.Size * (math.random(10, 13)/10 + (1 - math.abs(TrueI - 1)) * 0.2)
+	local Rotation = (i == 10 or i == -10) and 0.3 or 1
+	Leaf.CFrame = Trunk.CFrame * CFrame.new(i * 0.6 + math.random(-20, 20)/10, Trunk.Size.Y * 0.65, 5) * CFrame.Angles(0, math.rad(math.random(20, 30) * (math.random(0, 1) * 2 - 1)) * Rotation, 0)
+end
+
+for i = -10, 10, 10 do
+	local TrueI = (i + 10)/10
+	local Leaf = Folder.Leaves:GetChildren()[math.random(1, #Folder.Leaves:GetChildren())]:Clone()
+	Leaf.Parent = Model
+	Leaf.Size = Leaf.Size * (math.random(10, 13)/10 + (1 - math.abs(TrueI - 1)) * 0.2)
+	local Rotation = (i == 10 or i == -10) and 0.3 or 1
+	Leaf.CFrame = Trunk.CFrame * CFrame.new(i * 0.6 + math.random(-20, 20)/10, Trunk.Size.Y * 0.65, -5) * CFrame.Angles(0, math.rad(math.random(20, 30) * (math.random(0, 1) * 2 - 1)) * Rotation, 0)
+end
+
+game.Debris:AddItem(Model, 5)

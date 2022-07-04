@@ -1,0 +1,253 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX2191057F0D3F41E48C8EE669A47233A1">
+		<Properties>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">VehicleControl</string>
+			<ProtectedString name="Source"><![CDATA[Module = script
+
+function Weld(x, y)
+	local Weld = Instance.new("Weld", x)
+	Weld.Part0 = x
+	Weld.Part1 = y
+	Weld.C0 = x.CFrame:toObjectSpace(y.CFrame)
+	x.Anchored = false
+end
+
+return function(script)
+	local Engine, VehicleSeat = script.Parent.Engine, script.Parent.VehicleSeat
+	local Starting, Stopping, Running = Engine.Starting, Engine.Stopping, Engine.Running
+	local CameraScripts = {}
+	local UpVector = CFrame.new(0, 5, 0)
+	
+	for _, v in pairs(script.Parent:GetChildren()) do
+		if v:IsA("BasePart") and v ~= Engine then
+			Weld(v, Engine)
+		end
+	end
+	Engine.Anchored = false
+	
+	local function ReColor()
+		for _, v in pairs(script.Parent:GetChildren()) do
+			if v:IsA("Model") then
+				for _, x in pairs(v:GetChildren()) do
+					if x.Name == "PrimaryColor" then
+						x.BrickColor = script.Parent.Health.TeamColor.Value
+					end
+				end
+			end
+			if v.Name == "PrimaryColor" then
+				v.BrickColor = script.Parent.Health.TeamColor.Value
+			end
+		end
+		Engine.BrickColor = script.Parent.Health.TeamColor.Value
+	end
+	
+	local function DoSeat(v)
+		v.Changed:connect(function(Property)
+			if Property == "Occupant" then
+				if v.Occupant then
+					local Player = game.Players:GetPlayerFromCharacter(v.Occupant.Parent)
+					if Player then
+						CameraScripts[v] = Module.Camera:Clone()
+						CameraScripts[v].Parent = Player.PlayerGui
+						if v:IsA("VehicleSeat") then
+							Starting:Play()
+							Running:Play()
+							VehicleSeat:SetNetworkOwner(Player)
+							local LocalScript = Module.LocalVehicleControl:Clone()
+							LocalScript.Value.Value = script.Parent
+							LocalScript.Parent = Player.PlayerGui
+							script.Parent.Health.TeamColor.Value = Player:FindFirstChild("S2Color") and Player.S2Color.Value or Player.TeamColor
+							ReColor()
+						end
+					end
+				else
+					if CameraScripts[v] then
+						CameraScripts[v].Value.Value = 1
+					end
+					if v:IsA("VehicleSeat") then
+						Running:Stop()
+						Stopping:Play()
+						script.Parent.Health.TeamColor.Value = BrickColor.Gray()
+						ReColor()
+					end
+				end
+			end
+		end)
+	end
+	
+	script.Parent.Health.TeamColor.Value = BrickColor.Gray()
+	ReColor()
+	
+	for _, v in pairs(script.Parent:GetChildren()) do
+		if v:IsA("Seat") or v:IsA("VehicleSeat") then
+			DoSeat(v)
+		elseif v:IsA("Model") then
+			for _, x in pairs(v:GetChildren()) do
+				if x:IsA("Seat") or x:IsA("VehicleSeat") then
+					DoSeat(x)
+				end
+			end
+		end
+	end
+	
+	local function Flip()
+		if not Debounce then
+			Debounce = true
+			wait(0.2)
+			if Engine then
+				local bodypos = Instance.new("BodyPosition", Engine)
+				bodypos.maxForce = Vector3.new(100000, 10000000, 100000)
+				bodypos.position = Engine.Position + Vector3.new(0, 2, 0)
+				local bodygyro = Instance.new("BodyGyro", Engine)
+				game:GetService("Debris"):AddItem(bodypos, 3)
+				game:GetService("Debris"):AddItem(bodygyro, 3)
+			end
+			wait(1)
+			Debounce = false
+		end
+	end
+	
+	while wait(0.1) do
+		Running.Pitch = 0.8 + Engine.Velocity.magnitude/100
+		if (Engine.CFrame * UpVector).Y <= Engine.Position.Y and not Debounce then
+			Flip()
+		end
+	end
+end]]></ProtectedString>
+		</Properties>
+		<Item class="LocalScript" referent="RBXA71EFDE751D142218CF6004DD1F72B9A">
+			<Properties>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Camera</string>
+				<ProtectedString name="Source"><![CDATA[local Camera = workspace.CurrentCamera
+Camera.CameraType = Enum.CameraType.Follow
+script:WaitForChild("Value").Changed:connect(function()
+	Camera.CameraType = Enum.CameraType.Custom
+	script:Destroy()
+end)]]></ProtectedString>
+			</Properties>
+			<Item class="IntValue" referent="RBXE875A116C118487C8015B67A32D57725">
+				<Properties>
+					<string name="Name">Value</string>
+					<int name="Value">0</int>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="LocalScript" referent="RBX50D2601565D84890B6BAEAA63EE2AC01">
+			<Properties>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">LocalVehicleControl</string>
+				<ProtectedString name="Source"><![CDATA[UIS = game:GetService("UserInputService")
+Player, Character, Camere = game.Players.LocalPlayer, game.Players.LocalPlayer.Character, workspace.CurrentCamera
+Humanoid, HumanoidRootPart = Character.Humanoid, Character.HumanoidRootPart
+Vehicle = script:WaitForChild("Value").Value
+Engine, VehicleSeat = Vehicle:WaitForChild("Engine"), Vehicle:WaitForChild("VehicleSeat")
+Speed, TurnSpeed, Height, Bounce, Suspension = VehicleSeat.MaxSpeed, VehicleSeat.TurnSpeed * 40, 8, 50, 4
+MoveX, MoveZ = 0, 0
+TrueZ = 0
+
+UIS.InputBegan:connect(function(Input, GPE)
+	if not GPE then
+		if Input.KeyCode == Enum.KeyCode.W then
+			MoveZ = 1
+		elseif Input.KeyCode == Enum.KeyCode.A then
+			MoveX = -1
+		elseif Input.KeyCode == Enum.KeyCode.S then
+			MoveZ = -0.8
+		elseif Input.KeyCode == Enum.KeyCode.D then
+			MoveX = 1
+		end
+	end
+end)
+
+UIS.InputEnded:connect(function(Input)
+	if Input.KeyCode == Enum.KeyCode.W then
+		if MoveZ == 1 then
+			MoveZ = 0
+		end
+	elseif Input.KeyCode == Enum.KeyCode.A then
+		if MoveX == -1 then
+			MoveX = 0
+		end
+	elseif Input.KeyCode == Enum.KeyCode.S then
+		if MoveZ == -0.8 then
+			MoveZ = 0
+		end
+	elseif Input.KeyCode == Enum.KeyCode.D then
+		if MoveX == 1 then
+			MoveX = 0
+		end
+	end
+end)
+
+Mass = 0
+for _, v in pairs(Vehicle:GetChildren()) do
+	if v:IsA("BasePart") then
+		Mass = Mass + v:GetMass() * 196.2
+	elseif v:IsA("Model") then
+		for _, x in pairs(v:GetChildren()) do
+			if x:IsA("BasePart") then
+				Mass = Mass + x:GetMass() * 196.2
+			end
+		end
+	end
+end
+
+Force, Damping = Mass * Suspension, (Mass * Suspension)/Bounce
+
+Velocity, Angular = Instance.new("BodyVelocity", Engine), Instance.new("BodyAngularVelocity", Engine)
+Velocity.Velocity, Velocity.MaxForce = Vector3.new(), Vector3.new(2000000, 0, 2000000)
+Angular.AngularVelocity, Angular.MaxTorque = Vector3.new(), Vector3.new(0, 400000, 0)
+
+VelocityForce, AngularTorque = Vector3.new(Mass/2, Mass/4, Mass/2), Vector3.new(Mass/4, Mass/2, Mass/4)
+SmallSpeed, LargeSpeed = Speed/50, Speed * 1.7
+Rotation = 0
+
+RenderStepped = game:GetService("RunService").RenderStepped
+V3New, V3N, rad, abs = Vector3.new, Vector3.new(), math.rad, math.abs
+
+spawn(function()
+	while Humanoid.SeatPart == VehicleSeat do
+		RenderStepped:wait()
+		
+		if TrueZ < MoveZ then
+			TrueZ = TrueZ + 0.02
+		elseif TrueZ > MoveZ then
+			TrueZ = TrueZ - 0.02
+		end
+		
+		--[[if TrueZ ~= 0 then
+			Engine.Velocity = Engine.Velocity:Lerp(Engine.CFrame.lookVector * TrueZ * LargeSpeed, 0.1)
+			Velocity.MaxForce = V3N
+		else
+			Velocity.MaxForce = VelocityForce
+		end
+		local RotVelocity = Engine.CFrame:vectorToWorldSpace(V3New(TrueZ * SmallSpeed, 0, -Engine.RotVelocity.Y * 5 * TrueZ))
+		local TrueSpeed = -Engine.CFrame:vectorToObjectSpace(Engine.Velocity).unit.Z
+		RotVelocity = RotVelocity + Engine.CFrame:vectorToWorldSpace((V3New(0, -MoveX * TurnSpeed, 0)))
+		Engine.RotVelocity = Engine.RotVelocity:Lerp(RotVelocity, 0.1)]]
+		
+		local Vec = Engine.CFrame.lookVector
+		Velocity.Velocity = V3New(Vec.X, 0, Vec.Z) * TrueZ * Speed
+		
+		Angular.angularvelocity = V3New(0, -MoveX * TrueZ/100 * TurnSpeed, 0)
+	end
+	Velocity:Destroy()
+	Angular:Destroy()
+	script:Destroy()
+end)]]></ProtectedString>
+			</Properties>
+			<Item class="ObjectValue" referent="RBX71EECB9A9C5A4E28B21FA4F75A7240D6">
+				<Properties>
+					<string name="Name">Value</string>
+					<Ref name="Value">null</Ref>
+				</Properties>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

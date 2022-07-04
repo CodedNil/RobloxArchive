@@ -1,0 +1,349 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Script" referent="RBXB3B14B16FF794791B175D04601275D6F">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">CliffSpawner</string>
+			<string name="ScriptGuid"></string>
+			<ProtectedString name="Source"><![CDATA[local CliffSpacing = 170
+
+local Last1, Last2 = 1, 1
+local function GetRandom(New, S)
+	if S then
+		local N = Last1
+		Last1 = Last1 + math.random(1, 2)
+		if Last1 > 3 then
+			Last1 = Last1 - 3
+		end
+		return N
+	else
+		local N = Last2
+		Last2 = Last2 + math.random(1, 2)
+		if Last2 > 3 then
+			Last2 = Last2 - 3
+		end
+		return N
+	end
+end
+
+local function GetSize(New)
+	return Vector3.new(1, math.random(90, 120)/100, 1)
+end
+
+local function RedrawSpawn(Object)
+	for _, v in pairs(Object:GetChildren()) do
+		v.Name = "Cliff"
+	end
+	if Object.Size.Z < CliffSpacing then
+		local New = Object:FindFirstChild("Cliff")
+		if not New then
+			New = script["Cliff"..GetRandom(New)]:Clone()
+			New.Size = New.Size * GetSize(New)
+			New.Parent = Object
+		end
+		New.CFrame = Object.CFrame * CFrame.Angles(0, math.pi/2, 0)
+		New.Name = "Used"
+	else
+		for x = CliffSpacing/2, Object.Size.Z/2, CliffSpacing do
+			local New = Object:FindFirstChild("Cliff")
+			if not New then
+				New = script["Cliff"..GetRandom(New)]:Clone()
+				New.Size = New.Size * GetSize(New)
+				New.Parent = Object
+			end
+			New.CFrame = Object.CFrame * CFrame.new(0, 0, x) * CFrame.Angles(0, math.pi/2, 0)
+			New.Name = "Used"
+			
+			local New2 = Object:FindFirstChild("Cliff")
+			if not New2 then
+				New2 = script["Cliff"..GetRandom(New, true)]:Clone()
+				New2.Size = New2.Size * GetSize(New)
+				New2.Parent = Object
+			end
+			New2.CFrame = Object.CFrame * CFrame.new(0, 0, -x) * CFrame.Angles(0, math.pi/2, 0)
+			New2.Name = "Used"
+		end
+	end
+	for _, v in pairs(Object:GetChildren()) do
+		if v.Name == "Cliff" then
+			v:Destroy()
+		end
+	end
+end
+
+local Cliffs = {}
+
+game:GetService("UserInputService").InputEnded:connect(function(Input, GME)
+	if Input.UserInputType == Enum.UserInputType.Keyboard then
+		if Input.KeyCode == Enum.KeyCode.P and game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
+			for _, v in pairs(Cliffs) do
+				v:ClearAllChildren()
+				RedrawSpawn(v)
+			end
+		end
+	end
+end)
+
+local function AddSpawn(Object)
+	table.insert(Cliffs, Object)
+	Object.Transparency = 1
+	Object.Changed:connect(function(Property)
+		if Property == "Position" then
+			RedrawSpawn(Object)
+		end
+	end)
+end
+
+for _, v in pairs(workspace:GetChildren()) do
+	if v.Name == "CliffSpawner" then
+		AddSpawn(v)
+	end
+end
+
+workspace.ChildAdded:connect(function(Object)
+	if Object.Name == "CliffSpawner" then
+		AddSpawn(Object)
+	end
+end)]]></ProtectedString>
+		</Properties>
+		<Item class="MeshPart" referent="RBX43BF6147487C46DEAA3F9D135D92F726">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">302</int>
+				<CoordinateFrame name="CFrame">
+					<X>-955</X>
+					<Y>15</Y>
+					<Z>-150</Z>
+					<R00>0</R00>
+					<R01>0</R01>
+					<R02>1</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>-0</R12>
+					<R20>-1</R20>
+					<R21>0</R21>
+					<R22>0</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">false</bool>
+				<token name="CollisionFidelity">2</token>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<Vector3 name="InitialSize">
+					<X>110.897217</X>
+					<Y>57.4739685</Y>
+					<Z>49.9940796</Z>
+				</Vector3>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">800</token>
+				<Content name="MeshID"><url>rbxassetid://499123873</url></Content>
+				<string name="Name">Cliff1</string>
+				<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Content name="TextureID"><null></null></Content>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>221.794434</X>
+					<Y>114.947937</Y>
+					<Z>99.9881592</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="MeshPart" referent="RBX972289FC4C3345F79BBBE08CE09B705A">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">302</int>
+				<CoordinateFrame name="CFrame">
+					<X>-955</X>
+					<Y>15</Y>
+					<Z>-400</Z>
+					<R00>0</R00>
+					<R01>0</R01>
+					<R02>1</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>-0</R12>
+					<R20>-1</R20>
+					<R21>0</R21>
+					<R22>0</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">false</bool>
+				<token name="CollisionFidelity">2</token>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<Vector3 name="InitialSize">
+					<X>104.459747</X>
+					<Y>54.0855255</Y>
+					<Z>46.5092773</Z>
+				</Vector3>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">800</token>
+				<Content name="MeshID"><url>rbxassetid://489514543</url></Content>
+				<string name="Name">Cliff3</string>
+				<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Content name="TextureID"><null></null></Content>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>208.919495</X>
+					<Y>108.171051</Y>
+					<Z>93.0185547</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="MeshPart" referent="RBX5F3AE9D29DC34A108D5FD2990FB1170A">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">302</int>
+				<CoordinateFrame name="CFrame">
+					<X>-955</X>
+					<Y>15</Y>
+					<Z>-270</Z>
+					<R00>0</R00>
+					<R01>0</R01>
+					<R02>1</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>-0</R12>
+					<R20>-1</R20>
+					<R21>0</R21>
+					<R22>0</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">false</bool>
+				<token name="CollisionFidelity">2</token>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<Vector3 name="InitialSize">
+					<X>108.85939</X>
+					<Y>57.4885483</Y>
+					<Z>44.8564072</Z>
+				</Vector3>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">800</token>
+				<Content name="MeshID"><url>rbxassetid://489514446</url></Content>
+				<string name="Name">Cliff2</string>
+				<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Content name="TextureID"><null></null></Content>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>217.718781</X>
+					<Y>114.977097</Y>
+					<Z>89.7128143</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

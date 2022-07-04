@@ -1,0 +1,10 @@
+local module = require(game.Workspace.LuaSyntaxToolset)
+local function Loop(Obj)
+	for _, v in ipairs(Obj:GetChildren()) do
+		Loop(v)
+		if v:IsA("BaseScript") or v:IsA("ModuleScript") then
+			module.Minify(v, false)
+		end
+	end
+end
+Loop(game.ServerScriptService)

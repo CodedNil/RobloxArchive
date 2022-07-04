@@ -1,0 +1,35 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBXD4AAD75BC8B74CE78FD350DDFEEC1BD3">
+		<Properties>
+			<string name="Name">Climb</string>
+			<ProtectedString name="Source"><![CDATA[local Misc = require(game.ReplicatedStorage.Libraries.Misc)
+
+local module = {}
+
+local function WithinRange(Number, Lower, Upper)
+	return Number > Lower and Number < Upper
+end
+
+local LastClimb = 0
+
+function module.CheckJump(Character)
+	if tick() - LastClimb > 2 then
+		local Start = Character.HumanoidRootPart.CFrame * CFrame.Angles(math.rad(90), 0, 0)
+		Start = (Start + Start.lookVector * 12 + Character.HumanoidRootPart.CFrame.lookVector * 2) * CFrame.Angles(math.rad(-160), 0, 0)
+		local End = Start + Start.lookVector * 6
+		local Hit, Pos, Normal = Misc.RaycastWithIgnoreFunction(Start.p, End.p)
+		if WithinRange(Normal.x, -0.3, 0.3) and WithinRange(Normal.y, 0.92, 1.08) and WithinRange(Normal.z, -0.3, 0.3) then
+			local Force = Instance.new("BodyForce", Character.HumanoidRootPart)
+			Force.force = Vector3.new(0, 2500, 0)
+			game.Debris:AddItem(Force, 0.6)
+			LastClimb = tick()
+		end
+	end
+end
+
+return module]]></ProtectedString>
+		</Properties>
+	</Item>
+</roblox>

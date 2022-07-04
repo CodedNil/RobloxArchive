@@ -1,0 +1,1957 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Model" referent="RBX7C47E0C86F5C41389086120117F68A92">
+		<Properties>
+			<CoordinateFrame name="ModelInPrimary">
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+				<R00>1</R00>
+				<R01>0</R01>
+				<R02>0</R02>
+				<R10>0</R10>
+				<R11>1</R11>
+				<R12>0</R12>
+				<R20>0</R20>
+				<R21>0</R21>
+				<R22>1</R22>
+			</CoordinateFrame>
+			<string name="Name">Libraries</string>
+			<Ref name="PrimaryPart">null</Ref>
+		</Properties>
+		<Item class="ModuleScript" referent="RBXC9D8C580215445B5A0B3337D8EF832FA">
+			<Properties>
+				<string name="Name">Weld</string>
+				<ProtectedString name="Source">local module = {}
+
+function module:Create(PartA, PartB)
+&#9;if not PartA or not PartB then return end
+&#9;local Weld = Instance.new(&quot;Weld&quot;, game.JointsService)
+&#9;Weld.Part0 = PartA
+&#9;if PartA:FindFirstChild(&quot;WeldPartB&quot;) then
+&#9;&#9;Weld.Part1 = PartA.WeldPartB.Value
+&#9;else
+&#9;&#9;Weld.Part1 = PartB
+&#9;&#9;local ValuePartB = Instance.new(&quot;ObjectValue&quot;, PartA)
+&#9;&#9;ValuePartB.Value = PartB
+&#9;&#9;ValuePartB.Name = &quot;WeldPartB&quot;
+&#9;end
+&#9;if PartA:FindFirstChild(&quot;WeldValueA&quot;) then
+&#9;&#9;Weld.C0 = PartA.WeldValueA.Value
+&#9;else
+&#9;&#9;Weld.C0 = PartA.CFrame:toObjectSpace(PartA.CFrame)
+&#9;&#9;local ValueA = Instance.new(&quot;CFrameValue&quot;, PartA)
+&#9;&#9;ValueA.Value = Weld.C0
+&#9;&#9;ValueA.Name = &quot;WeldValueA&quot;
+&#9;end
+&#9;if PartA:FindFirstChild(&quot;WeldValueB&quot;) then
+&#9;&#9;Weld.C1 = PartA.WeldValueB.Value
+&#9;else
+&#9;&#9;Weld.C1 = PartB.CFrame:toObjectSpace(PartA.CFrame)
+&#9;&#9;local ValueB = Instance.new(&quot;CFrameValue&quot;, PartA)
+&#9;&#9;ValueB.Value = Weld.C1
+&#9;&#9;ValueB.Name = &quot;WeldValueB&quot;
+&#9;end
+&#9;PartA.Anchored = false
+&#9;return Weld
+end
+
+function module:CreateExisting(PartA)
+&#9;if not PartA or not PartA:FindFirstChild(&quot;WeldPartB&quot;) or not PartA:FindFirstChild(&quot;WeldValueA&quot;) or not PartA:FindFirstChild(&quot;WeldValueB&quot;)then return end&#9;
+&#9;local Weld = Instance.new(&quot;Weld&quot;, game.JointsService)
+&#9;Weld.Part0 = PartA
+&#9;Weld.Part1 = PartA.WeldPartB.Value
+&#9;Weld.C0 = PartA.WeldValueA.Value
+&#9;Weld.C1 = PartA.WeldValueB.Value
+&#9;PartA.Anchored = false
+&#9;return Weld
+end
+
+function module:ModelExisting(Model)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) then
+&#9;&#9;&#9;module:CreateExisting(v)
+&#9;&#9;elseif v.ClassName == &quot;Model&quot; then
+&#9;&#9;&#9;module:ModelExisting(v)
+&#9;&#9;end
+&#9;end
+end
+
+function module:CreateBlank(PartA, PartB)
+&#9;local Weld = Instance.new(&quot;Weld&quot;, game.JointsService)
+&#9;Weld.Part0 = PartA
+&#9;Weld.Part1 = PartB
+&#9;if not PartA:FindFirstChild(&quot;WeldPartB&quot;) then
+&#9;&#9;local ValuePartB = Instance.new(&quot;ObjectValue&quot;, PartA)
+&#9;&#9;ValuePartB.Value = PartB
+&#9;&#9;ValuePartB.Name = &quot;WeldPartB&quot;
+&#9;end
+&#9;if not PartA:FindFirstChild(&quot;WeldValueA&quot;) then
+&#9;&#9;local ValueA = Instance.new(&quot;CFrameValue&quot;, PartA)
+&#9;&#9;ValueA.Value = Weld.C0
+&#9;&#9;ValueA.Name = &quot;WeldValueA&quot;
+&#9;end
+&#9;if not PartA:FindFirstChild(&quot;WeldValueB&quot;) then
+&#9;&#9;local ValueB = Instance.new(&quot;CFrameValue&quot;, PartA)
+&#9;&#9;ValueB.Value = Weld.C1
+&#9;&#9;ValueB.Name = &quot;WeldValueB&quot;
+&#9;end
+&#9;PartA.Anchored = false
+&#9;return Weld
+end
+
+function module:CreateBlankUnsaved(PartA, PartB)
+&#9;local Weld = Instance.new(&quot;Weld&quot;, game.JointsService)
+&#9;Weld.Part0 = PartA
+&#9;Weld.Part1 = PartB
+&#9;PartA.Anchored = false
+&#9;return Weld
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX5BED7A2327F741BD8B2343EC11DE294E">
+			<Properties>
+				<string name="Name">Scale</string>
+				<ProtectedString name="Source">local module = {}
+
+function FindObjectHelper(Model, ClassName, ListOfFoundObjects)
+&#9;if not Model then return end
+&#9;if not ClassName or Model.ClassName == ClassName or (pcall(Model.IsA, Model, ClassName) and Model:IsA(ClassName)) then
+&#9;&#9;table.insert(ListOfFoundObjects, Model)
+&#9;end
+&#9;if pcall(Model.GetChildren, Model) then
+&#9;&#9;local ModelChildren = Model:GetChildren()
+&#9;&#9;for i = 1, #ModelChildren do
+&#9;&#9;&#9;FindObjectHelper(ModelChildren[i], ClassName, ListOfFoundObjects)
+&#9;&#9;end
+&#9;end
+end
+
+function module:Part(Part, ResizeFactor)
+&#9;if pcall(function() Part.FormFactor = &quot;Custom&quot; end) then Part.FormFactor = &quot;Custom&quot; end
+&#9;local OldCFrame = Part.CFrame
+&#9;Part.Size = Part.Size * ResizeFactor
+&#9;Part.CFrame = OldCFrame
+&#9;
+&#9;return Part
+end
+
+function module:Model(Model, ResizeFactor)
+&#9;local ModelCFrame = Model:GetModelCFrame()
+&#9;local ModelSize = Model:GetModelSize()
+&#9;local BaseParts = {}
+&#9;local BasePartCFrames = {}
+&#9;local Joints = {}
+&#9;local JointParents = {}
+&#9;local Meshes = {}
+&#9;
+&#9;FindObjectHelper(Model, &quot;BasePart&quot;, BaseParts)
+&#9;FindObjectHelper(Model, &quot;JointInstance&quot;, Joints)
+&#9;
+&#9;FindObjectHelper(Model, &quot;FileMesh&quot;, Meshes)
+&#9;FindObjectHelper(Model, &quot;CylinderMesh&quot;, Meshes)
+&#9;FindObjectHelper(Model, &quot;BlockMesh&quot;, Meshes)
+&#9;
+&#9;for _, v in pairs(BaseParts) do
+&#9;&#9;BasePartCFrames[v] = v.CFrame
+&#9;end
+&#9;
+&#9;for _, v in pairs(Meshes) do
+&#9;&#9;v.Scale = v.Scale * ResizeFactor
+&#9;end
+&#9;
+&#9;for _, v in pairs(Joints) do
+&#9;&#9;v.C0 = v.C0 + (v.C0.p) * (ResizeFactor - 1)
+&#9;&#9;v.C1 = v.C1 + (v.C1.p) * (ResizeFactor - 1)
+&#9;&#9;JointParents[v] = v.Parent
+&#9;end
+&#9;
+&#9;for _, v in pairs(BaseParts) do
+&#9;&#9;if pcall(function() v.FormFactor = &quot;Custom&quot; end) then v.FormFactor = &quot;Custom&quot; end
+&#9;&#9;v.Size = v.Size * ResizeFactor
+&#9;&#9;local OldCFrame = BasePartCFrames[v]
+&#9;&#9;local OldPositionInModel = ModelCFrame:pointToObjectSpace(OldCFrame.p)
+&#9;&#9;local DistanceFromCorner = OldPositionInModel + ModelSize/2
+&#9;&#9;DistanceFromCorner = DistanceFromCorner * ResizeFactor
+&#9;&#9;
+&#9;&#9;local NewPositionInSpace = ModelCFrame:pointToWorldSpace(DistanceFromCorner - ModelSize/2)
+&#9;&#9;v.CFrame = OldCFrame - OldCFrame.p + NewPositionInSpace
+&#9;end
+&#9;
+&#9;for _, v in pairs(Joints) do
+&#9;&#9;v.Parent = JointParents[v]
+&#9;end
+&#9;
+&#9;return Model
+end
+
+function module:CheapModel(Model, ResizeFactor)
+&#9;local BaseParts = {}
+&#9;
+&#9;FindObjectHelper(Model, &quot;BasePart&quot;, BaseParts)
+&#9;
+&#9;for _, v in pairs(BaseParts) do
+&#9;&#9;if pcall(function() v.FormFactor = &quot;Custom&quot; end) then v.FormFactor = &quot;Custom&quot; end
+&#9;&#9;local OldCFrame = v.CFrame
+&#9;&#9;v.Size = v.Size * ResizeFactor
+&#9;&#9;v.CFrame = OldCFrame - OldCFrame.p + OldCFrame.p * ResizeFactor
+&#9;end
+&#9;
+&#9;return Model
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX67CE12020A9E4A869CD2AC10B4E39A7E">
+			<Properties>
+				<string name="Name">Raycast</string>
+				<ProtectedString name="Source">local module = {}
+
+module.Bullets = workspace:FindFirstChild(&quot;BulletStorage&quot;) or Instance.new(&quot;Model&quot;, workspace)
+module.Bullets.Name = &quot;BulletStorage&quot;
+
+function module:New(Start, Range)
+&#9;local Ray = Ray.new(Start.p, Start.lookVector * Range)
+&#9;local HitObj, HitPos = workspace.FindPartOnRay(workspace, Ray, module.Bullets)
+&#9;local Distance = (Start.p - HitPos).magnitude
+&#9;return HitObj, HitPos, Distance
+end
+
+function module:NewIgnore(Start, Range, Ignores)
+&#9;local IgnoreList = module.Bullets:GetChildren()
+&#9;for _, v in ipairs(Ignores) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) then
+&#9;&#9;&#9;table.insert(IgnoreList, v)
+&#9;&#9;end
+&#9;end
+&#9;local Ray = Ray.new(Start.p, Start.lookVector * Range)
+&#9;local HitObj, HitPos = workspace.FindPartOnRayWithIgnoreList(workspace, Ray, IgnoreList)
+&#9;local Distance = (Start.p - HitPos).magnitude
+&#9;return HitObj, HitPos, Distance
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBXED1D07AB00024404A7E138392B7247EC">
+			<Properties>
+				<string name="Name">FormWeapon</string>
+				<ProtectedString name="Source">local module = {}
+
+local Weld = require(game.ReplicatedStorage.Libraries.Weld)
+local Group = require(game.ReplicatedStorage.Libraries.Group)
+local Stats = require(game.ReplicatedStorage.Libraries.ModuleCompiler)
+
+local function ConnectModels(Gun, Model1, Model2, Connection1, Connection2)
+&#9;local HeldPointA, HeldPointB
+&#9;for _, v in pairs(Model1:GetChildren()) do
+&#9;&#9;if v.Name == &quot;HoldPoint&quot; then
+&#9;&#9;&#9;if v:FindFirstChild(&quot;PriorityMain&quot;) then
+&#9;&#9;&#9;&#9;HeldPointA = v
+&#9;&#9;&#9;elseif v:FindFirstChild(&quot;PriorityAlt&quot;) then
+&#9;&#9;&#9;&#9;HeldPointB = v
+&#9;&#9;&#9;end
+&#9;&#9;end
+&#9;&#9;if v.Name == &quot;PrimaryColour&quot; then
+&#9;&#9;&#9;v.BrickColor = BrickColor.new(Gun.Colours[1])
+&#9;&#9;end
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) and v ~= Connection1 then
+&#9;&#9;&#9;v.CanCollide = false
+&#9;&#9;&#9;v.CFrame = Connection2.CFrame * Connection1.CFrame:toObjectSpace(v.CFrame)
+&#9;&#9;end
+&#9;end
+&#9;Connection1.CanCollide = false
+&#9;Connection2.CanCollide = false
+&#9;return HeldPointA, HeldPointB
+end
+
+function module:Create(Gun)
+&#9;local GunStats = Stats.NewTable()
+&#9;local HeldPointA, HeldPointB
+&#9;for _, v in pairs(Gun.Modules) do
+&#9;&#9;local Key = v[1]
+&#9;&#9;local Name = v[2]
+&#9;&#9;local Extra = v[4] or &quot;&quot;
+&#9;&#9;local Connector = v[3] and Gun.Model:FindFirstChild(v[3], true) or Gun.Model
+&#9;&#9;game.ReplicatedStorage.GunModules:WaitForChild(Key..&quot;s&quot;)
+&#9;&#9;game.ReplicatedStorage.GunModules[Key..&quot;s&quot;]:WaitForChild(Name)
+&#9;&#9;game.ReplicatedStorage.GunModules[Key..&quot;s&quot;][Name]:WaitForChild(&quot;Model&quot;)
+&#9;&#9;if Connector:FindFirstChild(&quot;Connection&quot;..Key..Extra) then
+&#9;&#9;&#9;Stats.AddModule(GunStats, game.ReplicatedStorage.GunModules[Key..&quot;s&quot;][Name])
+&#9;&#9;&#9;local NewModel = game.ReplicatedStorage.GunModules[Key..&quot;s&quot;][Name].Model:Clone()
+&#9;&#9;&#9;NewModel.Name = Key
+&#9;&#9;&#9;NewModel.Parent = Connector
+&#9;&#9;&#9;local TempA, TempB = ConnectModels(Gun, NewModel, Connector, NewModel.Connection, Connector[&quot;Connection&quot;..Key..Extra])
+&#9;&#9;&#9;if TempA then
+&#9;&#9;&#9;&#9;if HeldPointA then
+&#9;&#9;&#9;&#9;&#9;if TempA.PriorityMain.Value &lt; HeldPointA.PriorityMain.Value then
+&#9;&#9;&#9;&#9;&#9;&#9;HeldPointA = TempA
+&#9;&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;HeldPointA = TempA
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;&#9;if TempB then
+&#9;&#9;&#9;&#9;if HeldPointB then
+&#9;&#9;&#9;&#9;&#9;if TempB.PriorityAlt.Value &lt; HeldPointB.PriorityAlt.Value then
+&#9;&#9;&#9;&#9;&#9;&#9;HeldPointB = TempB
+&#9;&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;HeldPointB = TempB
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;Gun.Stats = GunStats
+&#9;
+&#9;Group:Ungroup(Gun.Model)
+&#9;
+&#9;for _, v in pairs(Gun.Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) and v.Name:find(&quot;Connection&quot;) then
+&#9;&#9;&#9;v:Destroy()
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;return HeldPointA, HeldPointB
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBXC25DE259A4304070921467480C1CD018">
+			<Properties>
+				<string name="Name">Group</string>
+				<ProtectedString name="Source">local module = {}
+
+function RecursiveUngroup(Model, Parent)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v.ClassName == &quot;Model&quot; then
+&#9;&#9;&#9;RecursiveUngroup(v, Parent)
+&#9;&#9;else
+&#9;&#9;&#9;v.Parent = Parent
+&#9;&#9;end
+&#9;end
+&#9;Model:Destroy()
+end
+
+function module:Ungroup(Model)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v.ClassName == &quot;Model&quot; then
+&#9;&#9;&#9;RecursiveUngroup(v, Model)
+&#9;&#9;end
+&#9;end
+end
+
+function module:BreakModel(Model)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) then
+&#9;&#9;&#9;v:BreakJoints()
+&#9;&#9;end
+&#9;end
+end
+
+function module:AnchorModel(Model)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) then
+&#9;&#9;&#9;v.Anchored = true
+&#9;&#9;end
+&#9;end
+end
+
+function module:UnAnchorModel(Model)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) then
+&#9;&#9;&#9;v.Anchored = false
+&#9;&#9;end
+&#9;end
+end
+
+function module:RefreshScripts(Model, Ignore)
+&#9;for _, v in ipairs(Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;Script&quot;) and v.Disabled == false and Ignore ~= v then
+&#9;&#9;&#9;v.Disabled = true
+&#9;&#9;&#9;delay(0.1, function()
+&#9;&#9;&#9;&#9;v.Disabled = false
+&#9;&#9;&#9;end)
+&#9;&#9;end
+&#9;end
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBXC1E075B0EE7D449683AC665E03EFF8EE">
+			<Properties>
+				<string name="Name">InverseKinematics</string>
+				<ProtectedString name="Source">local module = {}
+
+local Weld = require(game.ReplicatedStorage.Libraries.Weld)
+
+local Part = Instance.new(&quot;Part&quot;)
+Part.FormFactor = &quot;Custom&quot;
+Part.CanCollide = false
+Part.TopSurface = Enum.SurfaceType.Smooth
+Part.BottomSurface = Enum.SurfaceType.Smooth
+
+function module:SetupArm(Arm)
+&#9;Arm.Transparency = 1
+&#9;local Upper = Part:Clone()
+&#9;Upper.Parent = Arm
+&#9;Upper.Name = &quot;UpperArm&quot;
+&#9;Upper.Size = Vector3.new(Arm.Size.X, Arm.Size.Z, Arm.Size.Y/2)
+&#9;local UpperWeld = Weld:CreateBlank(Arm, Upper)
+&#9;local Lower = Part:Clone()
+&#9;Lower.Parent = Arm
+&#9;Lower.Name = &quot;Lower&quot;
+&#9;Lower.Size = Vector3.new(Arm.Size.X, Arm.Size.Z, Arm.Size.Y/2)
+&#9;local LowerWeld = Weld:CreateBlank(Arm, Lower)
+&#9;local Distance = Instance.new(&quot;NumberValue&quot;, Arm)
+&#9;Distance.Name = &quot;Distance&quot;
+&#9;
+&#9;Distance.Changed:connect(function()
+&#9;&#9;local MidLength = math.sqrt(math.pow(Upper.Size.Z, 2) - math.pow(Distance.Value/2, 2))
+&#9;&#9;--local MiddleB = Arm.CFrame:pointToWorldSpace(Vector3.new(0, -Arm.Size.Y/2 + Distance.Value/2, 0))
+&#9;&#9;local Direction = math.asin(MidLength/Upper.Size.Z)
+&#9;&#9;local Direction2 = math.pi/2 - Direction
+&#9;&#9;
+&#9;&#9;UpperWeld.C0 = CFrame.new(0, Upper.Size.Z, -Upper.Size.X/2) * CFrame.Angles(-Direction, 0, 0)
+&#9;&#9;LowerWeld.C0 = CFrame.new(0, -Distance.Value + Lower.Size.Z, -Lower.Size.X/2) * CFrame.Angles(Direction, 0, 0)
+&#9;&#9;UpperWeld.C1 = CFrame.new(0, Upper.Size.Z/2, -Upper.Size.X/2)
+&#9;&#9;LowerWeld.C1 = CFrame.new(0, -Lower.Size.Z/2, -Lower.Size.X/2)
+&#9;&#9;-- + CFrame.new(Start, Middle).lookVector * Upper.Size.Z/2
+&#9;&#9;--Elbow.CFrame = CFrame.new(Middle, MiddleB) * CFrame.Angles(0, 0, math.rad(90))
+&#9;&#9;--Lower.CFrame = CFrame.new(Middle, End) + CFrame.new(Middle, End).lookVector * Lower.Size.Z/2
+&#9;end)
+&#9;
+&#9;Distance.Value = Arm.Size.Y * 0.9
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX103817AAC59240A2A9254AC00F91EBDA">
+			<Properties>
+				<string name="Name">Helper</string>
+				<ProtectedString name="Source">local module = {}
+
+function module.TweenValue(Current, Aim, Increment)
+&#9;if Current &lt;= Aim then
+&#9;&#9;return math.min(Current + Increment, Aim)
+&#9;elseif Current &gt;= Aim then
+&#9;&#9;return math.max(Current - Increment, Aim)
+&#9;end
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX745A38AF3E554B67A0E3F530597DEB0E">
+			<Properties>
+				<string name="Name">Sound</string>
+				<ProtectedString name="Source">local module = {}
+
+function module:Play(Part, Sound)
+&#9;local Sound = game.ReplicatedStorage.Sounds[Sound]:Clone()
+&#9;Sound.Parent = Part
+&#9;Sound:Play()
+&#9;game.Debris:AddItem(Sound, 10)
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX577FEF03C0774E97A347323176EBBE40">
+			<Properties>
+				<string name="Name">Animation</string>
+				<ProtectedString name="Source">local module = {}
+module.LoadedAnims = {}
+
+function module:Stop(Anim)
+&#9;if module.LoadedAnims[Anim] then
+&#9;&#9;module.LoadedAnims[Anim]:Stop(0.2)
+&#9;end
+end
+
+function module:Play(Anim, Humanoid)
+&#9;if game.ReplicatedStorage.Animations[Anim] then
+&#9;&#9;module:Stop(Anim)
+&#9;&#9;module.LoadedAnims[Anim] = Humanoid:LoadAnimation(game.ReplicatedStorage.Animations[Anim])
+&#9;&#9;module.LoadedAnims[Anim]:Play(0.2)
+&#9;end
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX3B2188F6FD104A6C997054B273CC586B">
+			<Properties>
+				<string name="Name">ModuleCompiler</string>
+				<ProtectedString name="Source">local module = {}
+
+function module.NewTable()
+&#9;local Table = {}
+&#9;Table.Accuracy = 0
+&#9;Table.Ammo = 0
+&#9;Table.FireRate = 0
+&#9;Table.MuzzleVelocity = 0
+&#9;Table.RecoilCompensation = 0
+&#9;Table.ReloadTime = 0
+&#9;Table.Weight = 0
+&#9;Table.ZoomLevel = 0
+&#9;Table.Automatic = false
+&#9;Table.Suppressed = false
+&#9;Table.Bullet = &quot;&quot;
+&#9;return Table
+end
+
+local function AddStat(Table, Stats, Stat, Level, Overwrite)
+&#9;if Stats:FindFirstChild(Stat) then
+&#9;&#9;if Overwrite then
+&#9;&#9;&#9;if Stats[Stat]:IsA(&quot;IntValue&quot;) then
+&#9;&#9;&#9;&#9;Table[Stat] = Stats[Stat].Value * (Level or 1)
+&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;Table[Stat] = Stats[Stat].Value
+&#9;&#9;&#9;end
+&#9;&#9;else
+&#9;&#9;&#9;Table[Stat] = Table[Stat] + Stats[Stat].Value * (Level or 1)
+&#9;&#9;end
+&#9;end
+end
+
+function module.AddModule(Table, Stats)
+&#9;AddStat(Table, Stats, &quot;Accuracy&quot;, 0.1)
+&#9;AddStat(Table, Stats, &quot;Ammo&quot;)
+&#9;AddStat(Table, Stats, &quot;FireRate&quot;)
+&#9;AddStat(Table, Stats, &quot;MuzzleVelocity&quot;)
+&#9;AddStat(Table, Stats, &quot;RecoilCompensation&quot;, 0.1)
+&#9;AddStat(Table, Stats, &quot;ReloadTime&quot;, 0.1)
+&#9;AddStat(Table, Stats, &quot;ZoomLevel&quot;)
+&#9;AddStat(Table, Stats, &quot;Automatic&quot;, 1, true)
+&#9;AddStat(Table, Stats, &quot;Suppressed&quot;, 1, true)
+&#9;AddStat(Table, Stats, &quot;Bullet&quot;, 1, true)
+&#9;for _, v in ipairs(Stats.Model:GetChildren()) do
+&#9;&#9;if v:IsA(&quot;BasePart&quot;) and v.Transparency &lt; 1 then
+&#9;&#9;&#9;Table.Weight = Table.Weight + v:GetMass()
+&#9;&#9;end
+&#9;end
+&#9;return Table
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX3E271C6CDAD24B5BA4BF8FB5018BBEF6">
+			<Properties>
+				<string name="Name">Trello</string>
+				<ProtectedString name="Source">local module = {}
+local HttpService = game:GetService(&apos;HttpService&apos;)
+
+function module.GetLists(BoardID)
+&#9;return HttpService:GetAsync(&apos;https://api.trello.com/1/boards/&apos;..BoardID..&apos;/lists&apos;, true)
+end
+
+function module.GetCards(List)
+&#9;return HttpService:GetAsync(&apos;https://api.trello.com/1/lists/&apos;..List.id..&apos;/cards&apos;, true)
+end
+
+function module.GetChecklists(Card)
+&#9;return HttpService:GetAsync(&apos;https://api.trello.com/1/cards/&apos;..Card.id..&apos;/checklists&apos;, true)
+end
+
+function module.GetCheckItems(Checklist)
+&#9;return HttpService:GetAsync(&apos;https://api.trello.com/1/checklists/&apos;..Checklist.id..&apos;/checkItems&apos;, true)
+end
+
+function module.GetData(Item)
+&#9;return HttpService:JSONDecode(Item)
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBX3F7B2E2B90C8403BB2B21D403D745E03">
+			<Properties>
+				<string name="Name">PlayerDataStore</string>
+				<ProtectedString name="Source">--===============================================--
+--==                    API                    ==--
+--===============================================--
+--[[
+&#9;
+The module returns an object &apos;PlayerDataStore&apos;
+with the following methods:
+
+PlayerDataStore:GetSaveData(Player player) -&gt; returns SaveData
+&#9;Returns the SaveData structure for a given
+&#9;player who is currently in the server.
+&#9;Will yield until the player&apos;s data is actually
+&#9;ready before returning.
+
+PlayerDataStore:GetSaveDataById(integer userId) -&gt; returns SaveData
+&#9;Returns the SaveData structure for a player
+&#9;with a given userId, who may or may not
+&#9;currently be in the server.
+&#9;Will yield until the user&apos;s data is actually
+&#9;ready before returning.
+&#9;
+PlayerDataStore:FlushAll()
+&#9;Saves all unsaved changes in all SaveData
+&#9;structures in the place at the time of calling.
+&#9;Will yield until all of the save calls have
+&#9;completed.
+&#9;
+The SaveData structures have the following methods:
+
+SaveData:Get(string key) -&gt; returns stored value
+&#9;Gets the value associated with |key| in this
+&#9;player&apos;s stored data. The cached value for this
+&#9;server will be returned, so this call will always
+&#9;return immediately.
+&#9;
+SaveData:Set(string key, variant value)
+&#9;Sets the cached value associated with |key| on
+&#9;this server. This cached value will be saved to
+&#9;the DataStore at some point in the future: either
+&#9;when the passive save runs, when the player leaves
+&#9;the server, or when you call Flush() on he SaveData,
+&#9;whichever happens first.
+&#9;The call returns immediately.
+
+SaveData:Update((array of strings) keys, function updateFunction)
+&#9;Atomically update multiple keys of a SaveData
+&#9;at once, and update the results in the data store,
+&#9;ensuring that no data is lost. Will yield until the
+&#9;save to the data store has actually completed.
+&#9;EG, for an important developer product purchase:
+&#9;saveData:Update({&apos;PurchaseCount&apos;, &apos;Money&apos;}, function(oldPurchaseCount, oldMoney)
+&#9;&#9;if not oldPurchaseCount then oldPurchaseCount = 0 end
+&#9;&#9;if not oldMoney then oldMoney = 0 end
+&#9;&#9;oldMoney = oldMoney + developerProductAmount
+&#9;&#9;oldPurchaseCount = oldPurchaseCount + 1
+&#9;&#9;return oldPurchaseCount, oldMoney
+&#9;end)
+&#9;In general you should only be using this function to
+&#9;handle developer product purchases, as the data store
+&#9;throttling limit is quite low, and you will run into
+&#9;it if your users are hitting part of your functionality
+&#9;that uses this with a lot of requests.
+&#9;
+]]--
+
+
+--===============================================--
+--==          Global Module Settings           ==--
+--===============================================--
+
+-- How long to keep cached data for a given player
+-- before letting it be thrown away if there are
+-- no other references to it in your code.
+-- Note1: Even after the expiry time, as long as
+-- there is Lua code in your project somewhere
+-- holding onto a reference to the SaveData object
+-- for a player, the cached data for that player
+-- will be kept.
+-- Note2: Data for a given play will be cached for
+-- as long as that player is in the server whether
+-- or not you actually have a reference to it. The
+-- expiry time is only relevant for the data of
+-- players who are not in the server.
+local CACHE_EXPIRY_TIME = 60*10 --10 minutes
+
+-- How often to save unsaved changes to a player&apos;s 
+-- data store if it has not been manually Flush&apos;d 
+-- by calling the Flush method on their SaveData,
+-- or Flush&apos;d via the player leaving the place.
+local PASSIVE_SAVE_FREQUENCY = 60*1 -- once every 1 minute
+
+-- How accurately to clear cache entries / do passive
+-- saves. That is, how often to check if those things
+-- need to be done.
+local PASSIVE_GRANULARITY = 5 -- check once every 5 seconds
+
+-- Optional key serialization. This specifies how
+-- a given key should be saved to or loaded from
+-- the actual data store. If not specified in the
+-- tables then the key will just be directly
+-- passed to the DataStore:Get/Set/UpdateAsync
+-- methods.
+local SERIALIZE = {}
+local DESERIALIZE = {}
+-- Put your entries here --
+         --vvvvv--
+
+         --^^^^^--
+----------------------------
+-- EG:
+-- SERIALIZE.ScoreObject = function(scoreObject)
+--     return scoreObject.Value
+-- end
+-- DESERIALIZE.ScoreObject = function(value)
+--     local object = Instance.new(&apos;IntValue&apos;)
+--     object.Name = &apos;ScoreIntValue&apos;
+--     object.Value = value
+--     return object
+-- end
+-- ...usage (Note, you would never actually want to do this with an 
+--           IntValue object as shown, you could just be storing a straight 
+--           number instead, and it wouldn&apos;t work very well because
+--           if you just set the IntValue&apos;s value the PlayerDataStore
+--           would not know that it had changed, and would not save the
+--           change. You&apos;d actually have to call Set(...) to make the
+--           change save):
+-- local PlayerDataStore = require(game.ServerStorage.PlayerDataStore)
+-- local saveData = PlayerDataStore:GetSaveData(player)
+-- local valueObject = saveData:Get(&apos;ScoreObject&apos;)
+-- print(valueObject.Name, valueObject.Value) -&gt; ScoreIntValue &lt;value&gt;
+-- local newScoreObject = Instance.new(&apos;IntValue&apos;)
+-- newScoreObject.Value = 4
+-- -- Even though normally you cannot save objects to the data 
+-- -- store, the custom serialize you provided handles it
+-- saveData:Set(&apos;ScoreObject&apos;, newScoreObject)
+-- saveData:Flush()
+
+
+-- The name of the data store to use to store the 
+-- player data.
+local DATASTORE_NAME = &apos;PlayerDataStore_PlayerData&apos;
+
+-- Guarantee a save ASAP when a player leaves a server.
+-- This ensures that if they go to another server of the 
+-- same place the save will almost certainly have already
+-- completed when they enter the new place. You can leave
+-- this off to be lighter on the save quota if you are
+-- not possibly storing very important stuff in the data
+-- store right before a player leaves.
+local SAVE_ON_LEAVE = true
+
+-- Debug flag, for internal debugging
+local DEBUG = false
+
+-- Check that we are on the server, as this is a server
+-- only module.
+if Game.Players.LocalPlayer then
+&#9;error(&quot;PlayerDataStore requested on the client, is a server-only module.&quot;, 2)
+end
+
+--===============================================--
+--==             Utility Functions             ==--
+--===============================================--
+-- Deep copy a table without circular references
+local function DeepCopy(tb)
+&#9;if type(tb) == &apos;table&apos; then
+&#9;&#9;local new = {}
+&#9;&#9;for k, v in pairs(tb) do
+&#9;&#9;&#9;new[k] = DeepCopy(v)
+&#9;&#9;end
+&#9;&#9;return new
+&#9;else
+&#9;&#9;return tb
+&#9;end
+end
+
+-- Spawn a new thread and run it immedately up to
+-- the first yield before returning
+local function SpawnNow(func)
+&#9;local ev = Instance.new(&apos;BindableEvent&apos;)
+&#9;ev.Event:connect(func)
+&#9;ev:Fire()
+end
+&#9;
+--===============================================--
+--==              SaveData Class               ==--
+--===============================================--
+-- Holds the cached saved data for a given player.
+local SaveData = {}
+function SaveData.new(playerDataStore, userId)
+&#9;local this = {}
+&#9;
+&#9;--===============================================--
+&#9;--==               Private Data                ==--
+&#9;--===============================================--&#9;
+&#9;this.userId = userId
+&#9;this.lastSaved = 0
+&#9;
+&#9;-- Locked status, so that saves and updates cannot
+&#9;-- end up fighting over the same data
+&#9;this.locked = false
+&#9;this.unlocked = Instance.new(&apos;BindableEvent&apos;)
+&#9;
+&#9;-- The actual data for this SaveData structure 
+&#9;this.dataSet = nil
+&#9;
+&#9;-- Keys that have unsaved changes
+&#9;this.dirtyKeySet = {}
+&#9;
+&#9;-- keys that we &quot;own&quot;, that is, ones we have
+&#9;-- written to or read from on this SaveData.
+&#9;this.ownedKeySet = {} 
+&#9;
+&#9;--===============================================--
+&#9;--==          Private Implementation           ==--
+&#9;--===============================================--
+&#9;local function ownKey(key)
+&#9;&#9;this.ownedKeySet[key] = true
+&#9;end
+&#9;local function dirtyKey(key)
+&#9;&#9;this.dirtyKeySet[key] = true
+&#9;end
+&#9;local function markAsTouched(key)
+&#9;&#9;ownKey(key)
+&#9;&#9;playerDataStore:markAsTouched(this)
+&#9;end
+&#9;local function markAsDirty(key)
+&#9;&#9;ownKey(key)
+&#9;&#9;dirtyKey(key)
+&#9;&#9;playerDataStore:markAsDirty(this)
+&#9;end
+&#9;
+&#9;-- Load in the data for the struct
+&#9;function this:makeReady(data)
+&#9;&#9;this.dataSet = data
+&#9;&#9;this.lastSaved = tick()
+&#9;&#9;playerDataStore:markAsTouched(this)
+&#9;end
+&#9;
+&#9;function this:waitForUnlocked()
+&#9;&#9;while this.locked do
+&#9;&#9;&#9;this.unlocked.Event:wait()
+&#9;&#9;end
+&#9;end
+&#9;function this:lock()
+&#9;&#9;this.locked = true
+&#9;end
+&#9;function this:unlock()
+&#9;&#9;this.locked = false
+&#9;&#9;this.unlocked:Fire()
+&#9;end
+&#9;
+&#9;--===============================================--
+&#9;--==                Public API                 ==--
+&#9;--===============================================--
+&#9;-- Getter and setter function to manipulate keys 
+&#9;-- for this player.
+&#9;function this:Get(key)
+&#9;&#9;if type(key) ~= &apos;string&apos; then
+&#9;&#9;&#9;error(&quot;Bad argument #1 to SaveData::Get() (string expected)&quot;, 2)
+&#9;&#9;end
+&#9;&#9;if DEBUG then
+&#9;&#9;&#9;print(&quot;SaveData&lt;&quot;..this.userId..&quot;&gt;::Get(&quot;..key..&quot;)&quot;)
+&#9;&#9;end
+&#9;&#9;markAsTouched(key)
+&#9;&#9;local value = this.dataSet[key]
+&#9;&#9;if value == nil and DESERIALIZE[key] then
+&#9;&#9;&#9;-- If there&apos;s no current value, and the key
+&#9;&#9;&#9;-- has serialization, then we should get the
+&#9;&#9;&#9;-- null deserialized state. 
+&#9;&#9;&#9;local v = DESERIALIZE[key](nil)
+&#9;&#9;&#9;-- Note: we don&apos;t markAsDirty here, that&apos;s 
+&#9;&#9;&#9;-- intentional, as we don&apos;t want to save
+&#9;&#9;&#9;-- if we don&apos;t have to, and we don&apos;t need
+&#9;&#9;&#9;-- to here, as Deserialize(key, nil) should
+&#9;&#9;&#9;-- return back the same thing every time.
+&#9;&#9;&#9;-- However, we still need cache the value,
+&#9;&#9;&#9;-- because deserialize(key, nil) might still
+&#9;&#9;&#9;-- be expensive or the caller might expect
+&#9;&#9;&#9;-- the same reference back each time. 
+&#9;&#9;&#9;this.dataSet[key] = v
+&#9;&#9;&#9;return v
+&#9;&#9;else
+&#9;&#9;&#9;return value
+&#9;&#9;end
+&#9;end
+&#9;-- Set(key, value, allowErase)
+&#9;-- Note: If allowErase is not set to true, then 
+&#9;-- the call will error on value = nil, this is
+&#9;-- to prevent you accidentally erasing data when
+&#9;-- you don&apos;t mean to. If you do want to erase,
+&#9;-- then call with allowErase = true
+&#9;function this:Set(key, value, allowErase)
+&#9;&#9;if type(key) ~= &apos;string&apos; then
+&#9;&#9;&#9;error(&quot;Bad argument #1 to SaveData::Set() (string expected)&quot;, 2)
+&#9;&#9;end
+&#9;&#9;if value == nil and not allowErase then
+&#9;&#9;&#9;error(&quot;Attempt to SaveData::Set(&apos;&quot;..key..&quot;&apos;, nil) without allowErase = true&quot;, 2)
+&#9;&#9;end
+&#9;&#9;if DEBUG then
+&#9;&#9;&#9;print(&quot;SaveData&lt;&quot;..this.userId..&quot;&gt;::Set(&quot;..key..&quot;, &quot;..tostring(value)..&quot;)&quot;)
+&#9;&#9;end
+&#9;&#9;markAsDirty(key)
+&#9;&#9;this.dataSet[key] = value
+&#9;end
+&#9;
+&#9;-- For important atomic transactions, update data 
+&#9;-- store. For example, for any Developer Product
+&#9;-- based purchases you should use this to ensure
+&#9;-- that the changes are saved right away, and
+&#9;-- correctly.
+&#9;-- Note: Update() will automatically Flush any
+&#9;-- unsaved changes while doing the update.
+&#9;function this:Update(keyList, func)
+&#9;&#9;if type(keyList) ~= &apos;table&apos; then
+&#9;&#9;&#9;error(&quot;Bad argument #1 to SaveData::Update() (table of keys expected)&quot;, 2)
+&#9;&#9;end
+&#9;&#9;if type(func) ~= &apos;function&apos; then
+&#9;&#9;&#9;error(&quot;Bad argument #2 to SaveData::Update() (function expected)&quot;, 2)
+&#9;&#9;end
+&#9;&#9;if DEBUG then
+&#9;&#9;&#9;print(&quot;SaveData&lt;&quot;..this.userId..&quot;&gt;::Update(&quot;..table.concat(keyList, &quot;, &quot;)..&quot;, &quot;..tostring(func)..&quot;)&quot;)
+&#9;&#9;end
+&#9;&#9;playerDataStore:doUpdate(this, keyList, func)
+&#9;end
+&#9;
+&#9;-- Flush all unsaved changes out to the data 
+&#9;-- store for this player.
+&#9;-- Note: This call will yield and not return
+&#9;-- until the data has actually been saved if
+&#9;-- there were any unsaved changes.
+&#9;function this:Flush()
+&#9;&#9;if DEBUG then
+&#9;&#9;&#9;print(&quot;SaveData&lt;&quot;..this.userId..&quot;&gt;::Flush()&quot;)
+&#9;&#9;end
+&#9;&#9;playerDataStore:doSave(this)
+&#9;end
+&#9;
+&#9;return this
+end
+
+&#9;
+--===============================================--
+--==           PlayerDataStore Class           ==--
+--===============================================--
+-- A singleton that manages all of the player data
+-- saving and loading in a place.
+local PlayerDataStore = {}
+function PlayerDataStore.new()
+&#9;local this = {}
+
+&#9;--===============================================--
+&#9;--==               Private Data                ==--
+&#9;--===============================================--
+&#9;
+&#9;-- The actual data store we are writing to
+&#9;local DataStoreService = Game:GetService(&apos;DataStoreService&apos;)
+&#9;local mDataStore = DataStoreService:GetDataStore(DATASTORE_NAME)
+&#9;
+&#9;-- The weak-reference to each player&apos;s data, so
+&#9;-- that as long as the place owner keeps a ref
+&#9;-- to the data we will have it in this cache, and
+&#9;-- won&apos;t reload a second copy.
+&#9;local mUserIdSaveDataCache = setmetatable({}, {__mode = &apos;v&apos;}) -- {UserId -&gt; SaveData}
+&#9;
+&#9;-- Strong-reference to recently touched data, to
+&#9;-- implement the cache expiry time.
+&#9;local mTouchedSaveDataCacheSet = {} -- {SaveData}
+&#9;
+&#9;-- Strong-reference to the data of players who are
+&#9;-- online, we always want to keep a reference to
+&#9;-- their data.
+&#9;local mOnlinePlayerSaveDataMap = {} -- {Player -&gt; SaveData}
+&#9;
+&#9;-- Dirty save datas, that is, ones that have
+&#9;-- unsaved changes.
+&#9;local mDirtySaveDataSet = {} -- {SaveData}
+&#9;
+&#9;-- Players whose data is currently being requested
+&#9;local mOnRequestUserIdSet = {} -- {UserId}
+&#9;local mRequestCompleted = Instance.new(&apos;BindableEvent&apos;)
+&#9;
+&#9;-- Number of save functions still running
+&#9;-- used on server shutdown to know how long to keep the
+&#9;-- server alive for after the last player has left.
+&#9;local mSavingCount = 0
+&#9;
+&#9;--===============================================--
+&#9;--==          Private Implementation           ==--
+&#9;--===============================================--
+&#9;-- transform a userId into a data store key
+&#9;local function userIdToKey(userId)
+&#9;&#9;return &apos;PlayerList$&apos;..userId
+&#9;end&#9;
+&#9;
+&#9;function this:markAsTouched(saveData)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore::markAsTouched(&quot;..saveData.userId..&quot;)&quot;) end
+&#9;&#9;mTouchedSaveDataCacheSet[saveData] = true
+&#9;&#9;saveData.lastTouched = tick()
+&#9;&#9;mUserIdSaveDataCache[saveData.userId] = saveData
+&#9;end&#9;
+&#9;function this:markAsDirty(saveData)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore::markAsDirty(&quot;..saveData.userId..&quot;)&quot;) end
+&#9;&#9;this:markAsTouched(saveData)
+&#9;&#9;mDirtySaveDataSet[saveData] = true
+&#9;&#9;mUserIdSaveDataCache[saveData.userId] = saveData
+&#9;end
+&#9;
+&#9;-- the initial data to record for a given userId
+&#9;local function initialData(userId)
+&#9;&#9;return {}
+&#9;end
+&#9;
+&#9;-- collect and clear out the dirty key set of a save data
+&#9;local function collectDataToSave(saveData)
+&#9;&#9;local toSave = {}
+&#9;&#9;local toErase = {}
+&#9;&#9;for key, _ in pairs(saveData.dirtyKeySet) do
+&#9;&#9;&#9;local value = saveData.dataSet[key]
+&#9;&#9;&#9;if value ~= nil then
+&#9;&#9;&#9;&#9;-- Get the value to be saved
+&#9;&#9;&#9;&#9;if SERIALIZE[key] then
+&#9;&#9;&#9;&#9;&#9;-- If there is a seralization function provided, then use
+&#9;&#9;&#9;&#9;&#9;-- that to serialize out the value into the data to be
+&#9;&#9;&#9;&#9;&#9;-- stored.
+&#9;&#9;&#9;&#9;&#9;toSave[key] = SERIALIZE[key](value)
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;-- If no serialiation is provided, still do at least a deep
+&#9;&#9;&#9;&#9;&#9;-- copy of the value, so that further changes to the SaveData
+&#9;&#9;&#9;&#9;&#9;-- after the save call will not interfear with the call if
+&#9;&#9;&#9;&#9;&#9;-- it takes multiple tries to update the DataStore data.
+&#9;&#9;&#9;&#9;&#9;toSave[key] = DeepCopy(value)&#9;&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;-- no value, add to the list of keys to erase
+&#9;&#9;&#9;&#9;table.insert(toErase, key)
+&#9;&#9;&#9;end
+&#9;&#9;&#9;-- Turn off the dirty flag for the key, we are working on saving it
+&#9;&#9;&#9;saveData.dirtyKeySet[key] = nil
+&#9;&#9;end&#9;
+&#9;&#9;return toSave, toErase
+&#9;end
+&#9;
+&#9;-- Main saving functions that push out unsaved
+&#9;-- changes to the actual data store
+&#9;function this:doSave(saveData)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore::doSave(&quot;..saveData.userId..&quot;) {&quot;) end
+&#9;&#9;-- update save time and dirty status in my
+&#9;&#9;-- listing even if there arn&apos;t any changes 
+&#9;&#9;-- to save.
+&#9;&#9;saveData.lastSaved = tick()
+&#9;&#9;mDirtySaveDataSet[saveData] = nil&#9;
+&#9;&#9;
+&#9;&#9;-- are there any dirty keys?
+&#9;&#9;if next(saveData.dirtyKeySet) then
+&#9;&#9;&#9;-- cache the data to save
+&#9;&#9;&#9;local toSave, toErase = collectDataToSave(saveData)
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- update the data with all the dirty keys
+&#9;&#9;&#9;saveData:waitForUnlocked()
+&#9;&#9;&#9;saveData:lock()
+&#9;&#9;&#9;mSavingCount = mSavingCount + 1
+&#9;&#9;&#9;mDataStore:UpdateAsync(userIdToKey(saveData.userId), function(oldData)
+&#9;&#9;&#9;&#9;-- Init the data if there is none yet
+&#9;&#9;&#9;&#9;if not oldData then
+&#9;&#9;&#9;&#9;&#9;oldData = initialData(saveData.userId)
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\tattempting save:&quot;) end
+&#9;&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;-- For each dirty key to be saved, update it
+&#9;&#9;&#9;&#9;for key, data in pairs(toSave) do
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving `&quot;..key..&quot;` = &quot;..tostring(data)) end
+&#9;&#9;&#9;&#9;&#9;oldData[key] = data
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;-- For each key to erase, erase it
+&#9;&#9;&#9;&#9;for _, key in pairs(toErase) do
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving `&quot;..key..&quot;` = nil [ERASING])&quot;) end
+&#9;&#9;&#9;&#9;&#9;oldData[key] = nil
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;-- Return back the updated data
+&#9;&#9;&#9;&#9;return oldData
+&#9;&#9;&#9;end)
+&#9;&#9;&#9;if DEBUG then print(&quot;\t saved.&quot;) end
+&#9;&#9;&#9;mSavingCount = mSavingCount - 1
+&#9;&#9;&#9;saveData:unlock()
+&#9;&#9;elseif DEBUG then
+&#9;&#9;&#9;print(&quot;\tnothing to save&quot;)
+&#9;&#9;end
+&#9;&#9;if DEBUG then print(&quot;}&quot;) end
+&#9;end
+&#9;function this:doUpdate(saveData, keyList, updaterFunc)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore::doUpdate(&quot;..saveData.userId..&quot;, {&quot;..table.concat(keyList, &quot;, &quot;)..&quot;}, &quot;..tostring(updaterFunc)..&quot;) {&quot;) end
+&#9;&#9;-- updates happen all at once, lock right away
+&#9;&#9;saveData:waitForUnlocked()
+&#9;&#9;saveData:lock()
+&#9;&#9;mSavingCount = mSavingCount + 1
+&#9;&#9;
+&#9;&#9;-- Unflag this SaveData as dirty
+&#9;&#9;saveData.lastSaved = tick()
+&#9;&#9;mDirtySaveDataSet[saveData] = nil
+&#9;&#9;
+&#9;&#9;-- turn the keyList into a key set as well
+&#9;&#9;-- also own all of the keys in it.
+&#9;&#9;local updateKeySet = {}
+&#9;&#9;for _, key in pairs(keyList) do
+&#9;&#9;&#9;saveData.ownedKeySet[key] = true
+&#9;&#9;&#9;updateKeySet[key] = true
+&#9;&#9;end
+&#9;&#9;
+&#9;&#9;-- gather the data to save currently in the saveData. There
+&#9;&#9;-- may be some or none.
+&#9;&#9;local toSave, toErase = collectDataToSave(saveData)
+&#9;&#9;
+&#9;&#9;-- do the actual update
+&#9;&#9;mDataStore:UpdateAsync(userIdToKey(saveData.userId), function(oldData)
+&#9;&#9;&#9;if DEBUG then print(&quot;\ttrying update:&quot;) end
+&#9;&#9;&#9;-- Init the data if there is none yet
+&#9;&#9;&#9;if not oldData then
+&#9;&#9;&#9;&#9;oldData = initialData(saveData.userId)
+&#9;&#9;&#9;end
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- gather current values to pass to the the updater func
+&#9;&#9;&#9;local valueList = {}
+&#9;&#9;&#9;for i, key in pairs(keyList) do
+&#9;&#9;&#9;&#9;local value = saveData.dataSet[key]
+&#9;&#9;&#9;&#9;if value == nil and DESERIALIZE[key] then
+&#9;&#9;&#9;&#9;&#9;valueList[i] = DESERIALIZE[key](nil)
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;valueList[i] = value
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- call the updaterFunc and get the results back
+&#9;&#9;&#9;local results = {updaterFunc(unpack(valueList, 1, #keyList))}
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- Save the results to the data store and SaveData cache
+&#9;&#9;&#9;for i, result in pairs(results) do&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;local key = keyList[i]
+&#9;&#9;&#9;&#9;-- Serialize if needed, and save to the result for the data store
+&#9;&#9;&#9;&#9;if SERIALIZE[key] then
+&#9;&#9;&#9;&#9;&#9;local serialized = SERIALIZE[key](result)
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving result: `&quot;..key..&quot;` = &quot;..tostring(serialized)..&quot; [SERIALIZED]&quot;) end&#9;
+&#9;&#9;&#9;&#9;&#9;oldData[key] = serialized
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving result: `&quot;..key..&quot;` = &quot;..tostring(result)) end&#9;
+&#9;&#9;&#9;&#9;&#9;oldData[key] = result
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;-- also save the result to the SaveData cache:
+&#9;&#9;&#9;&#9;saveData.dataSet[key] = result
+&#9;&#9;&#9;end
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- Also while we&apos;re at it, save the dirty values to the data store
+&#9;&#9;&#9;-- but only if they weren&apos;t in the set that we just updated.
+&#9;&#9;&#9;for key, value in pairs(toSave) do
+&#9;&#9;&#9;&#9;-- Serialize if needed. 
+&#9;&#9;&#9;&#9;if not updateKeySet[key] then
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving unsaved value: `&quot;..key..&quot;` = &quot;..tostring(value)) end
+&#9;&#9;&#9;&#9;&#9;oldData[key] = value --(note, value is already serialized)
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;&#9;for _, key in pairs(toErase) do
+&#9;&#9;&#9;&#9;if not updateKeySet[key] then
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;\t\tsaving unsaved value: `&quot;..key..&quot;` = nil [ERASING]&quot;) end
+&#9;&#9;&#9;&#9;&#9;oldData[key] = nil
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;&#9;
+&#9;&#9;&#9;-- return the finalized result
+&#9;&#9;&#9;return oldData
+&#9;&#9;end)
+&#9;&#9;
+&#9;&#9;
+&#9;&#9;-- finish the save
+&#9;&#9;mSavingCount = mSavingCount - 1
+&#9;&#9;saveData:unlock()
+&#9;&#9;
+&#9;&#9;if DEBUG then print(&quot;}&quot;) end
+&#9;end
+&#9;
+&#9;-- Main method for loading in the data of a user
+&#9;-- or grabbing it from the cache if it is still
+&#9;-- &quot;hot&quot; (in the UserIdSaveDataCache but nowhere
+&#9;-- else)
+&#9;local function doLoad(userId)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore::doLoad(&quot;..userId..&quot;) {&quot;) end
+&#9;&#9;local saveData;
+&#9;&#9;-- First see if it is in the cache
+&#9;&#9;saveData = mUserIdSaveDataCache[userId]
+&#9;&#9;if saveData then
+&#9;&#9;&#9;if DEBUG then print(&quot;\tRecord was already in cache&quot;) end
+&#9;&#9;&#9;-- touch it and return it
+&#9;&#9;&#9;this:markAsTouched(saveData)
+&#9;&#9;&#9;if DEBUG then print(&quot;}&quot;) end
+&#9;&#9;&#9;return saveData
+&#9;&#9;end
+&#9;&#9;-- Not on file, we need to load it in, are
+&#9;&#9;-- we already loading it though?
+&#9;&#9;if mOnRequestUserIdSet[userId] then
+&#9;&#9;&#9;if DEBUG then print(&quot;\tRecord already requested, wait for it...&quot;) end
+&#9;&#9;&#9;-- wait for the existing request to complete
+&#9;&#9;&#9;while true do
+&#9;&#9;&#9;&#9;saveData = mRequestCompleted.Event:wait()()
+&#9;&#9;&#9;&#9;if saveData.userId == userId then
+&#9;&#9;&#9;&#9;&#9;-- this IS the request we&apos;re looking for
+&#9;&#9;&#9;&#9;&#9;this:markAsTouched(saveData)
+&#9;&#9;&#9;&#9;&#9;if DEBUG then 
+&#9;&#9;&#9;&#9;&#9;&#9;print(&quot;\tRecord successfully retrieved by another thread&quot;)
+&#9;&#9;&#9;&#9;&#9;&#9;print(&quot;}&quot;) 
+&#9;&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;&#9;return saveData
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;else
+&#9;&#9;&#9;if DEBUG then print(&quot;\tRequest record...&quot;) end
+&#9;&#9;&#9;-- Not on request, we need to do the load
+&#9;&#9;&#9;mOnRequestUserIdSet[userId] = true
+&#9;&#9;&#9;-- load the data
+&#9;&#9;&#9;local data = mDataStore:GetAsync(userIdToKey(userId)) or {}
+&#9;&#9;&#9;-- deserialize any data that needs to be deserialized
+&#9;&#9;&#9;for key, value in pairs(data) do
+&#9;&#9;&#9;&#9;if DESERIALIZE[key] then
+&#9;&#9;&#9;&#9;&#9;data[key] = DESERIALIZE[key](value)
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;&#9;-- create te SaveData structure and initialize it
+&#9;&#9;&#9;saveData = SaveData.new(this, userId)
+&#9;&#9;&#9;saveData:makeReady(data)
+&#9;&#9;&#9;this:markAsTouched(saveData)
+&#9;&#9;&#9;-- unmark as loading
+&#9;&#9;&#9;mOnRequestUserIdSet[userId] = nil
+&#9;&#9;&#9;-- Pass to other waiters
+&#9;&#9;&#9;mRequestCompleted:Fire(function() return saveData end)
+&#9;&#9;&#9;if DEBUG then 
+&#9;&#9;&#9;&#9;print(&quot;\tRecord successfully retrieved from data store&quot;)
+&#9;&#9;&#9;&#9;print(&quot;}&quot;) 
+&#9;&#9;&#9;end
+&#9;&#9;&#9;return saveData
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;-- Handle adding and removing strong-references to a player&apos;s
+&#9;-- data while they are in the server.
+&#9;local function HandlePlayer(player)
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore&gt; Player &quot;..player.userId..&quot; Entered &gt; Load Data&quot;) end
+&#9;&#9;local saveData = doLoad(player.userId)
+&#9;&#9;-- are the still in the game? If they are then
+&#9;&#9;-- add the strong-reference to the SaveData
+&#9;&#9;if player.Parent then
+&#9;&#9;&#9;mOnlinePlayerSaveDataMap[player] = saveData
+&#9;&#9;end 
+&#9;end
+&#9;Game.Players.PlayerAdded:connect(HandlePlayer)
+&#9;for _, player in pairs(Game.Players:GetChildren()) do
+&#9;&#9;if player:IsA(&apos;Player&apos;) then
+&#9;&#9;&#9;HandlePlayer(player)
+&#9;&#9;end
+&#9;end
+&#9;Game.Players.PlayerRemoving:connect(function(player)
+&#9;&#9;-- remove the strong-reference when they leave.
+&#9;&#9;local oldSaveData = mOnlinePlayerSaveDataMap[player]
+&#9;&#9;mOnlinePlayerSaveDataMap[player] = nil
+&#9;&#9;
+&#9;&#9;-- Do a save too if the flag is on
+&#9;&#9;if SAVE_ON_LEAVE and oldSaveData then 
+&#9;&#9;&#9;-- Note: We only need to do a save if the initial 
+&#9;&#9;&#9;-- load for that player actually completed yet. Cached
+&#9;&#9;&#9;-- versions from before the player entered are not a concern
+&#9;&#9;&#9;-- here as if there were a cache version the oldSaveData
+&#9;&#9;&#9;-- would exist, as the doLoad on player entered would
+&#9;&#9;&#9;-- have completed immediately.
+&#9;&#9;&#9;if DEBUG then print(&quot;PlayerDataStore&gt; Player &quot;..player.userId..&quot; Left with data to save &gt; Save Data&quot;) end
+&#9;&#9;&#9;this:doSave(oldSaveData)
+&#9;&#9;end
+&#9;end)
+&#9;
+&#9;-- when the game shuts down, save all data
+&#9;Game.OnClose = function()
+&#9;&#9;if DEBUG then print(&quot;PlayerDataStore&gt; OnClose Shutdown\n\tFlushing...&quot;) end
+&#9;&#9;
+&#9;&#9;-- First, flush all unsaved changes at the point of shutdown
+&#9;&#9;this:FlushAll()
+&#9;&#9;
+&#9;&#9;if DEBUG then print(&quot;\tFlushed, additional wait...&quot;) end
+&#9;&#9;
+&#9;&#9;-- Then wait for random saves that might still be running
+&#9;&#9;-- for some reason to complete as well
+&#9;&#9;while mSavingCount &gt; 0 do
+&#9;&#9;&#9;wait()
+&#9;&#9;end
+&#9;&#9;
+&#9;&#9;if DEBUG then print(&quot;\tShutdown completed normally.&quot;) end
+&#9;end
+&#9;
+&#9;-- Cleanup of cache entries that have timed out (not been touched
+&#9;-- in any way for more than CACHE_EXPIRY_TIME)
+&#9;local function removeTimedOutCacheEntries()
+&#9;&#9;local now = tick()
+&#9;&#9;for saveData, _ in pairs(mTouchedSaveDataCacheSet) do
+&#9;&#9;&#9;if (now - saveData.lastTouched) &gt; CACHE_EXPIRY_TIME then
+&#9;&#9;&#9;&#9;-- does it have unsaved changes still somehow?
+&#9;&#9;&#9;&#9;if mDirtySaveDataSet[saveData] then
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;&gt;&gt; Cache expired for: &quot;..saveData.userId..&quot;, has unsaved changes, wait.&quot;) end
+&#9;&#9;&#9;&#9;&#9;-- Spawn off a save and don&apos;t remove it, it needs to save
+&#9;&#9;&#9;&#9;&#9;SpawnNow(function() this:doSave(saveData) end)
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;if DEBUG then print(&quot;&gt;&gt; Cache expired for: &quot;..saveData.userId..&quot;, removing.&quot;) end
+&#9;&#9;&#9;&#9;&#9;-- It is not needed, uncache it
+&#9;&#9;&#9;&#9;&#9;mTouchedSaveDataCacheSet[saveData] = nil
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end 
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;-- Passive saving task, save entries with unsaved changes that have
+&#9;-- not been saved for more than PASSIVE_SAVE_FREQUENCY.
+&#9;local function passiveSaveUnsavedChanges()
+&#9;&#9;local now = tick()
+&#9;&#9;for saveData, _ in pairs(mDirtySaveDataSet) do
+&#9;&#9;&#9;if (now - saveData.lastSaved) &gt; PASSIVE_SAVE_FREQUENCY then
+&#9;&#9;&#9;&#9;if DEBUG then print(&quot;PlayerDataStore&gt;&gt; Passive save for: &quot;..saveData.userId) end
+&#9;&#9;&#9;&#9;SpawnNow(function()
+&#9;&#9;&#9;&#9;&#9;this:doSave(saveData)
+&#9;&#9;&#9;&#9;end)
+&#9;&#9;&#9;end
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;-- Main save / cache handling daemon
+&#9;Spawn(function()
+&#9;&#9;while true do
+&#9;&#9;&#9;removeTimedOutCacheEntries()
+&#9;&#9;&#9;passiveSaveUnsavedChanges()
+&#9;&#9;&#9;wait(PASSIVE_GRANULARITY)
+&#9;&#9;end
+&#9;end)
+&#9;
+&#9;--===============================================--
+&#9;--==                Public API                 ==--
+&#9;--===============================================--
+&#9;
+&#9;-- Get the data for a player online in the place
+&#9;function this:GetSaveData(player)
+&#9;&#9;if not player or not player:IsA(&apos;Player&apos;) then
+&#9;&#9;&#9;error(&quot;Bad argument #1 to PlayerDataStore::GetSaveData(), Player expected&quot;, 2)
+&#9;&#9;end
+&#9;&#9;return doLoad(player.userId)
+&#9;end
+&#9;
+&#9;-- Get the data for a player by userId, they may
+&#9;-- or may not be currently online in the place.
+&#9;function this:GetSaveDataById(userId)
+&#9;&#9;if type(userId) ~= &apos;number&apos; then
+&#9;&#9;&#9;error(&quot;Bad argument #1 to PlayerDataStore::GetSaveDataById(), userId expected&quot;, 2)
+&#9;&#9;end
+&#9;&#9;return doLoad(userId)
+&#9;end
+&#9;
+&#9;-- Save out all unsaved changes at the time of 
+&#9;-- calling.
+&#9;-- Note: This call yields until all the unsaved 
+&#9;-- changes have been saved out.
+&#9;function this:FlushAll()
+&#9;&#9;local savesRunning = 0
+&#9;&#9;local complete = Instance.new(&apos;BindableEvent&apos;)
+&#9;&#9;-- Call save on all of the dirty entries
+&#9;&#9;for saveData, _ in pairs(mDirtySaveDataSet) do
+&#9;&#9;&#9;SpawnNow(function()
+&#9;&#9;&#9;&#9;savesRunning = savesRunning + 1
+&#9;&#9;&#9;&#9;this:doSave(saveData)
+&#9;&#9;&#9;&#9;savesRunning = savesRunning - 1
+&#9;&#9;&#9;&#9;if savesRunning &lt;= 0 then
+&#9;&#9;&#9;&#9;&#9;complete:Fire()
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end)
+&#9;&#9;end
+&#9;&#9;-- wait for completion
+&#9;&#9;if savesRunning &gt; 0 then
+&#9;&#9;&#9;complete.Event:wait()
+&#9;&#9;end
+&#9;end
+&#9;
+&#9;return this
+end
+
+return PlayerDataStore.new()</ProtectedString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX186E22D10BB348D1A43A5325D29CAD52">
+				<Properties>
+					<string name="Name">Example_VisitCounter</string>
+					<ProtectedString name="Source">local PlayerDataStore = require(game.ServerScriptService.PlayerDataStore)
+
+function HandlePlayer(player)
+&#9;-- Get a reference to the save data
+&#9;local saveData = PlayerDataStore:GetSaveData(player)
+&#9;
+&#9;-- get the visits
+&#9;local currentVisits = saveData:Get(&apos;VisitCount&apos;)
+&#9;if not currentVisits then
+&#9;&#9;currentVisits = 0
+&#9;end
+&#9;
+&#9;-- increment the visits
+&#9;currentVisits = currentVisits + 1
+&#9;
+&#9;-- set the new visits
+&#9;saveData:Set(&apos;VisitCount&apos;, currentVisits)
+&#9;
+&#9;print(&quot;Player &quot;..player.userId..&quot; -&gt; VisitCount: &quot;..currentVisits)
+&#9;
+&#9;-- No need to saveData:Flush() here, or have used :Update() for 
+&#9;-- the change, as nothing important like a developer product 
+&#9;-- purchase has happened. 
+&#9;-- In the unlikely event of a server crash, all that will be 
+&#9;-- lost is a visit in the visit counter.
+&#9;-- Barring a server crash the changes will be saved automagically
+&#9;-- when the the player leaves or the server shuts down by the
+&#9;-- PlayerDataStore module.
+end
+
+game.Players.PlayerAdded:connect(HandlePlayer)
+for _, player in pairs(game.Players:GetChildren()) do
+&#9;if player:IsA(&apos;Player&apos;) then
+&#9;&#9;HandlePlayer(player)
+&#9;end
+end
+
+return true</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX31772C16FF894E7792A96AE69CA77E34">
+				<Properties>
+					<string name="Name">Example_Serialization</string>
+					<ProtectedString name="Source">-- To be put in the PlayerDataStore by the in the serialization settings:
+local ItemDefs = require(game.ReplicatedStorage.ItemDefs)
+SERIALIZE.Inventory = function(inventory)
+&#9;inventory = inventory or {}
+&#9;local data = {}
+&#9;for index, item in pairs(inventory) do
+&#9;&#9;data[index] = item.Identifier
+&#9;end
+&#9;return data
+end
+DESERIALIZE.Inventory = function(data)
+&#9;data = data or {}
+&#9;local inventory = {}
+&#9;for index, identifier in pairs(data) do
+&#9;&#9;inventory[index] = ItemDefs[identifier]
+&#9;end
+&#9;return inventory
+end
+
+local PlayerDataStore = require(game.ServerScriptService.PlayerDataStore)
+
+game.Players.PlayerAdded:connect(function(player)
+&#9;local saveData = PlayerDataStore:GetSaveData(player)
+&#9;-- note: we do not need to check for the gotten value being
+&#9;-- nil here, because the deserializer that we provided for
+&#9;-- the Inventory key returns a valid inventory (empty table),
+&#9;-- when the player has no data yet.
+&#9;for _, item in pairs(saveData:Get(&apos;Inventory&apos;)) do
+&#9;&#9;-- Now we have the complex item definitions in the inventory
+&#9;&#9;-- right away after load thanks to the serialization rather
+&#9;&#9;-- than just identifying strings for them, even though we
+&#9;&#9;-- only save the identifying strings
+&#9;&#9;print(item.Name, item.Cost)
+&#9;&#9;-- ...
+&#9;end
+&#9;
+&#9;-- We can call Get on the inventory as many times as we want, at
+&#9;-- no additional cost, as the result is cached by the
+&#9;-- PlayerDataStore.
+&#9;local tb = saveData:Get(&apos;Inventory&apos;)
+&#9;
+&#9;-- add an item. Note: This will NOT BE SAVED YET, as the
+&#9;-- PlayerDataStore has no way of knowing that you inserted that
+&#9;-- item.
+&#9;table.insert(tb, ItemDefs.SomeItem)
+&#9;
+&#9;-- Now, by calling Set, even though we have not actually set the
+&#9;-- key to a new value, we let the PlayerDataStore know that it
+&#9;-- needs to save the value eventually, and our change will be saved
+&#9;-- when it does get around to it.
+&#9;saveData:Set(&apos;Inventory&apos;, tb)
+end)
+
+
+
+
+
+
+</ProtectedString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="ModuleScript" referent="RBX7B4C649E45EA413AB155CFB56A2593CD">
+			<Properties>
+				<string name="Name">ScreenSpace</string>
+				<ProtectedString name="Source">local PlayerMouse = Game:GetService(&apos;Players&apos;).LocalPlayer:GetMouse()
+
+local ScreenSpace = {}
+
+-- Getter functions, with a couple of hacks for Ipad pre-focus.
+function ScreenSpace.ViewSizeX()
+&#9;local x = PlayerMouse.ViewSizeX
+&#9;local y = PlayerMouse.ViewSizeY
+&#9;if x == 0 then
+&#9;&#9;return 1024
+&#9;else
+&#9;&#9;if x &gt; y then
+&#9;&#9;&#9;return x
+&#9;&#9;else
+&#9;&#9;&#9;return y
+&#9;&#9;end
+&#9;end
+end
+
+function ScreenSpace.ViewSizeY()
+&#9;local x = PlayerMouse.ViewSizeX
+&#9;local y = PlayerMouse.ViewSizeY
+&#9;if y == 0 then
+&#9;&#9;return 768
+&#9;else
+&#9;&#9;if x &gt; y then
+&#9;&#9;&#9;return y
+&#9;&#9;else
+&#9;&#9;&#9;return x
+&#9;&#9;end
+&#9;end
+end
+
+-- Nice getter for aspect ratio. Due to the checks in the ViewSize functions this
+-- will never fail with a divide by zero error.
+function ScreenSpace.AspectRatio()
+&#9;return ScreenSpace.ViewSizeX() / ScreenSpace.ViewSizeY()
+end
+
+-- WorldSpace -&gt; ScreenSpace. Raw function taking a world position and giving you the
+-- screen position.
+function ScreenSpace.WorldToScreen(at)
+&#9;local point = Workspace.CurrentCamera.CoordinateFrame:pointToObjectSpace(at)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;--
+&#9;local x = (point.x/point.z) / -wfactor
+&#9;local y = (point.y/point.z) /  hfactor
+&#9;--
+&#9;return Vector2.new(ScreenSpace.ViewSizeX()*(0.5 + 0.5*x), ScreenSpace.ViewSizeY()*(0.5 + 0.5*y))
+end
+
+-- ScreenSpace -&gt; WorldSpace. Raw function taking a screen position and a depth and 
+-- converting it into a world position.
+function ScreenSpace.ScreenToWorld(x, y, depth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;--
+&#9;local xf, yf = x/ScreenSpace.ViewSizeX()*2 - 1, y/ScreenSpace.ViewSizeY()*2 - 1
+&#9;local xpos = xf * -wfactor * depth
+&#9;local ypos = yf *  hfactor * depth
+&#9;--
+&#9;return Vector3.new(xpos, ypos, depth)
+end
+
+-- ScreenSize -&gt; WorldSize
+function ScreenSpace.ScreenWidthToWorldWidth(screenWidth, depth)&#9;
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx = ScreenSpace.ViewSizeX()
+&#9;--
+&#9;return -(screenWidth / sx) * 2 * wfactor * depth
+end
+function ScreenSpace.ScreenHeightToWorldHeight(screenHeight, depth)
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local sy = ScreenSpace.ViewSizeY()
+&#9;--
+&#9;return -(screenHeight / sy) * 2 * hfactor * depth
+end
+
+-- WorldSize -&gt; ScreenSize
+function ScreenSpace.WorldWidthToScreenWidth(worldWidth, depth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx = ScreenSpace.ViewSizeX()
+&#9;--
+&#9;return -(worldWidth * sx) / (2 * wfactor * depth)
+end
+function ScreenSpace.WorldHeightToScreenHeight(worldHeight, depth)
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local sy = ScreenSpace.ViewSizeY()
+&#9;--
+&#9;return -(worldHeight * sy) / (2 * hfactor * depth)
+end
+
+-- WorldSize + ScreenSize -&gt; Depth needed
+function ScreenSpace.GetDepthForWidth(screenWidth, worldWidth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx, sy = ScreenSpace.ViewSizeX(), ScreenSpace.ViewSizeY()
+&#9;--
+&#9;return -(sx * worldWidth) / (screenWidth * 2 * wfactor)&#9;
+end
+function ScreenSpace.GetDepthForHeight(screenHeight, worldHeight)
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local sy = ScreenSpace.ViewSizeY()
+&#9;--
+&#9;return -(sy * worldHeight) / (screenHeight * 2 * hfactor)&#9;
+end
+
+-- ScreenSpace -&gt; WorldSpace. Taking a screen height, and a depth to put an object 
+-- at, and returning a size of how big that object has to be to appear that size
+-- at that depth.
+function ScreenSpace.ScreenToWorldByHeightDepth(x, y, screenHeight, depth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx, sy = ScreenSpace.ViewSizeX(), ScreenSpace.ViewSizeY()
+&#9;--
+&#9;local worldHeight = -(screenHeight/sy) * 2 * hfactor * depth
+&#9;--
+&#9;local xf, yf = x/sx*2 - 1, y/sy*2 - 1
+&#9;local xpos = xf * -wfactor * depth
+&#9;local ypos = yf *  hfactor * depth
+&#9;--
+&#9;return Vector3.new(xpos, ypos, depth), worldHeight
+end
+
+-- ScreenSpace -&gt; WorldSpace. Taking a screen width, and a depth to put an object 
+-- at, and returning a size of how big that object has to be to appear that size
+-- at that depth.
+function ScreenSpace.ScreenToWorldByWidthDepth(x, y, screenWidth, depth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx, sy = ScreenSpace.ViewSizeX(), ScreenSpace.ViewSizeY()
+&#9;--
+&#9;local worldWidth = (screenWidth/sx) * 2 * -wfactor * depth
+&#9;--
+&#9;local xf, yf = x/sx*2 - 1, y/sy*2 - 1
+&#9;local xpos = xf * -wfactor * depth
+&#9;local ypos = yf *  hfactor * depth
+&#9;--
+&#9;return Vector3.new(xpos, ypos, depth), worldWidth
+end
+
+-- ScreenSpace -&gt; WorldSpace. Taking a screen height that you want that object to be
+-- and a world height that is the size of that object, and returning the position to
+-- put that object at to satisfy those.
+function ScreenSpace.ScreenToWorldByHeight(x, y, screenHeight, worldHeight)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx, sy = ScreenSpace.ViewSizeX(), ScreenSpace.ViewSizeY()
+&#9;--
+&#9;local depth = - (sy * worldHeight) / (screenHeight * 2 * hfactor)
+&#9;--
+&#9;local xf, yf = x/sx*2 - 1, y/sy*2 - 1
+&#9;local xpos = xf * -wfactor * depth
+&#9;local ypos = yf *  hfactor * depth
+&#9;--
+&#9;return Vector3.new(xpos, ypos, depth)
+end
+
+-- ScreenSpace -&gt; WorldSpace. Taking a screen width that you want that object to be
+-- and a world width that is the size of that object, and returning the position to
+-- put that object at to satisfy those.
+function ScreenSpace.ScreenToWorldByWidth(x, y, screenWidth, worldWidth)
+&#9;local aspectRatio = ScreenSpace.AspectRatio()
+&#9;local hfactor = math.tan(math.rad(Workspace.CurrentCamera.FieldOfView)/2)
+&#9;local wfactor = aspectRatio*hfactor
+&#9;local sx, sy = ScreenSpace.ViewSizeX(), ScreenSpace.ViewSizeY()
+&#9;--
+&#9;local depth = - (sx * worldWidth) / (screenWidth * 2 * wfactor)
+&#9;--
+&#9;local xf, yf = x/sx*2 - 1, y/sy*2 - 1
+&#9;local xpos = xf * -wfactor * depth
+&#9;local ypos = yf *  hfactor * depth
+&#9;--
+&#9;return Vector3.new(xpos, ypos, depth)
+end
+
+return ScreenSpace
+
+
+
+</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBXB2E413A2E9A14DD5918DEEB20A837E37">
+			<Properties>
+				<string name="Name">PolyDraw</string>
+				<ProtectedString name="Source">local PolyDraw = {}
+
+PolyDraw.BrickColor = BrickColor.new(21)
+PolyDraw.CanCollide = false
+
+local function setupPart(part)
+&#9;part.Anchored = true
+&#9;part.FormFactor = &apos;Custom&apos;
+&#9;part.CanCollide = PolyDraw.CanCollide
+&#9;part.BrickColor = PolyDraw.BrickColor
+&#9;part.TopSurface = &apos;Smooth&apos;
+&#9;part.BottomSurface = &apos;Smooth&apos;
+end
+
+local Point = {}
+PolyDraw.Point = Point
+
+function Point.new(parent, at)
+&#9;local this = {}
+&#9;local mPart = Instance.new(&apos;Part&apos;)
+&#9;setupPart(mPart)
+&#9;mPart.Size = Vector3.new(1, 1, 1)
+&#9;mPart.Parent = parent
+&#9;function this:Set(at)
+&#9;&#9;mPart.CFrame = CFrame.new(at)
+&#9;end
+&#9;function this:Destroy()
+&#9;&#9;mPart:Destroy()
+&#9;end
+&#9;function this:SetProperty(prop, value)
+&#9;&#9;mPart[prop] = value
+&#9;end
+&#9;this:Set(at)
+&#9;return this
+end
+
+local Edge = {}
+PolyDraw.Edge = Edge
+
+function Edge.new(parent, a, b)
+&#9;local this = {}
+&#9;local mPart = Instance.new(&apos;Part&apos;)
+&#9;setupPart(mPart)
+&#9;mPart.Parent = parent
+&#9;function this:Set(a, b)
+&#9;&#9;local sep = (a-b).magnitude
+&#9;&#9;mPart.Size = Vector3.new(0.5, 0.5, sep)
+&#9;&#9;mPart.CFrame = CFrame.new(a, b) * CFrame.new(0, 0, -0.5*sep)
+&#9;end
+&#9;function this:Destroy()
+&#9;&#9;mPart:Destroy()
+&#9;end
+&#9;function this:SetProperty(prop, value)
+&#9;&#9;mPart[prop] = value
+&#9;end
+&#9;this:Set(a, b)
+&#9;return this
+end
+
+local Tri = {}
+PolyDraw.Tri = Tri
+
+local function CFrameFromTopBack(at, top, back)
+&#9;local right = top:Cross(back)
+&#9;return CFrame.new(at.x, at.y, at.z,
+&#9;                  right.x, top.x, back.x,
+&#9;                  right.y, top.y, back.y,
+&#9;                  right.z, top.z, back.z)
+end
+
+function Tri.new(parent, a, b, c)
+&#9;local this = {}
+&#9;local mPart1 = Instance.new(&apos;WedgePart&apos;)
+&#9;setupPart(mPart1)
+&#9;local mPart2 = Instance.new(&apos;WedgePart&apos;)
+&#9;setupPart(mPart2)
+&#9;function this:Set(a, b, c)
+&#9;&#9;--[[       edg1
+&#9;&#9;&#9;A ------|------&gt;B  --.
+&#9;&#9;&#9;&apos;\      |      /      \
+&#9;&#9;&#9;  \part1|part2/       |
+&#9;&#9;&#9;   \   cut   /       / Direction edges point in:
+&#9;&#9;   edg3 \       / edg2  /        (clockwise)
+&#9;&#9;&#9;     \     /      |/
+&#9;&#9;&#9;      \&lt;- /        `
+&#9;&#9;&#9;       \ /
+&#9;&#9;&#9;        C
+&#9;&#9;--]]
+&#9;&#9;local ab, bc, ca = b-a, c-b, a-c
+&#9;&#9;local abm, bcm, cam = ab.magnitude, bc.magnitude, ca.magnitude
+&#9;&#9;local edg1 = math.abs(0.5 + ca:Dot(ab)/(abm*abm))
+&#9;&#9;local edg2 = math.abs(0.5 + ab:Dot(bc)/(bcm*bcm))
+&#9;&#9;local edg3 = math.abs(0.5 + bc:Dot(ca)/(cam*cam))
+&#9;&#9;-- Idea: Find the edge onto which the vertex opposite that
+&#9;&#9;-- edge has the projection closest to 1/2 of the way along that 
+&#9;&#9;-- edge. That is the edge thatwe want to split on in order to 
+&#9;&#9;-- avoid ending up with small &quot;sliver&quot; triangles with one very
+&#9;&#9;-- small dimension relative to the other one.
+&#9;&#9;if edg1 &lt; edg2 then
+&#9;&#9;&#9;if edg1 &lt; edg3 then
+&#9;&#9;&#9;&#9;-- min is edg1: less than both
+&#9;&#9;&#9;&#9;-- nothing to change
+&#9;&#9;&#9;else&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;-- min is edg3: edg3 &lt; edg1 &lt; edg2
+&#9;&#9;&#9;&#9;-- &quot;rotate&quot; verts twice counterclockwise
+&#9;&#9;&#9;&#9;a, b, c = c, a, b
+&#9;&#9;&#9;&#9;ab, bc, ca = ca, ab, bc
+&#9;&#9;&#9;&#9;abm = cam
+&#9;&#9;&#9;end
+&#9;&#9;else
+&#9;&#9;&#9;if edg2 &lt; edg3 then
+&#9;&#9;&#9;&#9;-- min is edg2: less than both
+&#9;&#9;&#9;&#9;-- &quot;rotate&quot; verts once counterclockwise
+&#9;&#9;&#9;&#9;a, b, c = b, c, a
+&#9;&#9;&#9;&#9;ab, bc, ca = bc, ca, ab
+&#9;&#9;&#9;&#9;abm = bcm
+&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;-- min is edg3: edg3 &lt; edg2 &lt; edg1
+&#9;&#9;&#9;&#9;-- &quot;rotate&quot; verts twice counterclockwise
+&#9;&#9;&#9;&#9;a, b, c = c, a, b
+&#9;&#9;&#9;&#9;ab, bc, ca = ca, ab, bc
+&#9;&#9;&#9;&#9;abm = cam
+&#9;&#9;&#9;end
+&#9;&#9;end
+&#9; 
+&#9;&#9;--calculate lengths
+&#9;&#9;local len1 = -ca:Dot(ab)/abm
+&#9;&#9;local len2 = abm - len1
+&#9;&#9;local width = (ca + ab.unit*len1).magnitude
+&#9; 
+&#9;&#9;--calculate &quot;base&quot; CFrame to pasition parts by
+&#9;&#9;local maincf = CFrameFromTopBack(a, ab:Cross(bc).unit, -ab.unit)
+&#9; 
+&#9;&#9;--make parts
+&#9;&#9;if len1 &gt; 0.2 then
+&#9;&#9;&#9;mPart1.Parent = parent
+&#9;&#9;&#9;mPart1.Size = Vector3.new(0.2, width, len1)
+&#9;&#9;&#9;mPart1.CFrame = maincf*CFrame.Angles(math.pi,0,math.pi/2)*CFrame.new(0,width/2,len1/2)
+&#9;&#9;else
+&#9;&#9;&#9;mPart1.Parent = nil
+&#9;&#9;end
+&#9;&#9;--
+&#9;&#9;if len2 &gt; 0.2 then
+&#9;&#9;&#9;mPart2.Parent = parent
+&#9;&#9;&#9;mPart2.Size = Vector3.new(0.2, width, len2)
+&#9;&#9;&#9;mPart2.CFrame = maincf*CFrame.Angles(math.pi,math.pi,-math.pi/2)*CFrame.new(0,width/2,-len1 - len2/2)
+&#9;&#9;else
+&#9;&#9;&#9;mPart2.Parent = nil
+&#9;&#9;end&#9;
+&#9;end
+&#9;function this:SetProperty(prop, value)
+&#9;&#9;mPart1[prop] = value
+&#9;&#9;mPart2[prop] = value
+&#9;end
+&#9;this:Set(a, b, c)
+&#9;function this:Destroy()
+&#9;&#9;mPart1:Destroy()
+&#9;&#9;mPart2:Destroy()
+&#9;end
+&#9;return this
+end
+
+return PolyDraw</ProtectedString>
+			</Properties>
+		</Item>
+		<Item class="ModuleScript" referent="RBXD76A2CE6067E49D8B7CACF94DD0B9CC3">
+			<Properties>
+				<string name="Name">CustomAnimation</string>
+				<ProtectedString name="Source">local module = {}
+
+local RenderStepped = game:GetService(&quot;RunService&quot;).RenderStepped
+
+module.EasingStyle = {}
+
+function module.EasingStyle.Linear(x)
+&#9;return x
+end
+
+function module.EasingStyle.Sine(x)
+&#9;return x^2 + x^2.6 - x^3
+end
+
+function module.EasingStyle.Back(x)
+&#9;return x^2 * ((1.75 + 1) * x - 1.75)
+end
+
+function module.EasingStyle.Quad(x)
+&#9;return x^2
+end
+
+function module.EasingStyle.Quart(x)
+&#9;return x^4
+end
+
+function module.EasingStyle.Quint(x)
+&#9;return x^5
+end
+
+function module.EasingStyle.Bounce(x)
+&#9;x = x &lt; 0 and -x or x
+&#9;local a = 0
+&#9;local b = 1
+&#9;while true do
+&#9;&#9;if x &gt;= (7 - 4 * a) / 11 then
+&#9;&#9;&#9;return -((11 - 6 * a - 11 * x) / 4)^2 + b^2
+&#9;&#9;end
+&#9;&#9;a = a + b
+&#9;&#9;b = b / 2
+&#9;end
+end
+
+function module.EasingStyle.Elastic(x)
+&#9;return 2^(8 * (x-1)) * math.sin(2.5*math.pi*x)
+end
+
+function module.MatrixCFrame(CFPos, CFTop, CFBack)
+&#9;local CFRight = CFTop:Cross(CFBack)
+&#9;return CFrame.new(
+&#9;&#9;CFPos.x, CFPos.y, CFPos.z,
+&#9;&#9;CFRight.x, CFTop.x, CFBack.x,
+&#9;&#9;CFRight.y, CFTop.y, CFBack.y,
+&#9;&#9;CFRight.z, CFTop.z, CFBack.z
+&#9;)
+end
+
+function module.LerpCF(StartCF, EndCF, Alpha)
+&#9;local StartTop = (StartCF * CFrame.Angles(math.rad(90), 0, 0)).lookVector
+&#9;local StartBack = -StartCF.lookVector
+&#9;local EndTop = (EndCF * CFrame.Angles(math.rad(90), 0, 0)).lookVector
+&#9;local EndBack = -EndCF.lookVector
+&#9;local StartPos = StartCF.p
+&#9;local EndPos = EndCF.p
+&#9;local NewCF = module.MatrixCFrame(
+&#9;&#9;StartPos:lerp(EndPos, Alpha),
+&#9;&#9;StartTop:lerp(EndTop, Alpha),
+&#9;&#9;StartBack:lerp(EndBack, Alpha)
+&#9;)
+&#9;return NewCF
+end
+
+function module.TweenJoint(Joint, NewC0, NewC1, Alpha, Duration)
+&#9;coroutine.resume(
+&#9;&#9;coroutine.create(
+&#9;&#9;&#9;function()
+&#9;&#9;&#9;&#9;local TweenValue = nil
+&#9;&#9;&#9;&#9;local TweenCode = math.random(-1e9, 1e9)
+&#9;&#9;&#9;&#9;if not Joint:FindFirstChild(&quot;TweenCode&quot;) then
+&#9;&#9;&#9;&#9;&#9;TweenValue = Instance.new(&quot;IntValue&quot;)
+&#9;&#9;&#9;&#9;&#9;TweenValue.Name = &quot;TweenCode&quot;
+&#9;&#9;&#9;&#9;&#9;TweenValue.Value = TweenCode
+&#9;&#9;&#9;&#9;&#9;TweenValue.Parent = Joint
+&#9;&#9;&#9;&#9;else
+&#9;&#9;&#9;&#9;&#9;TweenValue = Joint.TweenCode
+&#9;&#9;&#9;&#9;&#9;TweenValue.Value = TweenCode
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;
+&#9;&#9;&#9;&#9;local StartC0 = Joint.C0
+&#9;&#9;&#9;&#9;local StartC1 = Joint.C1
+&#9;&#9;&#9;&#9;local X = 0
+&#9;&#9;&#9;&#9;while true do
+&#9;&#9;&#9;&#9;&#9;local NewX = X + math.min(1.5 / math.max(Duration, 0), 90)
+&#9;&#9;&#9;&#9;&#9;X = (NewX &gt; 90 and 90 or NewX)
+&#9;&#9;&#9;&#9;&#9;if TweenValue.Value ~= TweenCode then break end
+&#9;&#9;&#9;&#9;&#9;if not module.Active then break end
+&#9;&#9;&#9;&#9;&#9;if NewC0 then Joint.C0 = module.LerpCF(StartC0, NewC0, Alpha(X)) end
+&#9;&#9;&#9;&#9;&#9;if NewC1 then Joint.C1 = module.LerpCF(StartC1, NewC1, Alpha(X)) end
+&#9;&#9;&#9;&#9;&#9;if X == 90 then break end
+&#9;&#9;&#9;&#9;&#9;RenderStepped:wait()
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;&#9;if TweenValue.Value == TweenCode then
+&#9;&#9;&#9;&#9;&#9;TweenValue:Destroy()
+&#9;&#9;&#9;&#9;end
+&#9;&#9;&#9;end
+&#9;&#9;)
+&#9;)
+end
+
+return module</ProtectedString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

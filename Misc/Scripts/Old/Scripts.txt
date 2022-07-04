@@ -1,0 +1,31 @@
+for _, v in pairs(workspace.PyramidParts:GetChildren()) do v.CFrame = v.CFrame * CFrame.new(0, -170, 0) * CFrame.Angles(0, 0, math.rad(31.765) * (v.Name == "A" and 1 or -1))  * CFrame.new(0, 170, 0) end game.ChangeHistoryService:SetWaypoint("Thing")
+function Loop(a) for _, v in pairs(a:GetChildren()) do if v:IsA("LuaSourceContainer") then print(v:GetFullName()) end Loop(v) end end Loop(game.Selection:Get()[1])
+a = "" for i = 1, 7 do a = a..math.random(1, 39)..(i ~= 7 and "," or "") end game.Selection:Get()[1].Value = a
+Module = require(game.ServerScriptService.TerrainSaveLoad) Terrain = Module:Save() Module:Load(Terrain, Vector3.new(0, 0, -750)) Terrain:Destroy() game.ChangeHistoryService:SetWaypoint("Thing")
+
+function Replace(Model)
+	local Rotation, Cylinder = workspace.StargateChulak.Rotation:Clone(), workspace.StargateChulak.Cylinder:Clone()
+	Rotation.CFrame = Model.Rotation.CFrame
+	Cylinder.CFrame = Model.Cylinder.CFrame
+	Model.Rotation:Destroy()
+	Model.Cylinder:Destroy()
+	Rotation.Parent = Model
+	Cylinder.Parent = Model
+end
+Replace(workspace.StargateEarth)
+
+function Replace(Model)
+	for i = 1, 9 do
+		local A = workspace.StargateChulak["Chevron"..i]:Clone()
+		A.CFrame = Model["Chevron"..i].CFrame
+		Model["Chevron"..i]:Destroy()
+		A.Parent = Model
+		local B = workspace.StargateChulak["Light"..i]:Clone()
+		B.CFrame = Model["Light"..i].CFrame
+		Model["Light"..i]:Destroy()
+		B.Parent = Model
+	end
+end
+Replace(workspace.StargateEarth)
+
+

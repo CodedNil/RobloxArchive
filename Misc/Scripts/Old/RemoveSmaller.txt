@@ -1,0 +1,15 @@
+local Total = 0
+local Marked = {}
+for _, a in pairs(game.Selection:Get()[1]:GetChildren()) do
+	for _, b in pairs(game.Selection:Get()[1]:GetChildren()) do
+		if not Marked[a] and a ~= b and (a.Position - b.Position).magnitude < b.Size.X/2 - a.Size.X/2 + 4 then
+			Total = Total + 1
+			Marked[a] = true
+			Marked[b] = true
+			local Color = BrickColor.Random()
+			a.BrickColor = Color
+			b.BrickColor = Color
+		end
+	end
+end
+print(Total)

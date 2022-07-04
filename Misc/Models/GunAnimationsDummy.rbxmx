@@ -1,0 +1,4419 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Model" referent="RBXD932E32E3E2C47F7AB0AF80126321A13">
+		<Properties>
+			<CoordinateFrame name="ModelInPrimary">
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+				<R00>1</R00>
+				<R01>0</R01>
+				<R02>0</R02>
+				<R10>0</R10>
+				<R11>1</R11>
+				<R12>0</R12>
+				<R20>0</R20>
+				<R21>0</R21>
+				<R22>1</R22>
+			</CoordinateFrame>
+			<string name="Name">GunAnimationDummy</string>
+			<Ref name="PrimaryPart">null</Ref>
+		</Properties>
+		<Item class="Part" referent="RBXC4ECCFB737B84FB99AF5672597BE3781">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-52.8000031</X>
+					<Y>3.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">HumanoidRootPart</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0.5</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>2</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+			<Item class="Motor6D" referent="RBX7915D3AC6E344124B55D7CE812CBC700">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+						<R00>-1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>0</R11>
+						<R12>1</R12>
+						<R20>0</R20>
+						<R21>1</R21>
+						<R22>-0</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+						<R00>-1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>0</R11>
+						<R12>1</R12>
+						<R20>0</R20>
+						<R21>1</R21>
+						<R22>-0</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Root Hip</string>
+					<Ref name="Part0">RBXC4ECCFB737B84FB99AF5672597BE3781</Ref>
+					<Ref name="Part1">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+				</Properties>
+			</Item>
+			<Item class="Attachment" referent="RBXCDAF68ADE3F64B3DBEFDCA713272D4FC">
+				<Properties>
+					<CoordinateFrame name="CFrame">
+						<X>-1</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<string name="Name">LeftArm</string>
+					<bool name="Visible">false</bool>
+				</Properties>
+			</Item>
+			<Item class="Attachment" referent="RBXF16FAE907024463AAB60C8005DBDD99B">
+				<Properties>
+					<CoordinateFrame name="CFrame">
+						<X>1</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<string name="Name">RightArm</string>
+					<bool name="Visible">false</bool>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBX603892A3F445419E9AF1AE68537C8513">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-52.8000031</X>
+					<Y>3.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Torso</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>2</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+			<Item class="Motor6D" referent="RBX72C6835F54D84CA59657BFA59F3154FA">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>-1</X>
+						<Y>-1</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>0.99999994</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>-0.5</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Left Hip</string>
+					<Ref name="Part0">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+					<Ref name="Part1">RBXCEB5D518948844AFBB6B6F1E3A6AF3C8</Ref>
+				</Properties>
+			</Item>
+			<Item class="Motor6D" referent="RBX0EF4850BD1714DBB9B145C8BDCEA9341">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>1</X>
+						<Y>-1</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>1</R02>
+						<R10>-0</R10>
+						<R11>0.99999994</R11>
+						<R12>0</R12>
+						<R20>-1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>0.5</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>-1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Right Hip</string>
+					<Ref name="Part0">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+					<Ref name="Part1">RBX2B7268B6F57D4474BE3B1FF2D9CD4ADD</Ref>
+				</Properties>
+			</Item>
+			<Item class="Motor6D" referent="RBXEE947D0DD99B4536BD5A97C69C33A185">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>-1</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>0.99999994</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Left Shoulder</string>
+					<Ref name="Part0">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+					<Ref name="Part1">RBX8B14CC953871429FA34756A95EAC4499</Ref>
+				</Properties>
+			</Item>
+			<Item class="Motor6D" referent="RBX85EA017F80D6472489B3931701848DC7">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>1</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>1</R02>
+						<R10>-0</R10>
+						<R11>0.99999994</R11>
+						<R12>0</R12>
+						<R20>-1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>-0.5</X>
+						<Y>0.5</Y>
+						<Z>0</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>-1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Right Shoulder</string>
+					<Ref name="Part0">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+					<Ref name="Part1">RBX883D2E12BE28460BBFC3D4FAF2CBC64C</Ref>
+				</Properties>
+			</Item>
+			<Item class="Motor6D" referent="RBX23FD957A30C14E558CAC4BDCD034253A">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>0</X>
+						<Y>1</Y>
+						<Z>0</Z>
+						<R00>-1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>0</R11>
+						<R12>1</R12>
+						<R20>0</R20>
+						<R21>1</R21>
+						<R22>-0</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>0</X>
+						<Y>-0.5</Y>
+						<Z>0</Z>
+						<R00>-1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>0</R11>
+						<R12>1</R12>
+						<R20>0</R20>
+						<R21>1</R21>
+						<R22>-0</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0.100000001</float>
+					<string name="Name">Neck</string>
+					<Ref name="Part0">RBX603892A3F445419E9AF1AE68537C8513</Ref>
+					<Ref name="Part1">RBX7C95B38163564E239763EADEC1C54748</Ref>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBXCEB5D518948844AFBB6B6F1E3A6AF3C8">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-53.3000031</X>
+					<Y>1.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>0.99999994</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Left Leg</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>1</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="Part" referent="RBX2B7268B6F57D4474BE3B1FF2D9CD4ADD">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-52.3000031</X>
+					<Y>1.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>0.99999994</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Right Leg</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>1</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="Part" referent="RBX8B14CC953871429FA34756A95EAC4499">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-54.3000031</X>
+					<Y>3.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>0.99999994</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Left Arm</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>1</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="Part" referent="RBX883D2E12BE28460BBFC3D4FAF2CBC64C">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-51.3000031</X>
+					<Y>3.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>0.99999994</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Right Arm</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>1</X>
+					<Y>2</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+			<Item class="Motor6D" referent="RBXDF587CA88BEE4B38BCED085B9F2AA926">
+				<Properties>
+					<CoordinateFrame name="C0">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<CoordinateFrame name="C1">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<float name="DesiredAngle">0</float>
+					<float name="MaxVelocity">0</float>
+					<string name="Name">RightGrip</string>
+					<Ref name="Part0">RBX883D2E12BE28460BBFC3D4FAF2CBC64C</Ref>
+					<Ref name="Part1">RBXEAE1533A2C214C899051E061B4575616</Ref>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBX7C95B38163564E239763EADEC1C54748">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">194</int>
+				<CoordinateFrame name="CFrame">
+					<X>-52.8000031</X>
+					<Y>4.50001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">256</token>
+				<string name="Name">Head</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">1</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>2</X>
+					<Y>1</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+			<Item class="Decal" referent="RBX4E3BBF17DE0B4085A8BF34A21AEBF8A6">
+				<Properties>
+					<token name="Face">5</token>
+					<string name="Name">Face</string>
+					<Content name="Texture"><url>rbxasset://textures/face.png</url></Content>
+					<float name="Transparency">0</float>
+				</Properties>
+			</Item>
+			<Item class="SpecialMesh" referent="RBX75A1467CB5E9431495AC0356A1D78D68">
+				<Properties>
+					<token name="LODX">2</token>
+					<token name="LODY">2</token>
+					<Content name="MeshId"><null></null></Content>
+					<token name="MeshType">0</token>
+					<string name="Name">Mesh</string>
+					<Vector3 name="Offset">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<Vector3 name="Scale">
+						<X>1.25</X>
+						<Y>1.25</Y>
+						<Z>1.25</Z>
+					</Vector3>
+					<Content name="TextureId"><null></null></Content>
+					<Vector3 name="VertexColor">
+						<X>1</X>
+						<Y>1</Y>
+						<Z>1</Z>
+					</Vector3>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Humanoid" referent="RBXC04B484685454C0C87AE1B93723890E6">
+			<Properties>
+				<bool name="AutoJumpEnabled">true</bool>
+				<bool name="AutoRotate">true</bool>
+				<token name="DisplayDistanceType">0</token>
+				<float name="HealthDisplayDistance">100</float>
+				<token name="HealthDisplayType">0</token>
+				<float name="Health_XML">100</float>
+				<float name="HipHeight">0</float>
+				<float name="JumpPower">50</float>
+				<float name="MaxHealth">100</float>
+				<float name="MaxSlopeAngle">89</float>
+				<string name="Name">Humanoid</string>
+				<float name="NameDisplayDistance">100</float>
+				<token name="NameOcclusion">2</token>
+				<token name="RigType">0</token>
+				<float name="WalkSpeed">16</float>
+			</Properties>
+			<Item class="Animator" referent="RBXFF1F0CFA5A324627828FD394258CFCF5">
+				<Properties>
+					<string name="Name">Animator</string>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Model" referent="RBX067C730D51984DE98CF6D7D62FA52A88">
+			<Properties>
+				<CoordinateFrame name="ModelInPrimary">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<string name="Name">AnimSaves</string>
+				<Ref name="PrimaryPart">null</Ref>
+			</Properties>
+			<Item class="KeyframeSequence" referent="RBXC8C0DB833D47418BA1DC464611282314">
+				<Properties>
+					<bool name="Loop">true</bool>
+					<string name="Name">Hold</string>
+					<token name="Priority">2</token>
+				</Properties>
+				<Item class="Keyframe" referent="RBX41FBC15FA20448A6B064CA3F60BE67FE">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0</float>
+					</Properties>
+					<Item class="Pose" referent="RBXC452ABBD756E4694866446B273CCE13D">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX94C8BF4CF9724A3D87A2A85730670A26">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.20178026</X>
+									<Y>-0.234150544</Y>
+									<Z>-0.891381145</Z>
+									<R00>0.210249379</R00>
+									<R01>0.686941624</R01>
+									<R02>-0.695633769</R02>
+									<R10>-0.956215084</R10>
+									<R11>0.292664826</R11>
+									<R12>1.27927855e-008</R12>
+									<R20>0.203587547</R20>
+									<R21>0.665175498</R21>
+									<R22>0.718396544</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX21EAA68D1B424F3CB1F0F9ED5E9FDED0">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.526282907</X>
+									<Y>0.201854929</Y>
+									<Z>-0.328564614</Z>
+									<R00>0.447407275</R00>
+									<R01>-0.814170539</R01>
+									<R02>0.370071709</R02>
+									<R10>0.87639153</R10>
+									<R11>0.481599301</R11>
+									<R12>2.1051374e-008</R12>
+									<R20>-0.178226292</R20>
+									<R21>0.324327707</R21>
+									<R22>0.929003179</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBXF966200E1E3E402BAE7E32A63650204C">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXD5FD7726E72742A68BFE7FAC57938032">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.200000003</float>
+					</Properties>
+					<Item class="Pose" referent="RBX89A8BB6D6B564CCBB3104302F27A65B1">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX271A5878838F442092DC7CE2FC6BC031">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.198767453</X>
+									<Y>-0.230711281</Y>
+									<Z>-0.894182444</Z>
+									<R00>0.205729961</R00>
+									<R01>0.684403896</R01>
+									<R02>-0.699475825</R02>
+									<R10>-0.957668722</R10>
+									<R11>0.287872642</R11>
+									<R12>1.25833139e-008</R12>
+									<R20>0.201359972</R20>
+									<R21>0.669866145</R21>
+									<R22>0.714656234</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXFB783C0E6DD042E5AD62C2F2A2FB4727">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.535648346</X>
+									<Y>0.205208689</Y>
+									<Z>-0.327010274</Z>
+									<R00>0.443011552</R00>
+									<R01>-0.818807185</R01>
+									<R02>0.36509648</R02>
+									<R10>0.879520833</R10>
+									<R11>0.475860357</R11>
+									<R12>2.08005169e-008</R12>
+									<R20>-0.173734948</R20>
+									<R21>0.321109951</R21>
+									<R22>0.930969656</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX3E47A1425E5148778D287A3513FF42C2">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX689466DFDAFF4CCE8DD77712457543D5">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.400000006</float>
+					</Properties>
+					<Item class="Pose" referent="RBX1798D3DB986A4419B416D03E5AD342D6">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX850684CDEEAD4A2F95FFA14FC4888B31">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.198466122</X>
+									<Y>-0.234922379</Y>
+									<Z>-0.896262527</Z>
+									<R00>0.208132416</R00>
+									<R01>0.682061911</R01>
+									<R02>-0.701050878</R02>
+									<R10>-0.956459403</R10>
+									<R11>0.291865319</R11>
+									<R12>1.27578375e-008</R12>
+									<R20>0.204612449</R20>
+									<R21>0.670526683</R21>
+									<R22>0.713111222</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX47E601A8E49448C685EBD21DB84C6DEA">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.53407073</X>
+									<Y>0.208754376</Y>
+									<Z>-0.329821408</Z>
+									<R00>0.449651331</R00>
+									<R01>-0.817414284</R01>
+									<R02>0.360066056</R02>
+									<R10>0.876182675</R10>
+									<R11>0.481979221</R11>
+									<R12>2.10679811e-008</R12>
+									<R20>-0.173544377</R20>
+									<R21>0.31548363</R21>
+									<R22>0.932926774</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX791160BFF3EB4BD48F3D55D7E76578B3">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXCBDD6E45601B468BA0848315E14CD9E2">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.600000024</float>
+					</Properties>
+					<Item class="Pose" referent="RBXCEF3D62D583F4D83B6272CE9D23B8C9B">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX6FBC89F312C04F17897E51EC4DE057CF">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.199431092</X>
+									<Y>-0.238855883</Y>
+									<Z>-0.896465302</Z>
+									<R00>0.211335495</R00>
+									<R01>0.681582808</R01>
+									<R02>-0.700558484</R02>
+									<R10>-0.955139577</R10>
+									<R11>0.296156108</R11>
+									<R12>1.29453959e-008</R12>
+									<R20>0.207474694</R20>
+									<R21>0.66913116</R21>
+									<R22>0.713594973</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX2729CBD005BF4C8EBA6310ECF242CFB4">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.529478133</X>
+									<Y>0.209614962</Y>
+									<Z>-0.332100123</Z>
+									<R00>0.45540005</R00>
+									<R01>-0.814744532</R01>
+									<R02>0.358890057</R02>
+									<R10>0.872897089</R10>
+									<R11>0.48790431</R11>
+									<R12>2.1326974e-008</R12>
+									<R20>-0.175104022</R20>
+									<R21>0.313274086</R21>
+									<R22>0.933379829</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX1F520BC01BB24D0BAEA010393F77BFC0">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX48B67EC4CD3340DFA427B9CA8103B902">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.800000012</float>
+					</Properties>
+					<Item class="Pose" referent="RBX7EE311ECF91740A0875C89F4F7DB3B17">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX4A0D896569A34D0F82F690A997510BB3">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.201302111</X>
+									<Y>-0.240971461</Y>
+									<Z>-0.894724786</Z>
+									<R00>0.214123145</R00>
+									<R01>0.683143616</R01>
+									<R02>-0.698187709</R02>
+									<R10>-0.954224825</R10>
+									<R11>0.299090326</R11>
+									<R12>1.30736524e-008</R12>
+									<R20>0.208821207</R20>
+									<R21>0.666228056</R21>
+									<R22>0.715914726</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX62FEB73E7DE7412899ADE202D6FBBE15">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.523721516</X>
+									<Y>0.207413927</Y>
+									<Z>-0.33299315</Z>
+									<R00>0.458030462</R00>
+									<R01>-0.81188482</R01>
+									<R02>0.362009883</R02>
+									<R10>0.870958209</R10>
+									<R11>0.491357118</R11>
+									<R12>2.14779021e-008</R12>
+									<R20>-0.177876145</R20>
+									<R21>0.315295488</R21>
+									<R22>0.932174265</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBXD594997205B94442A9EC921A796692F1">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX506698C212CF49A69468D4338234A447">
+					<Properties>
+						<string name="Name">KF2</string>
+						<float name="Time">1</float>
+					</Properties>
+					<Item class="Pose" referent="RBX4A2C6C45F08B4979A61A242682E93891">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBXB0F9DE1E941D40CE9E077661B6EE68D8">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.20178026</X>
+									<Y>-0.234150544</Y>
+									<Z>-0.891381145</Z>
+									<R00>0.210249379</R00>
+									<R01>0.686941624</R01>
+									<R02>-0.695633769</R02>
+									<R10>-0.956215084</R10>
+									<R11>0.292664826</R11>
+									<R12>1.27927855e-008</R12>
+									<R20>0.203587547</R20>
+									<R21>0.665175498</R21>
+									<R22>0.718396544</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXE4F95D14A3AF4F08AC242693578A7681">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.526282907</X>
+									<Y>0.201854929</Y>
+									<Z>-0.328564614</Z>
+									<R00>0.447407275</R00>
+									<R01>-0.814170539</R01>
+									<R02>0.370071709</R02>
+									<R10>0.87639153</R10>
+									<R11>0.481599301</R11>
+									<R12>2.1051374e-008</R12>
+									<R20>-0.178226292</R20>
+									<R21>0.324327707</R21>
+									<R22>0.929003179</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX44E2781587CF489AB353D2AAB9C0C885">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0459289551</X>
+										<Y>-1.03094292</Y>
+										<Z>-0.128839493</Z>
+										<R00>0.929003179</R00>
+										<R01>-1.72569159e-008</R01>
+										<R02>-0.370071679</R02>
+										<R10>0.324327707</R10>
+										<R11>0.481599301</R11>
+										<R12>0.814170539</R12>
+										<R20>0.178226247</R20>
+										<R21>-0.87639153</R21>
+										<R22>0.447407305</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+			</Item>
+			<Item class="KeyframeSequence" referent="RBXB8CBDA7D76E34F429639E09D16BB8282">
+				<Properties>
+					<bool name="Loop">true</bool>
+					<string name="Name">Run</string>
+					<token name="Priority">2</token>
+				</Properties>
+				<Item class="Keyframe" referent="RBXA8A33D96169B49E0B7BEB02E41191A90">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0</float>
+					</Properties>
+					<Item class="Pose" referent="RBX7ABFB726B8D14B3595436235F9251D75">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBXF0302771F3B14C23B5DF37708B4687E1">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.311912954</X>
+									<Y>-0.360596627</Y>
+									<Z>-0.672399521</Z>
+									<R00>0.507659554</R00>
+									<R01>0.7703439</R01>
+									<R02>-0.385813504</R02>
+									<R10>-0.834991634</R10>
+									<R11>0.55026263</R11>
+									<R12>2.40527438e-008</R12>
+									<R20>0.212298766</R20>
+									<R21>0.322151035</R21>
+									<R22>0.922576785</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX282BC4A695AE426584073DEBB82E19C1">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.00952035189</X>
+									<Y>-0.137198865</Y>
+									<Z>-0.529403687</Z>
+									<R00>0.580440819</R00>
+									<R01>-0.737140894</R01>
+									<R02>0.345993817</R02>
+									<R10>0.785666168</R10>
+									<R11>0.618650675</R11>
+									<R12>2.70420806e-008</R12>
+									<R20>-0.214049324</R20>
+									<R21>0.271835625</R21>
+									<R22>0.938236773</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBXB45D85909DEF45A7A779DB32987372C6">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX45D6F63B35E44721ACA05FA4DA0F5100">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.200000003</float>
+					</Properties>
+					<Item class="Pose" referent="RBX4F29FF37FF3D49EDA1FD2D87445502A4">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX98204CBD67574689A0A290A5772D9935">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.18321377</X>
+									<Y>-0.283467859</Y>
+									<Z>-0.680439472</Z>
+									<R00>0.430507958</R00>
+									<R01>0.75412482</R01>
+									<R02>-0.495942116</R02>
+									<R10>-0.868451655</R10>
+									<R11>0.495773822</R11>
+									<R12>2.16709619e-008</R12>
+									<R20>0.245875135</R20>
+									<R21>0.430701733</R21>
+									<R22>0.868355572</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX1E2D5160065A49BDA7E60202D3F84BED">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.158005521</X>
+									<Y>0.0157084372</Y>
+									<Z>-0.474938899</Z>
+									<R00>0.541500032</R00>
+									<R01>-0.795625031</R01>
+									<R02>0.271585226</R02>
+									<R10>0.826696932</R10>
+									<R11>0.562647462</R11>
+									<R12>2.4594101e-008</R12>
+									<R20>-0.152806759</R20>
+									<R21>0.224518657</R21>
+									<R22>0.962414384</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX69739907DC4844F881B4415865374208">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX5442BAF4A8904707B4658641B9E136A5">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.400000006</float>
+					</Properties>
+					<Item class="Pose" referent="RBX8C8F1D7BC3BC449D8759064E1DEEFB4E">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX6FF49F91BB144C28B397B0865F345EBF">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.184978813</X>
+									<Y>-0.362653345</Y>
+									<Z>-0.708965957</Z>
+									<R00>0.473684907</R00>
+									<R01>0.699560344</R01>
+									<R02>-0.535012066</R02>
+									<R10>-0.82803452</R10>
+									<R11>0.560677111</R11>
+									<R12>2.45079743e-008</R12>
+									<R20>0.299969047</R20>
+									<R21>0.443008482</R21>
+									<R22>0.84484446</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXECC31BA916634BACB431BBCCE137BDCA">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.117262423</X>
+									<Y>0.0190097</Y>
+									<Z>-0.486594051</Z>
+									<R00>0.6271981</R00>
+									<R01>-0.75543946</R01>
+									<R02>0.189561993</R02>
+									<R10>0.769389451</R10>
+									<R11>0.638779998</R11>
+									<R12>2.79219599e-008</R12>
+									<R20>-0.12108843</R20>
+									<R21>0.145846978</R21>
+									<R22>0.981868744</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX0B2DC6B423724B08A9EC2E43B7A1F0C2">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXD76987EC9B784977860D2A50ECA9A3AC">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.600000024</float>
+					</Properties>
+					<Item class="Pose" referent="RBX88555ADCD8C04299B7B5A88C568621B2">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBXA0698979CBFC43679F957AB1569D530D">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.2307778</X>
+									<Y>-0.445385844</Y>
+									<Z>-0.723043919</Z>
+									<R00>0.526678562</R00>
+									<R01>0.675230205</R01>
+									<R02>-0.516404688</R02>
+									<R10>-0.788502872</R10>
+									<R11>0.615031064</R11>
+									<R12>2.68838622e-008</R12>
+									<R20>0.317604959</R20>
+									<R21>0.407186598</R21>
+									<R22>0.8563447</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXC506FAF393FD4A359F1D7B803ADF9433">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.037949048</X>
+									<Y>-0.0499474704</Y>
+									<Z>-0.501213372</Z>
+									<R00>0.68498975</R00>
+									<R01>-0.706645072</R01>
+									<R02>0.177318066</R02>
+									<R10>0.718023181</R10>
+									<R11>0.696019173</R11>
+									<R12>3.04239656e-008</R12>
+									<R20>-0.123416796</R20>
+									<R21>0.127318457</R21>
+									<R22>0.984153569</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX61581E320976453BBDF05360A8203051">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX761ACCC754EB471985EB91926A11793F">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.800000012</float>
+					</Properties>
+					<Item class="Pose" referent="RBXD3F13F3709AC41C6B4CB4E183CB4C102">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX174E3E7393844E5989D7768F1587203C">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.306635916</X>
+									<Y>-0.495142907</Y>
+									<Z>-0.715574086</Z>
+									<R00>0.569756508</R00>
+									<R01>0.68663764</R01>
+									<R02>-0.451559782</R02>
+									<R10>-0.769565344</R10>
+									<R11>0.638568103</R11>
+									<R12>2.79126979e-008</R12>
+									<R20>0.288351685</R20>
+									<R21>0.347504765</R21>
+									<R22>0.892240822</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXEA0CEB228B9C469AA86E2D593F27F540">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>0.0368701741</X>
+									<Y>-0.1611083</Y>
+									<Z>-0.52278018</Z>
+									<R00>0.696612775</R00>
+									<R01>-0.678980052</R01>
+									<R02>0.231768653</R02>
+									<R10>0.69798553</R10>
+									<R11>0.716111839</R11>
+									<R12>3.13022426e-008</R12>
+									<R20>-0.165972292</R20>
+									<R21>0.161771148</R21>
+									<R22>0.972770929</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX8BDD9F20D729424C8F15F817875813FE">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX4A1687ADE36941C49CD3D0F7AE1E8554">
+					<Properties>
+						<string name="Name">KF2</string>
+						<float name="Time">1</float>
+					</Properties>
+					<Item class="Pose" referent="RBX7C5A074360194784917C9902F3B0438F">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX0FBCDBE45758428FBE5B0F608F9246E5">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.311912954</X>
+									<Y>-0.360596627</Y>
+									<Z>-0.672399521</Z>
+									<R00>0.507659554</R00>
+									<R01>0.7703439</R01>
+									<R02>-0.385813504</R02>
+									<R10>-0.834991634</R10>
+									<R11>0.55026263</R11>
+									<R12>2.40527438e-008</R12>
+									<R20>0.212298766</R20>
+									<R21>0.322151035</R21>
+									<R22>0.922576785</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXE4DDD93B0B32470F80840E18DFC0006E">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.00952035189</X>
+									<Y>-0.137198865</Y>
+									<Z>-0.529403687</Z>
+									<R00>0.580440819</R00>
+									<R01>-0.737140894</R01>
+									<R02>0.345993817</R02>
+									<R10>0.785666168</R10>
+									<R11>0.618650675</R11>
+									<R12>2.70420806e-008</R12>
+									<R20>-0.214049324</R20>
+									<R21>0.271835625</R21>
+									<R22>0.938236773</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX8306B351F67E4B269078A2CC2F42F64B">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.142208099</X>
+										<Y>-1.65580463</Y>
+										<Z>-0.155834198</Z>
+										<R00>0.78736341</R00>
+										<R01>-0.224092394</R01>
+										<R02>0.574315548</R02>
+										<R10>-0.353084505</R10>
+										<R11>0.599742293</R11>
+										<R12>0.718079805</R12>
+										<R20>-0.505357027</R20>
+										<R21>-0.768173754</R21>
+										<R22>0.393091917</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+			</Item>
+			<Item class="KeyframeSequence" referent="RBXA257DEA6687F47BDA3826DBD3DEEB13D">
+				<Properties>
+					<bool name="Loop">true</bool>
+					<string name="Name">Walk</string>
+					<token name="Priority">2</token>
+				</Properties>
+				<Item class="Keyframe" referent="RBX9F083688D1764C12B77BB363E6043EE5">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0</float>
+					</Properties>
+					<Item class="Pose" referent="RBX86C0469C8C2143B6A761AC71E1D418AA">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX24B87491F5484F3098E8E58018F1E58F">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.257369578</X>
+									<Y>-0.250503063</Y>
+									<Z>-0.838929713</Z>
+									<R00>0.257835388</R00>
+									<R01>0.742247522</R01>
+									<R02>-0.61853826</R02>
+									<R10>-0.944630086</R10>
+									<R11>0.328137249</R11>
+									<R12>1.43433354e-008</R12>
+									<R20>0.202965468</R20>
+									<R21>0.584289849</R21>
+									<R22>0.78575474</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXA3807462C5CA4B57A54EE0285603E7CB">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.393378496</X>
+									<Y>0.108063385</Y>
+									<Z>-0.358028591</Z>
+									<R00>0.452816933</R00>
+									<R01>-0.760408998</R01>
+									<R02>0.465548068</R02>
+									<R10>0.859197259</R10>
+									<R11>0.511644483</R11>
+									<R12>2.23646914e-008</R12>
+									<R20>-0.238195121</R20>
+									<R21>0.399997622</R21>
+									<R22>0.885022581</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBXF6D172892AD24A5F93C4482E617C82C5">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXA86AF42EFFCF45F1939DB4A0D641DB31">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.200000003</float>
+					</Properties>
+					<Item class="Pose" referent="RBX20A0407C4E284F94BEA232B1DE4B7468">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX1CEB0A4EF306437087993EAC58FA3EB6">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.214595944</X>
+									<Y>-0.210649356</Y>
+									<Z>-0.865917921</Z>
+									<R00>0.203782827</R00>
+									<R01>0.714743495</R01>
+									<R02>-0.669039786</R02>
+									<R10>-0.961676478</R10>
+									<R11>0.274186701</R11>
+									<R12>1.19850796e-008</R12>
+									<R20>0.183441833</R20>
+									<R21>0.643399835</R21>
+									<R22>0.743226588</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX18CE7317506D4D63ABB349F624D2EC24">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.504997015</X>
+									<Y>0.162340671</Y>
+									<Z>-0.315687656</Z>
+									<R00>0.406177104</R00>
+									<R01>-0.809508324</R01>
+									<R02>0.423929662</R02>
+									<R10>0.893797874</R10>
+									<R11>0.448470026</R11>
+									<R12>1.9603247e-008</R12>
+									<R20>-0.190119758</R20>
+									<R21>0.378907442</R21>
+									<R22>0.905695081</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX67B9A5E3E7E54A8589636876B55D4449">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX68C6BFD7407E48BD9B9BF4772D219523">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.400000006</float>
+					</Properties>
+					<Item class="Pose" referent="RBXF90364DEB46D44B3A76798F69B8EC13A">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX4447E04906474116AB8969B0F96D3C56">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.210670739</X>
+									<Y>-0.259562165</Y>
+									<Z>-0.889928937</Z>
+									<R00>0.23271656</R00>
+									<R01>0.686541021</R01>
+									<R02>-0.688842833</R02>
+									<R10>-0.947069705</R10>
+									<R11>0.321027905</R11>
+									<R12>1.4032576e-008</R12>
+									<R20>0.221137792</R20>
+									<R21>0.652382195</R21>
+									<R22>0.724910736</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX5429C1F1020B45EF8A5A1E9630AA9FAE">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.491318703</X>
+									<Y>0.20064415</Y>
+									<Z>-0.343263239</Z>
+									<R00>0.482529342</R00>
+									<R01>-0.79479599</R01>
+									<R02>0.368055463</R02>
+									<R10>0.854799628</R10>
+									<R11>0.518958211</R11>
+									<R12>2.26843841e-008</R12>
+									<R20>-0.191005424</R20>
+									<R21>0.31461367</R21>
+									<R22>0.929803848</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX1D1077406A58414F847128D8D70470D3">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXE4CEC8FB9B6C4BC5A55C8A0FCFEA40B8">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.600000024</float>
+					</Properties>
+					<Item class="Pose" referent="RBX4379ADCA48AF493BA6A946283220075B">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBXE990944DB92047F1AA69E7AE18BD5211">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.224412739</X>
+									<Y>-0.30725041</Y>
+									<Z>-0.892868757</Z>
+									<R00>0.270145565</R00>
+									<R01>0.679675877</R01>
+									<R02>-0.681954622</R02>
+									<R10>-0.929287612</R10>
+									<R11>0.369356871</R11>
+									<R12>1.61451013e-008</R12>
+									<R20>0.251884639</R20>
+									<R21>0.633731961</R21>
+									<R22>0.731394529</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX83A42FA63FA6454E9E60758512C2E3F3">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.434920579</X>
+									<Y>0.196629032</Y>
+									<Z>-0.370321214</Z>
+									<R00>0.542608202</R00>
+									<R01>-0.762224913</R01>
+									<R02>0.352972388</R02>
+									<R10>0.814661622</R10>
+									<R11>0.579936564</R11>
+									<R12>2.53498325e-008</R12>
+									<R20>-0.204701617</R20>
+									<R21>0.287553042</R21>
+									<R22>0.935633719</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX83715B3D60C74FB195D3B9578B741E63">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBXF7B50C06AF9A439BB5853AAEC621BD40">
+					<Properties>
+						<string name="Name">Keyframe</string>
+						<float name="Time">0.800000012</float>
+					</Properties>
+					<Item class="Pose" referent="RBX6927531925BC4B7DABE80D3B9B325AF9">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBX0464F475D421499CA910A24AE5A94842">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.251790434</X>
+									<Y>-0.330915809</Y>
+									<Z>-0.875095367</Z>
+									<R00>0.302565038</R00>
+									<R01>0.695844054</R01>
+									<R02>-0.651348889</R02>
+									<R10>-0.917058408</R10>
+									<R11>0.398752868</R11>
+									<R12>1.74300414e-008</R12>
+									<R20>0.259727269</R20>
+									<R21>0.597324967</R21>
+									<R22>0.758778393</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBXE7ECE9DF5C774E0CA8B6F9BC73051A7E">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.370684683</X>
+									<Y>0.148083076</Y>
+									<Z>-0.387352794</Z>
+									<R00>0.561112702</R00>
+									<R01>-0.7332744</R01>
+									<R02>0.384006858</R02>
+									<R10>0.794162631</R10>
+									<R11>0.607705295</R11>
+									<R12>2.6563642e-008</R12>
+									<R20>-0.233363017</R20>
+									<R21>0.304963887</R21>
+									<R22>0.923330247</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX5A18552C95F64E6BBA3ED460562F3500">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+				<Item class="Keyframe" referent="RBX9087C874B17D41249CEDB57945266244">
+					<Properties>
+						<string name="Name">KF2</string>
+						<float name="Time">1</float>
+					</Properties>
+					<Item class="Pose" referent="RBX766A5B267A4349D484824C1B6EC83FAA">
+						<Properties>
+							<CoordinateFrame name="CFrame">
+								<X>0</X>
+								<Y>0</Y>
+								<Z>0</Z>
+								<R00>1</R00>
+								<R01>0</R01>
+								<R02>0</R02>
+								<R10>0</R10>
+								<R11>1</R11>
+								<R12>0</R12>
+								<R20>0</R20>
+								<R21>0</R21>
+								<R22>1</R22>
+							</CoordinateFrame>
+							<token name="EasingDirection">0</token>
+							<token name="EasingStyle">0</token>
+							<float name="MaskWeight">0</float>
+							<string name="Name">Torso</string>
+							<float name="Weight">0</float>
+						</Properties>
+						<Item class="Pose" referent="RBXD01802BDCBDB468D90962BBC8A5EDD7B">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.257369578</X>
+									<Y>-0.250503063</Y>
+									<Z>-0.838929713</Z>
+									<R00>0.257835388</R00>
+									<R01>0.742247522</R01>
+									<R02>-0.61853826</R02>
+									<R10>-0.944630086</R10>
+									<R11>0.328137249</R11>
+									<R12>1.43433354e-008</R12>
+									<R20>0.202965468</R20>
+									<R21>0.584289849</R21>
+									<R22>0.78575474</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Left Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+						</Item>
+						<Item class="Pose" referent="RBX8EB26905581E49B7B2268CB89C9F0FE4">
+							<Properties>
+								<CoordinateFrame name="CFrame">
+									<X>-0.393378496</X>
+									<Y>0.108063385</Y>
+									<Z>-0.358028591</Z>
+									<R00>0.452816933</R00>
+									<R01>-0.760408998</R01>
+									<R02>0.465548068</R02>
+									<R10>0.859197259</R10>
+									<R11>0.511644483</R11>
+									<R12>2.23646914e-008</R12>
+									<R20>-0.238195121</R20>
+									<R21>0.399997622</R21>
+									<R22>0.885022581</R22>
+								</CoordinateFrame>
+								<token name="EasingDirection">0</token>
+								<token name="EasingStyle">0</token>
+								<float name="MaskWeight">0</float>
+								<string name="Name">Right Arm</string>
+								<float name="Weight">1</float>
+							</Properties>
+							<Item class="Pose" referent="RBX703F2E8C81EC4DE39E29D1EB01443EDC">
+								<Properties>
+									<CoordinateFrame name="CFrame">
+										<X>-0.0747680664</X>
+										<Y>-1.23262882</Y>
+										<Z>-0.171183586</Z>
+										<R00>0.885022581</R00>
+										<R01>-1.51920148e-008</R01>
+										<R02>-0.465548038</R02>
+										<R10>0.399997622</R10>
+										<R11>0.511644483</R11>
+										<R12>0.760408998</R12>
+										<R20>0.238195077</R20>
+										<R21>-0.859197259</R21>
+										<R22>0.452816963</R22>
+									</CoordinateFrame>
+									<token name="EasingDirection">0</token>
+									<token name="EasingStyle">0</token>
+									<float name="MaskWeight">0</float>
+									<string name="Name">Handle</string>
+									<float name="Weight">1</float>
+								</Properties>
+							</Item>
+						</Item>
+					</Item>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Part" referent="RBXEAE1533A2C214C899051E061B4575616">
+			<Properties>
+				<bool name="Anchored">false</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">199</int>
+				<CoordinateFrame name="CFrame">
+					<X>-51.3000031</X>
+					<Y>3.00001717</Y>
+					<Z>19.2000084</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>0.99999994</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">false</bool>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>true</CustomPhysics>
+					<Density>0.00999999978</Density>
+					<Friction>0.400000006</Friction>
+					<Elasticity>0.25</Elasticity>
+					<FrictionWeight>1</FrictionWeight>
+					<ElasticityWeight>1</ElasticityWeight>
+				</PhysicalProperties>
+				<float name="Elasticity">0</float>
+				<float name="Friction">1</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">1088</token>
+				<string name="Name">Handle</string>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<token name="formFactorRaw">3</token>
+				<token name="shape">1</token>
+				<Vector3 name="size">
+					<X>1</X>
+					<Y>1</Y>
+					<Z>1</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBXFFDFAF547D09468F96140B0D4A7C8D9E">
+			<Properties>
+				<string name="Name">Positions</string>
+			</Properties>
+			<Item class="Part" referent="RBX9F289437304549208B64CD5E6E0E7A13">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>-52.2000008</X>
+						<Y>3.11643004</Y>
+						<Z>18.3199997</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<PhysicalProperties name="CustomPhysicalProperties">
+						<CustomPhysics>true</CustomPhysics>
+						<Density>0.00999999978</Density>
+						<Friction>0.400000006</Friction>
+						<Elasticity>0.25</Elasticity>
+						<FrictionWeight>1</FrictionWeight>
+						<ElasticityWeight>1</ElasticityWeight>
+					</PhysicalProperties>
+					<float name="Elasticity">0</float>
+					<float name="Friction">1</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">1088</token>
+					<string name="Name">Hold</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">1</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.269999981</X>
+						<Y>0.560000002</Y>
+						<Z>0.540000141</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Attachment" referent="RBXE61B7A535C614C90BB3971F661D20450">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">RightHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="Attachment" referent="RBX804916F43F274E0D8374CBD473B264F4">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>-0.699999988</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">LeftHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBXCDF659DBF45E4153B1A956E4CCCCB9B5">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">37</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.2000008</X>
+							<Y>3.2650001</Y>
+							<Z>17.375</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://502073110</url></Content>
+						<string name="Name">Color</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX06779962274047D380506F7826A60490">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.2000008</X>
+							<Y>3.38643003</Y>
+							<Z>16.9199982</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845738</url></Content>
+						<string name="Name">Dark</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX07F0D9E18BED4AADA69D44A73EC3F862">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.2000008</X>
+							<Y>3.40643001</Y>
+							<Z>17.5900002</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845914</url></Content>
+						<string name="Name">Light</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX38B26642601A4D6A94AF9638AAE765A0">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.2000008</X>
+							<Y>3.9000001</Y>
+							<Z>19.1399994</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">AimPart</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX202699480E3F437DB30DDA361EE1935F">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.2000008</X>
+							<Y>3.61642909</Y>
+							<Z>14.7194166</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">Barrel</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="NumberValue" referent="RBX7B9049F16675424ABCFDCC3BC3EA2115">
+					<Properties>
+						<string name="Name">Scale</string>
+						<double name="Value">0.050000000000000003</double>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Part" referent="RBX62900BE4276F4DAFB8B0EB9F97DBE0A5">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>-52.4168892</X>
+						<Y>2.59808683</Y>
+						<Z>17.9381962</Z>
+						<R00>0.534581065</R00>
+						<R01>-0.211647466</R01>
+						<R02>0.818184674</R02>
+						<R10>0.178605974</R10>
+						<R11>0.974559069</R11>
+						<R12>0.135401502</R12>
+						<R20>-0.826025784</R20>
+						<R21>0.0737497509</R21>
+						<R22>0.558782995</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<PhysicalProperties name="CustomPhysicalProperties">
+						<CustomPhysics>true</CustomPhysics>
+						<Density>0.00999999978</Density>
+						<Friction>0.400000006</Friction>
+						<Elasticity>0.25</Elasticity>
+						<FrictionWeight>1</FrictionWeight>
+						<ElasticityWeight>1</ElasticityWeight>
+					</PhysicalProperties>
+					<float name="Elasticity">0</float>
+					<float name="Friction">1</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">1088</token>
+					<string name="Name">Run</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">1</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.269999981</X>
+						<Y>0.560000002</Y>
+						<Z>0.540000141</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Attachment" referent="RBX3F84BE43D9364041A4F440C6B32DE956">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">RightHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="Attachment" referent="RBXC703DA431D59442D987AEFF9E85C09D6">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>-0.699999988</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">LeftHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX225B00ED923E4482B481E511E60973DE">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">37</int>
+						<CoordinateFrame name="CFrame">
+							<X>-53.221508</X>
+							<Y>2.6149261</Y>
+							<Z>17.4211006</Z>
+							<R00>0.534581065</R00>
+							<R01>-0.211647466</R01>
+							<R02>0.818184674</R02>
+							<R10>0.178605974</R10>
+							<R11>0.974559069</R11>
+							<R12>0.135401502</R12>
+							<R20>-0.826025784</R20>
+							<R21>0.0737497509</R21>
+							<R22>0.558782995</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://502073110</url></Content>
+						<string name="Name">Color</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX584FE8069B394A30A43C2E11408665F7">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-53.6194801</X>
+							<Y>2.67165804</Y>
+							<Z>17.1758118</Z>
+							<R00>0.534581065</R00>
+							<R01>-0.211647466</R01>
+							<R02>0.818184674</R02>
+							<R10>0.178605974</R10>
+							<R11>0.974559069</R11>
+							<R12>0.135401502</R12>
+							<R20>-0.826025784</R20>
+							<R21>0.0737497509</R21>
+							<R22>0.558782995</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845738</url></Content>
+						<string name="Name">Dark</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBX76C413A790F34E86BADA6975D9BD35DE">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-53.0755501</X>
+							<Y>2.78186679</Y>
+							<Z>17.5516682</Z>
+							<R00>0.534581065</R00>
+							<R01>-0.211647466</R01>
+							<R02>0.818184674</R02>
+							<R10>0.178605974</R10>
+							<R11>0.974559069</R11>
+							<R12>0.135401502</R12>
+							<R20>-0.826025784</R20>
+							<R21>0.0737497509</R21>
+							<R22>0.558782995</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845914</url></Content>
+						<string name="Name">Light</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXF0310A240072491598C938783A363F86">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-51.9118195</X>
+							<Y>3.47275186</Y>
+							<Z>18.4541874</Z>
+							<R00>0.534581065</R00>
+							<R01>-0.211647466</R01>
+							<R02>0.818184674</R02>
+							<R10>0.178605974</R10>
+							<R11>0.974559069</R11>
+							<R12>0.135401502</R12>
+							<R20>-0.826025784</R20>
+							<R21>0.0737497509</R21>
+							<R22>0.558782995</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">AimPart</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXD6687A54036648708A23DE53C6A53E43">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-55.4686546</X>
+							<Y>2.59783959</Y>
+							<Z>15.9631252</Z>
+							<R00>0.534581065</R00>
+							<R01>-0.211647466</R01>
+							<R02>0.818184674</R02>
+							<R10>0.178605974</R10>
+							<R11>0.974559069</R11>
+							<R12>0.135401502</R12>
+							<R20>-0.826025784</R20>
+							<R21>0.0737497509</R21>
+							<R22>0.558782995</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">Barrel</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="NumberValue" referent="RBX4F3C1D5F2D3D497BAB2E44C8684CD117">
+					<Properties>
+						<string name="Name">Scale</string>
+						<double name="Value">1</double>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Part" referent="RBXEB909E6D69924AD2AD5C89B4322544D0">
+				<Properties>
+					<bool name="Anchored">true</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>-52.3999977</X>
+						<Y>3.01643014</Y>
+						<Z>18.2199993</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<PhysicalProperties name="CustomPhysicalProperties">
+						<CustomPhysics>true</CustomPhysics>
+						<Density>0.00999999978</Density>
+						<Friction>0.400000006</Friction>
+						<Elasticity>0.25</Elasticity>
+						<FrictionWeight>1</FrictionWeight>
+						<ElasticityWeight>1</ElasticityWeight>
+					</PhysicalProperties>
+					<float name="Elasticity">0</float>
+					<float name="Friction">1</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">1088</token>
+					<string name="Name">Walk</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">1</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.269999981</X>
+						<Y>0.560000002</Y>
+						<Z>0.540000141</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Attachment" referent="RBXA84F112B894C46B69DD3FD6C4FE9143B">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>0</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">RightHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="Attachment" referent="RBXEB229F57B12C468596A858CA430F759E">
+					<Properties>
+						<CoordinateFrame name="CFrame">
+							<X>0</X>
+							<Y>-0.100000001</Y>
+							<Z>-0.699999988</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<string name="Name">LeftHand</string>
+						<bool name="Visible">false</bool>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBXD6D660BFBDA5440ABAA449F84DB05F1B">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">37</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.3999977</X>
+							<Y>3.1650002</Y>
+							<Z>17.2749996</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://502073110</url></Content>
+						<string name="Name">Color</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.210000038</X>
+							<Y>0.839660168</Y>
+							<Z>0.760708272</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBXE4784C541FB942B69ECB0F4F08BBD8BD">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.3999977</X>
+							<Y>3.28643012</Y>
+							<Z>16.8199978</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845738</url></Content>
+						<string name="Name">Dark</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.280494511</X>
+							<Y>1.07275021</Y>
+							<Z>4.39310646</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="MeshPart" referent="RBXE830427A9A5D45BF94B52D1AC2A5C670">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.3999977</X>
+							<Y>3.3064301</Y>
+							<Z>17.4899998</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<token name="CollisionFidelity">2</token>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.349999994</Friction>
+							<Elasticity>0.0500000007</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0.5</float>
+						<float name="Friction">0.300000012</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<Vector3 name="InitialSize">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<Content name="MeshID"><url>rbxassetid://518845914</url></Content>
+						<string name="Name">Light</string>
+						<BinaryString name="PhysicsData">Q1NHUEhTAAAAAEJMT0NL</BinaryString>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Content name="TextureID"><null></null></Content>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">0</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="size">
+							<X>0.220000088</X>
+							<Y>0.730001688</Y>
+							<Z>4.57000303</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBXF344CC40DCA9463787AAFE9116C18470">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">194</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.3999977</X>
+							<Y>3.80000019</Y>
+							<Z>19.039999</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">AimPart</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="Part" referent="RBX800856F3A7424BD285C5F61EECF8ABC7">
+					<Properties>
+						<bool name="Anchored">true</bool>
+						<float name="BackParamA">-0.5</float>
+						<float name="BackParamB">0.5</float>
+						<token name="BackSurface">0</token>
+						<token name="BackSurfaceInput">0</token>
+						<float name="BottomParamA">-0.5</float>
+						<float name="BottomParamB">0.5</float>
+						<token name="BottomSurface">0</token>
+						<token name="BottomSurfaceInput">0</token>
+						<int name="BrickColor">199</int>
+						<CoordinateFrame name="CFrame">
+							<X>-52.3999977</X>
+							<Y>3.51642919</Y>
+							<Z>14.6194162</Z>
+							<R00>1</R00>
+							<R01>0</R01>
+							<R02>0</R02>
+							<R10>0</R10>
+							<R11>1</R11>
+							<R12>0</R12>
+							<R20>0</R20>
+							<R21>0</R21>
+							<R22>1</R22>
+						</CoordinateFrame>
+						<bool name="CanCollide">false</bool>
+						<PhysicalProperties name="CustomPhysicalProperties">
+							<CustomPhysics>true</CustomPhysics>
+							<Density>0.00999999978</Density>
+							<Friction>0.400000006</Friction>
+							<Elasticity>0.25</Elasticity>
+							<FrictionWeight>1</FrictionWeight>
+							<ElasticityWeight>1</ElasticityWeight>
+						</PhysicalProperties>
+						<float name="Elasticity">0</float>
+						<float name="Friction">1</float>
+						<float name="FrontParamA">-0.5</float>
+						<float name="FrontParamB">0.5</float>
+						<token name="FrontSurface">0</token>
+						<token name="FrontSurfaceInput">0</token>
+						<float name="LeftParamA">-0.5</float>
+						<float name="LeftParamB">0.5</float>
+						<token name="LeftSurface">0</token>
+						<token name="LeftSurfaceInput">0</token>
+						<bool name="Locked">false</bool>
+						<token name="Material">1088</token>
+						<string name="Name">Barrel</string>
+						<float name="Reflectance">0</float>
+						<float name="RightParamA">-0.5</float>
+						<float name="RightParamB">0.5</float>
+						<token name="RightSurface">0</token>
+						<token name="RightSurfaceInput">0</token>
+						<Vector3 name="RotVelocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="TopParamA">-0.5</float>
+						<float name="TopParamB">0.5</float>
+						<token name="TopSurface">0</token>
+						<token name="TopSurfaceInput">0</token>
+						<float name="Transparency">1</float>
+						<Vector3 name="Velocity">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<token name="formFactorRaw">3</token>
+						<token name="shape">1</token>
+						<Vector3 name="size">
+							<X>0.200000003</X>
+							<Y>0.200000003</Y>
+							<Z>0.200000003</Z>
+						</Vector3>
+					</Properties>
+				</Item>
+				<Item class="NumberValue" referent="RBX34A94D61131049B8BA62B1378489AFED">
+					<Properties>
+						<string name="Name">Scale</string>
+						<double name="Value">0.59999999999999998</double>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Script" referent="RBXE540FC83BF654BFCAA5BD724FDABE819">
+			<Properties>
+				<bool name="Disabled">true</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Script</string>
+				<string name="ScriptGuid"></string>
+				<ProtectedString name="Source"><![CDATA[local Dummy = workspace.GunAnimationDummy
+Dummy.AnimSaves:ClearAllChildren()
+local LeftArm, RightArm = Dummy.HumanoidRootPart.LeftArm, Dummy.HumanoidRootPart.RightArm
+
+local function AddKeyframe(Sequence, Time, Left, Right, Grip)
+	local Main = Instance.new("Keyframe", Sequence)
+	Main.Name = Time == 1 and "KF2" or "Keyframe"
+	Main.Time = Time
+	if Left then
+		local Torso = Instance.new("Pose", Main)
+		Torso.Weight = 0
+		Torso.Name = "Torso"
+		local LeftArm = Instance.new("Pose", Torso)
+		LeftArm.Name = "Left Arm"
+		LeftArm.CFrame = Left
+		local RightArm = Instance.new("Pose", Torso)
+		RightArm.Name = "Right Arm"
+		RightArm.CFrame = Right
+		local RightGrip = Instance.new("Pose", RightArm)
+		RightGrip.Name = "Handle"
+		RightGrip.CFrame = Grip
+	end
+end
+
+local function GetRot(Start, End, Left)
+	local Dist = (Start - End).magnitude
+	local X, Y, Z = CFrame.new(Start, End):toEulerAnglesXYZ()
+	local CF = CFrame.Angles(0, Y, X * -Left) * CFrame.Angles(math.pi/2, 0, math.pi/2 * -Left)
+	return (CF - CF.p) * CFrame.Angles(0, math.pi/2 * -Left, 0) * CFrame.new(0, 1.5 - Dist, -0.5)
+end
+
+local function GetGrip(RightRot, Handle)
+	return (Dummy.Torso.CFrame * CFrame.new(1, 0.5, 0, 0, 0, 1, 0, 1, 0, -1, 0, 0) * (RightRot - RightRot.p) * CFrame.Angles(0, -math.pi/2, 0)):toObjectSpace(Handle.CFrame)
+end
+
+for _, v in pairs(Dummy.Positions:GetChildren()) do
+	local Sequence = Instance.new("KeyframeSequence", Dummy.AnimSaves)
+	Sequence.Name = v.Name
+	local LeftHand, RightHand, Scale = v.LeftHand, v.RightHand, v.Scale
+	local LeftRot = GetRot(LeftArm.WorldPosition, LeftHand.WorldPosition, 1)
+	local RightRot = GetRot(RightArm.WorldPosition, RightHand.WorldPosition, -1)
+	local Grip = GetGrip(RightRot, v)
+	
+	AddKeyframe(Sequence, 0, LeftRot, RightRot, Grip)
+	for i = 0.2, 0.8, 0.2 do
+		local Frequency = math.pi
+		local Offset = Vector3.new(math.sin(i * Frequency)/3, math.cos(i * Frequency)/4, math.sin(i * Frequency)/6) * Scale.Value
+		local LeftRot = GetRot(LeftArm.WorldPosition, LeftHand.WorldPosition + Offset, 1)
+		local RightRot = GetRot(RightArm.WorldPosition, RightHand.WorldPosition + Offset, -1)
+		AddKeyframe(Sequence, i, LeftRot, RightRot, Grip)
+	end
+	AddKeyframe(Sequence, 1, LeftRot, RightRot, Grip)
+end]]></ProtectedString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

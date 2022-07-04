@@ -1,0 +1,21 @@
+api = require(game.Workspace.CodedAPI) sel = game.Selection:Get() game.Workspace.CornerBlocks:ClearAllChildren() for _, v in pairs(sel) do p = game.Workspace.BasePart:Clone() p.Parent = game.Workspace.CornerBlocks p.CFrame = v.CFrame + api.GetFrontVector(v.CFrame) * v.Size.z/2 + api.GetLeftVector(v.CFrame) * v.Size.x/2 end
+sel = game.Selection:Get() for _, v in pairs(sel) do v.CFrame = CFrame.new(v.Position) end
+api = require(game.Workspace.CodedAPI) sel = game.Selection:Get() api.DrawTriangle(sel[1].Position, sel[2].Position, sel[3].Position, game.Workspace.Triangles)
+api = require(game.Workspace.CodedAPI) sel = game.Selection:Get() for i = 1, #sel - 1 do api.DrawLine(sel[i].Position, sel[i + 1].Position, game.Workspace.Triangles) end
+require(game.Workspace.Ship.Main.MoveModule).Move(Vector3.new(1, 0, 0))
+
+
+local module = require(game.Workspace.LuaSyntaxToolset)
+local start = tick()
+local function Loop(Obj)
+	for _, v in ipairs(Obj:GetChildren()) do
+		if v:IsA("Folder") then
+			Loop(v)
+		elseif v:IsA("BaseScript") or v:IsA("ModuleScript") then
+			module.Minify(v, false)
+		end
+	end
+end
+
+Loop(game.ServerScriptService.Setup)
+print(tick() - start)

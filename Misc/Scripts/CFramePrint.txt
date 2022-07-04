@@ -1,0 +1,25 @@
+local function CFramePrint(s)
+	local x, y, z = s:toEulerAnglesXYZ()
+	local function r(e, t)
+		if t then
+			return math.floor(e)
+		else
+			return math.floor(e * 100 + 0.5)/100
+		end
+	end
+	local function d(e)
+		return r(math.deg(e), true)
+	end
+	local function t(e)
+		if d(e) == 0 then
+			return 0
+		else
+			return "math.rad("..d(e)..")"
+		end
+	end
+	if d(x) == 0 and d(y) == 0 and d(z) == 0 then
+		print("CFrame.new("..r(s.X)..", "..r(s.Y)..", "..r(s.Z)..")")
+	else
+		print("CFrame.new("..r(s.X)..", "..r(s.Y)..", "..r(s.Z)..") * CFrame.Angles("..t(x)..", "..t(y)..", "..t(z)..")")
+	end
+end

@@ -1,0 +1,274 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Script" referent="RBX86AC2E12E186457CBBC7F8CFD1DFEE2F">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">TreePlugin</string>
+			<string name="ScriptGuid">{9A43149B-B163-4C8F-A623-A5C121A501FE}</string>
+			<ProtectedString name="Source"><![CDATA[if not workspace:FindFirstChild("Trees") then
+	return
+end
+local Toolbar = plugin:CreateToolbar("Tree")
+local Button = Toolbar:CreateButton("Tree", "", "rbxassetid://119724182")
+local Mouse = plugin:GetMouse()
+local Camera = workspace.CurrentCamera
+local Active = false
+
+local IgnoreList = {}
+local function LoopedRaycast(NewRay)
+	local i = 1
+	local Part, Hit, Normal, Material = workspace:FindPartOnRayWithIgnoreList(NewRay, IgnoreList)
+	if not Part or Part.CanCollide then
+		return Part, Hit, Normal, Material
+	end
+	repeat
+		i = i + 1
+		Part, Hit, Normal, Material = workspace:FindPartOnRayWithIgnoreList(NewRay, IgnoreList)
+		if Part and not Part.CanCollide then
+			table.insert(IgnoreList, Part)
+		end
+		wait()
+	until not Part or Part.CanCollide
+	return Part, Hit, Normal, Material
+end
+
+local Colors = {"Moss", "Sand green", "Artichoke", "Olivine", "Laurel green"}
+Mouse.Button1Down:connect(function()
+	if Active then
+		local Hit, Pos, Normal = LoopedRaycast(Ray.new(Camera.CoordinateFrame.p, CFrame.new(Camera.CoordinateFrame.p, Mouse.Hit.p).lookVector * 999))
+		if Hit then
+			local RandomSize = math.random(95, 120)/100
+			local Trunk = script.Trunk:Clone()
+			Trunk.Parent = workspace.Trees
+			Trunk.Size = Trunk.Size * RandomSize
+			Trunk.CFrame = CFrame.new(Pos + Vector3.new(0, Trunk.Size.Y * (22/44.97), 0)) * CFrame.Angles(0, math.rad(math.random(0, 360)), 0)
+			local Leaves = script.Leaves:Clone()
+			Leaves.Parent = Trunk
+			Leaves.Size = Leaves.Size * RandomSize
+			Leaves.BrickColor = BrickColor.new(Colors[math.random(1, #Colors)])
+			Leaves.CFrame = CFrame.new(Pos + Vector3.new(0, Trunk.Size.Y * (24.4/44.97), 0)) * CFrame.Angles(0, math.rad(math.random(0, 360)), 0)
+			game.ChangeHistoryService:SetWaypoint("PlacedTree")
+		end
+	end
+end)
+
+Button.Click:connect(function()
+	Active = not Active
+	plugin:Activate(Active)
+end)]]></ProtectedString>
+		</Properties>
+		<Item class="MeshPart" referent="RBX209DF30685DD404AB8FD1BEBCDFBE09E">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">1022</int>
+				<CoordinateFrame name="CFrame">
+					<X>-60.4000015</X>
+					<Y>24.3999996</Y>
+					<Z>-57.4000015</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">false</bool>
+				<token name="CollisionFidelity">0</token>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<Vector3 name="InitialSize">
+					<X>19.2194633</X>
+					<Y>39.4480476</Y>
+					<Z>19.2194633</Z>
+				</Vector3>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">1280</token>
+				<Content name="MeshID"><url>rbxassetid://507239742</url></Content>
+				<string name="Name">Leaves</string>
+				<BinaryString name="PhysicsData"><![CDATA[Q1NHUEhTAwAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAgD94AAAA
+BAAAACCLx8C+FYbBJ2XUwHVmEMC3L5vBdsEZwXbBGcG2L5vBc2YQwCZl1MC9FYbBIIvHQHbB
+GcG2L5vBd2YQQHFmEMC1L5vBdsEZQSCLx0C9FYbBJmXUQHlmEEC1L5vBdsEZQXbBGUG2L5vB
+cWYQQDR4Ir89ZZVBctzQvih4Ir89ZZVBAdvQPhF9Wz+ALZJB8iNOvnbBGUG2L5vBemYQwFsi
+Tj6ALZJBrHxbP3VmEEC3L5vBdsEZwXVmEEDNyp3BOp8UwfghTj6ALZJBe31bvyVl1EC+FYbB
+IYvHwDufFMHMyp3BeGYQQDufFEHMyp3BcWYQQHJmEMDLyp3BO58UQXVmEMDNyp3BOp8UwTuf
+FEHMyp3BeWYQwHhmEEDLyp3BO58UQTufFMHMyp3Bc2YQwDR4Ij89ZZVB2trQPip4Ij89ZZVB
+l9zQvmEiTr6ALZJBdn1bv/8hTr6ALZJBsXxbPxGBSD3Nyp1B/s1aPRZ9W7+ALZJBjCNOvhOB
+SL3Lyp1BHdtavafb0D49ZZVBmngiv6fb0L49ZZVBznciP8zb0L49ZZVBkHgiv8vb0D49ZZVB
+xXciPxZ9Wz+ALZJBZyBOPhF9W7+ALZJBzSBOPozUWj3Lyp1Bo4dIvfuASL3Nyp1BEc5aPeQA
+AAAAAAAAAQAAAAIAAAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAAAAAAAAIAAAAKAAAA
+BAAAAAMAAAALAAAACAAAAAwAAAANAAAABQAAAAcAAAAOAAAADwAAAAEAAAAOAAAAAQAAABAA
+AAAOAAAADAAAAA8AAAAOAAAAEQAAAAwAAAASAAAABAAAAAIAAAASAAAABQAAAAQAAAATAAAA
+EgAAAA8AAAATAAAADAAAAAgAAAATAAAACAAAAAcAAAAUAAAAEgAAABMAAAAUAAAABwAAAAUA
+AAAUAAAABQAAABIAAAAVAAAADwAAABIAAAAVAAAAAQAAAA8AAAAVAAAAAgAAAAEAAAAWAAAA
+DwAAAAwAAAAWAAAADAAAABMAAAAWAAAAEwAAAA8AAAAXAAAAEwAAAAcAAAAXAAAABwAAABQA
+AAAXAAAAFAAAABMAAAAYAAAAEgAAAAIAAAAYAAAAAgAAABUAAAAYAAAAFQAAABIAAAAZAAAA
+BgAAAAgAAAAaAAAAGQAAAAsAAAAaAAAADAAAABEAAAAaAAAACwAAAAwAAAAbAAAAEAAAAAEA
+AAAcAAAADQAAAB0AAAAcAAAABQAAAA0AAAAeAAAACgAAAAkAAAAeAAAAAgAAAAQAAAAeAAAA
+CQAAAAIAAAAfAAAAEAAAABsAAAAfAAAACQAAAAoAAAAgAAAAEAAAAB8AAAAgAAAAGgAAABEA
+AAAgAAAAEQAAAA4AAAAgAAAADgAAABAAAAAhAAAACgAAAAMAAAAhAAAAAwAAAAUAAAAhAAAA
+BQAAABwAAAAhAAAAHAAAAB0AAAAiAAAACQAAAB8AAAAiAAAAHwAAABsAAAAiAAAAAAAAAAkA
+AAAiAAAAAQAAAAAAAAAiAAAAGwAAAAEAAAAjAAAABgAAABkAAAAjAAAAHQAAAA0AAAAjAAAA
+GQAAAB0AAAAjAAAABwAAAAYAAAAjAAAADQAAAAcAAAAkAAAACAAAAAsAAAAkAAAACwAAABkA
+AAAkAAAAGQAAAAgAAAAlAAAABAAAAAoAAAAlAAAACgAAAB4AAAAlAAAAHgAAAAQAAAAmAAAA
+GgAAACAAAAAmAAAAIAAAAB8AAAAmAAAAHwAAAB0AAAAmAAAAHQAAABkAAAAmAAAAGQAAABoA
+AAAnAAAACgAAACEAAAAnAAAAIQAAAB0AAAAnAAAAHQAAAB8AAAAnAAAAHwAAAAoAAAA=]]></BinaryString>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Content name="TextureID"><null></null></Content>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">-2.23517413e-010</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>19.2194633</X>
+					<Y>39.4480476</Y>
+					<Z>19.2194633</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+		<Item class="MeshPart" referent="RBX6447F03897DD49BC92D9C5ED142BB712">
+			<Properties>
+				<bool name="Anchored">true</bool>
+				<float name="BackParamA">-0.5</float>
+				<float name="BackParamB">0.5</float>
+				<token name="BackSurface">0</token>
+				<token name="BackSurfaceInput">0</token>
+				<float name="BottomParamA">-0.5</float>
+				<float name="BottomParamB">0.5</float>
+				<token name="BottomSurface">0</token>
+				<token name="BottomSurfaceInput">0</token>
+				<int name="BrickColor">364</int>
+				<CoordinateFrame name="CFrame">
+					<X>-60.3520012</X>
+					<Y>22</Y>
+					<Z>-67.3860016</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="CanCollide">true</bool>
+				<token name="CollisionFidelity">0</token>
+				<PhysicalProperties name="CustomPhysicalProperties">
+					<CustomPhysics>false</CustomPhysics>
+				</PhysicalProperties>
+				<float name="Elasticity">0.5</float>
+				<float name="Friction">0.300000012</float>
+				<float name="FrontParamA">-0.5</float>
+				<float name="FrontParamB">0.5</float>
+				<token name="FrontSurface">0</token>
+				<token name="FrontSurfaceInput">0</token>
+				<Vector3 name="InitialSize">
+					<X>2.7031219</X>
+					<Y>44.969902</Y>
+					<Z>2.77263784</Z>
+				</Vector3>
+				<float name="LeftParamA">-0.5</float>
+				<float name="LeftParamB">0.5</float>
+				<token name="LeftSurface">0</token>
+				<token name="LeftSurfaceInput">0</token>
+				<bool name="Locked">false</bool>
+				<token name="Material">800</token>
+				<Content name="MeshID"><url>rbxassetid://514461287</url></Content>
+				<string name="Name">Trunk</string>
+				<BinaryString name="PhysicsData"><![CDATA[Q1NHUEhTAwAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAgD97AAAA
+BAAAAPP/rD8u4bPBv/GdPrzDYDQu4bPB5nKxPwAAAAAu4bPB5nKxv/P/rL8u4bPBw/Gdvi28
+ir8u4bPBcEZdPy68ij8u4bPBbEZdv/77GT8u4bPBOOCfP7zDYDSjPbHB5nKxP/T7Gb8u4bPB
+POCfvwNKBT5ewo5BrWKKPi68ij+jPbHBaUZdP/j7Gb+jPbHBO+CfP/2Am77MXpBA2HMhP/P/
+rD+jPbHBvfGdvi68ij+jPbHBbEZdvwS1Lj/IXpBA6YEfvv77GT+jPbHBOOCfvwKBmz7IXpBA
+anQhvy28ir8u4bPBcEZdvy28ir+jPbHBcEZdv/j7Gb8u4bPBO+CfP/P/rL8u4bPBwvGdPvP/
+rL+jPbHBwPGdPi68ij8u4bPBakZdP/P/rD8u4bPBu/Gdvv77GT8u4bPBOOCfvwAAAABewo5B
+d5qZvry/lT5ewo5BE7SIPb4tcD5ewo5B9Yo/vjY6yzwu4bNBYxyivKUMir1+RLFB2SZcPby/
+lb5ewo5BFbSIPf5JBb5ewo5BsGKKPqUMir18RLFBHTZcvbktcL5ewo5B+oo/vis5GT1+RLFB
+IhKfPa0aDL/MXpBA43TfPgS1Lr/IXpBA8YEfvvmAm77IXpBAbXQhv5P74jPMXpBA6jIzP+wA
+NTYu4bNBtuwBPeoAAAAAAAAAAQAAAAIAAAADAAAAAgAAAAEAAAAEAAAAAwAAAAEAAAAFAAAA
+AAAAAAIAAAAGAAAAAQAAAAAAAAAGAAAABwAAAAEAAAAIAAAAAgAAAAMAAAAJAAAABgAAAAoA
+AAALAAAABwAAAAwAAAALAAAAAQAAAAcAAAANAAAADgAAAA8AAAANAAAADwAAAAAAAAANAAAA
+BQAAAA4AAAAQAAAAAgAAABEAAAAQAAAAEQAAAA4AAAAQAAAADgAAAAUAAAASAAAAAwAAABMA
+AAASAAAAEwAAAAgAAAASAAAACAAAAAMAAAAUAAAABAAAAAEAAAAUAAAAAQAAAAsAAAAUAAAA
+CwAAAAQAAAAVAAAAFgAAAAMAAAAVAAAAAwAAAAQAAAAVAAAABAAAABYAAAAXAAAAAAAAAAoA
+AAAXAAAACgAAAAYAAAAXAAAABgAAAAAAAAAYAAAAAAAAAAUAAAAYAAAABQAAAA0AAAAYAAAA
+DQAAAAAAAAAZAAAABQAAAAIAAAAZAAAAAgAAABAAAAAZAAAAEAAAAAUAAAAaAAAAEQAAAAIA
+AAAbAAAAAAAAAA8AAAAbAAAACgAAAAAAAAAbAAAACQAAAAoAAAAcAAAAGgAAAB0AAAAcAAAA
+HQAAABsAAAAcAAAAGwAAAA8AAAAcAAAAEQAAABoAAAAcAAAADgAAABEAAAAcAAAADwAAAA4A
+AAAeAAAAHwAAACAAAAAhAAAAIgAAAB8AAAAhAAAAHwAAAB4AAAAhAAAAHQAAABoAAAAhAAAA
+GgAAACIAAAAjAAAAIAAAAAkAAAAjAAAAHgAAACAAAAAjAAAACQAAABsAAAAjAAAAGwAAAB0A
+AAAkAAAAIAAAAB8AAAAkAAAADAAAACAAAAAkAAAABAAAAAsAAAAkAAAACwAAAAwAAAAkAAAA
+FgAAAAQAAAAkAAAAHwAAABYAAAAlAAAAHwAAACIAAAAlAAAAEwAAAAMAAAAlAAAAIgAAABMA
+AAAlAAAAAwAAABYAAAAlAAAAFgAAAB8AAAAmAAAAIgAAABoAAAAmAAAAAgAAAAgAAAAmAAAA
+GgAAAAIAAAAmAAAACAAAABMAAAAmAAAAEwAAACIAAAAnAAAACQAAACAAAAAnAAAADAAAAAcA
+AAAnAAAAIAAAAAwAAAAnAAAABwAAAAYAAAAnAAAABgAAAAkAAAAoAAAAHgAAACMAAAAoAAAA
+IwAAAB0AAAAoAAAAHQAAACEAAAAoAAAAIQAAAB4AAAA=]]></BinaryString>
+				<float name="Reflectance">0</float>
+				<float name="RightParamA">-0.5</float>
+				<float name="RightParamB">0.5</float>
+				<token name="RightSurface">0</token>
+				<token name="RightSurfaceInput">0</token>
+				<Vector3 name="RotVelocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Content name="TextureID"><null></null></Content>
+				<float name="TopParamA">-0.5</float>
+				<float name="TopParamB">0.5</float>
+				<token name="TopSurface">0</token>
+				<token name="TopSurfaceInput">0</token>
+				<float name="Transparency">0</float>
+				<Vector3 name="Velocity">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+				</Vector3>
+				<Vector3 name="size">
+					<X>2.7031219</X>
+					<Y>44.969902</Y>
+					<Z>2.77263784</Z>
+				</Vector3>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

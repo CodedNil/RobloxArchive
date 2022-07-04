@@ -1,0 +1,29 @@
+for _, x in pairs(game.StarterPack:GetDescendants()) do
+	if x:IsA("Weld") or x:IsA("Motor6D") then
+		x:Destroy()
+	elseif x:IsA("BasePart") then
+		x.Anchored = true
+	end
+end
+for _, x in pairs(game.StarterPack:GetChildren()) do
+	x.Handle.CFrame = CFrame.new(x.AimPart.CFrame.X, x.Handle.CFrame.Y, x.Handle.CFrame.Z)
+	for i, v in pairs(x:GetChildren()) do
+		if v:IsA("BasePart") and v ~= x.Handle then
+			local s = v.Name == "TopPart" and x.Slide or v.Name == "CockingPiece" and x.OperatingBolt or v.Name == "RevolverAmmo" and x.RevolverSpin or x.Handle
+			local w = Instance.new((v.Name == "OperatingBolt" or v.Name == "CockingPiece" or v.Name == "RevolverSpin" or v.Name == "Slide") and "Motor6D" or "Weld", v)
+			w.Part0 = s
+			w.Part1 = v
+			if v.Name == "CockingPiece" then
+				w.C1 = s.CFrame:toObjectSpace(v.CFrame):inverse()
+			else
+				w.C0 = s.CFrame:toObjectSpace(v.CFrame)
+			end
+		end
+	end
+end
+for _, x in pairs(game.StarterPack:GetDescendants()) do
+	if x:IsA("BasePart") then
+		x.Anchored = false
+	end
+end
+game.ChangeHistoryService:SetWaypoint("Weld")

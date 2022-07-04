@@ -1,0 +1,18 @@
+Explode:
+for _, v in pairs(game.Selection:Get()[1]:GetChildren()) do v.Anchored = false v.Velocity = Vector3.new(-math.random(5, 10), math.random(20, 30), math.random(5, 10)) end
+
+Place Moss:
+
+local Colours = {BrickColor.new("Moss"), BrickColor.new("Artichoke"), BrickColor.new("Medium green"), BrickColor.new("Laurel green"), BrickColor.new("Grime")}
+for _, v in pairs(game.Selection:Get()) do
+	for y = 1, v.Size.Y do
+		local Factor = (1 - (y/v.Size.Y))
+		for x = 1, math.random(2, 4) * Factor do
+			local New = workspace.MossStart:Clone()
+			New.Parent = workspace
+			New.Name = "Moss"
+			New.CFrame = v.CFrame * CFrame.new(0, v.Size.Y/2 - y, math.random(-v.Size.Z * 5v.Size.Z * 5)/10)
+			game.Debris:AddItem(New, 5)
+		end
+	end
+end

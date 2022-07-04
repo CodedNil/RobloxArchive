@@ -1,0 +1,6 @@
+for _, v in pairs(game.Selection:Get()) do
+	local r = math.rad(v.Rotation - 90)
+	local dist = -50
+	local p = Vector2.new(math.cos(r) * dist, math.sin(r) * dist)
+	v.Position = UDim2.new(0, p.X, 0, p.Y)
+end

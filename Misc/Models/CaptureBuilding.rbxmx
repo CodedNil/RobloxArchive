@@ -1,0 +1,419 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX9AACE60904FE4A51B865870747DB9EA2">
+		<Properties>
+			<string name="Name">CaptureBuilding</string>
+		</Properties>
+		<Item class="ModuleScript" referent="RBX7B51B3AB730F4E129F25638B9895DC7D">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">MainModule</string>
+				<string name="ScriptGuid"></string>
+				<ProtectedString name="Source"><![CDATA[local CaptureTime = 30
+
+script.CaptureBuildingClient.Parent = game.StarterPlayer.StarterPlayerScripts
+local TeamControl = require(game.ReplicatedStorage.TeamControl.MainModule)
+local AllyTeams, EnemyTeams = TeamControl()
+
+local PingEvent = game.ReplicatedStorage:FindFirstChild("PingEvent") or Instance.new("RemoteFunction", game.ReplicatedStorage)
+PingEvent.Name = "PingEvent"
+PingEvent.OnServerInvoke = function()
+	return tick()
+end
+
+local wrap = coroutine.wrap
+
+return function(Model, AllyStart)
+	local AllyHeld = AllyStart
+	local InProgress = false
+	
+	local Value = Instance.new("ObjectValue", game.StarterPlayer.StarterPlayerScripts.CaptureBuildingClient)
+	Value.Value = Model
+	
+	local OriginalTeam = Instance.new("BrickColorValue", Model)
+	OriginalTeam.Value = AllyHeld and AllyTeams[1] or EnemyTeams[1]
+	OriginalTeam.Name = "OriginalTeam"
+	local TeamColor = Instance.new("BrickColorValue", Model)
+	TeamColor.Value = AllyHeld and AllyTeams[1] or EnemyTeams[1]
+	TeamColor.Name = "TeamColor"
+	local CaptureValue = Instance.new("NumberValue", Model)
+	CaptureValue.Name = "CaptureValue"
+	local ChangeColor = Instance.new("BrickColorValue", Model)
+	ChangeColor.Value = TeamColor.Value
+	ChangeColor.Name = "ChangeColor"
+	
+	local function StartTimer()
+		if AllyHeld then
+			ChangeColor.Value = EnemyTeams[1]
+		else
+			ChangeColor.Value = AllyTeams[1]
+		end
+		repeat wait(0.1) until tick() - CaptureValue.Value >= CaptureTime or not InProgress
+		if InProgress then
+			InProgress = false
+			CaptureValue.Value = 0
+			AllyHeld = not AllyHeld
+			if AllyHeld then
+				game.ReplicatedStorage.HUD.RemoteAlert:FireAllClients(Model.Name.." has been captured by the defenders!", 1)
+				TeamColor.Value = AllyTeams[1]
+			else
+				game.ReplicatedStorage.HUD.RemoteAlert:FireAllClients(Model.Name.." has been captured by the raiders!", 1)
+				TeamColor.Value = EnemyTeams[1]
+			end
+		else
+			if AllyHeld then
+				ChangeColor.Value = AllyTeams[1]
+			else
+				ChangeColor.Value = EnemyTeams[1]
+			end
+		end
+	end
+	
+	local Cooldown = false
+	Model.CaptureBar.Capture.ClickDetector.MouseClick:connect(function(Player)
+		if Cooldown then
+			return
+		end
+		Cooldown = true
+		local IsAlly, IsEnemy = false, false
+		for _, v in pairs(AllyTeams) do
+			if Player.TeamColor == v then
+				IsAlly = true
+			end
+		end
+		for _, v in pairs(EnemyTeams) do
+			if Player.TeamColor == v then
+				IsEnemy = true
+			end
+		end
+		if IsAlly or IsEnemy then
+			if InProgress then
+				if AllyHeld and IsAlly then
+					InProgress = false
+					CaptureValue.Value = 0
+				elseif not AllyHeld and IsEnemy then
+					InProgress = false
+					CaptureValue.Value = 0
+				end
+			else
+				if AllyHeld and IsEnemy then
+					InProgress = true
+					CaptureValue.Value = tick()
+					wrap(StartTimer)()
+				elseif not AllyHeld and IsAlly then
+					InProgress = true
+					CaptureValue.Value = tick()
+					wrap(StartTimer)()
+				end
+			end
+		end
+		wait()
+		Cooldown = false
+	end)
+end]]></ProtectedString>
+			</Properties>
+			<Item class="LocalScript" referent="RBXAAA7BADAE8DA4D25B05DF535AC2638D6">
+				<Properties>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">CaptureBuildingClient</string>
+					<string name="ScriptGuid"></string>
+					<ProtectedString name="Source"><![CDATA[local CaptureTime = 10
+
+local CurrentTarget = {}
+local Player = game.Players.LocalPlayer
+local TeamControl = require(game.ReplicatedStorage.TeamControl.MainModule)
+
+local function ChangeCaptureColor(BasePart, Part, NewColor)
+	if CurrentTarget[BasePart] ~= NewColor then
+		CurrentTarget[BasePart] = NewColor
+		local Color = Vector3.new(NewColor.Color.r, NewColor.Color.g, NewColor.Color.b) * 0.56
+		local Highlight = Part.SurfaceGui.TextLabel.Highlight:Clone()
+		Highlight.Parent = Part.SurfaceGui.TextLabel
+		Highlight.Position = UDim2.new(0.5, 0, 0.5, 0)
+		Highlight.ImageColor3 = Color3.new(Color.X, Color.Y, Color.Z)
+		Highlight:TweenSizeAndPosition(UDim2.new(1.5, 0, 1.5, 0), UDim2.new(-0.25, 0, -1.25, 0), nil, nil, 0.5, true, function()
+			if NewColor == BasePart.BrickColor then
+				Part.BrickColor = NewColor
+			end
+			Highlight:Destroy()
+		end)
+	end
+end
+
+local function SetText(Sign, Text, Hover)
+	if Hover then
+		Sign.Capture.BrickColor = BrickColor.new("Cork")
+		Sign.CaptureText.SurfaceGui.TextLabel.Text = "["..Text.."]"
+	else
+		Sign.Capture.BrickColor = BrickColor.new("Grime")
+		Sign.CaptureText.SurfaceGui.TextLabel.Text = Text
+	end
+end
+
+local CFNew, V3New, V3N, V31, INew, CSNew = CFrame.new, Vector3.new, Vector3.new(), Vector3.new(1, 1, 1), Instance.new, ColorSequence.new
+
+local TickOffset
+spawn(function()
+	local Start = tick()
+	local ServerTick = game.ReplicatedStorage.PingEvent:InvokeServer(Player)
+	local Ping = tick() - Start
+	TickOffset = ServerTick - tick() + Ping
+end)
+
+for _, v in pairs(script:GetChildren()) do
+	if v:IsA("ObjectValue") then
+		local Sign = v.Value.CaptureBar
+		local TeamColor, CaptureValue, ChangeColor = v.Value.TeamColor, v.Value.CaptureValue, v.Value.ChangeColor
+		local Hover = false
+		Sign.CaptureText.SurfaceGui.TextLabel.TextScaled = true
+		
+		local ModelLength = v.Value:GetExtentsSize().Z
+		local MainParts, ExtraParts = {}, {}
+		local function CheckAdd(x)
+			if x:IsA("Part") and x.BrickColor == BrickColor.new("Earth green") and not x:FindFirstChild("Mesh") then
+				x.BrickColor = TeamColor.Value
+				local Offset = v.Value:GetPrimaryPartCFrame():toObjectSpace(x.CFrame).Z
+				local Start, End = 1 - (Offset + x.Size.Z/2 + ModelLength/2)/ModelLength, 1 - (Offset - x.Size.Z/2 + ModelLength/2)/ModelLength
+				table.insert(MainParts, {x, Start, End, 0})
+			elseif x:IsA("BasePart") and x.BrickColor == BrickColor.new("Earth green") and not x:FindFirstChild("Mesh") then
+				x.BrickColor = TeamColor.Value
+				table.insert(ExtraParts, x)
+			end
+		end
+		for _, x in pairs(v.Value:GetChildren()) do
+			CheckAdd(x)
+			for _, z in pairs(x:GetChildren()) do
+				CheckAdd(z)
+				for _, y in pairs(z:GetChildren()) do
+					CheckAdd(y)
+				end
+			end
+		end
+		for _, x in pairs(MainParts) do
+			if x[1]:IsA("WedgePart") then
+				Instance.new("SpecialMesh", x[1]).MeshType = Enum.MeshType.Wedge
+			else
+				Instance.new("BlockMesh", x[1])
+			end
+			local Sub = x[1]:Clone()
+			Sub.Parent = x[1]
+			Sub.Name = "Sub"
+			Sub.Transparency = 1
+			Sub.CanCollide = false
+			local Particle = x[1]:Clone()
+			Particle.Parent = x[1]
+			Particle.Name = "Particle"
+			Particle.Transparency = 1
+			Particle.CanCollide = false
+			Particle.Size = Vector3.new(x[1].Size.X + 1, x[1].Size.Y + 0.6, 1)
+			Particle.Material = Enum.Material.Neon
+			Particle.Mesh:Destroy()
+			local Emitter = script.ParticleEmitter:Clone()
+			Emitter.Parent = Particle
+			local Sound = Instance.new("Sound", Particle)
+			Sound.SoundId = "rbxassetid://169309483"
+			Sound.Looped = true
+			Sound.Volume = 1
+			if not x[1].Anchored then
+				local Weld1 = Instance.new("Weld", Sub)
+				Weld1.Part0 = x[1]
+				Weld1.Part1 = Sub
+				local Weld2 = Instance.new("Weld", Particle)
+				Weld2.Part0 = x[1]
+				Weld2.Part1 = Particle
+			end
+		end
+		
+		for _, x in pairs(MainParts) do
+			x[1].BrickColor = ChangeColor.Value
+		end
+		
+		local GID = 0
+		ChangeColor.Changed:connect(function(New)
+			GID = GID + 1
+			local UID = GID
+			for _, x in pairs(MainParts) do
+				x[1].Mesh.Scale = V31
+				x[1].Mesh.Offset = V3N
+				x[1].Sub.Mesh.Scale = V3N
+				x[1].Sub.Mesh.Offset = V3N
+				x[1].Sub.Transparency = 1
+				x[1].Sub.BrickColor = New
+			end
+			if New == MainParts[1].BrickColor then
+				for _, x in pairs(MainParts) do
+					x[1].Sub.Transparency = 1
+					x[1].Particle.Transparency = 1
+					x[1].Particle.Sound:Stop()
+					x[1].Particle.ParticleEmitter.Enabled = false
+					x[1].Particle.ParticleEmitter:Emit(80)
+					x[4] = 0
+					local Sound = INew("Sound", x[1].Particle)
+					Sound.SoundId = "rbxassetid://160247625"
+					Sound.Volume = 1
+					Sound.PlayOnRemove = true
+					Sound:Destroy()
+				end
+				return
+			end
+			repeat
+				local i = (tick() + TickOffset - CaptureValue.Value)/CaptureTime
+				for _, x in pairs(MainParts) do
+					local p, s, e, t  = x[1], x[2], x[3], x[4]
+					if i > s and i < e then
+						if t == 0 then
+							p.Sub.Transparency = 0
+							p.Particle.BrickColor = New
+							p.Particle.Transparency = 0.2
+							p.Particle.Sound:Play()
+							p.Particle.ParticleEmitter.Enabled = true
+							p.Particle.ParticleEmitter.Color = CSNew(New.Color)
+							x[4] = 1
+						end
+						local li = (i - s) * (1/(e - s))
+						p.Mesh.Scale = V3New(1, 1, 1 - li)
+						p.Mesh.Offset = V3New(0, 0, -p.Size.Z/2 * li)
+						p.Sub.Mesh.Scale = V3New(1, 1, li)
+						p.Sub.Mesh.Offset = V3New(0, 0, p.Size.Z/2 * (1 - li))
+						if p.Anchored then
+							p.Particle.CFrame = p.CFrame * CFNew(0, 0, -p.Size.Z/2 + p.Size.Z * (1 - li))
+						else
+							p.Particle.Weld.C0 = CFNew(0, 0, -p.Size.Z/2 + p.Size.Z * (1 - li))
+						end
+					elseif i > e and t == 1 then
+						p.Mesh.Scale = V31
+						p.Mesh.Offset = V3N
+						p.Sub.Mesh.Scale = V3N
+						p.Sub.Mesh.Offset = V3N
+						p.BrickColor = New
+						p.Sub.Transparency = 1
+						p.Particle.Transparency = 1
+						p.Particle.Sound:Stop()
+						p.Particle.ParticleEmitter.Enabled = false
+						x[4] = 2
+					end
+				end
+				wait()
+			until tick() + TickOffset - CaptureValue.Value >= CaptureTime or UID ~= GID or CaptureValue.Value == 0
+			wait(0.1)
+			if UID ~= GID then
+				return
+			end
+			for _, x in pairs(MainParts) do
+				x[1].BrickColor = New
+				x[1].Mesh.Scale = V31
+				x[1].Mesh.Offset = V3N
+				x[1].Sub.Transparency = 1
+				x[1].Particle.Transparency = 1
+				x[1].Particle.Sound:Stop()
+				x[1].Particle.ParticleEmitter.Enabled = false
+				x[4] = 0
+			end
+			for _, x in pairs(ExtraParts) do
+				x.BrickColor = New
+			end
+		end)
+	
+		Sign.Capture.Changed:connect(function(Property)
+			if Property == "BrickColor" then
+				ChangeCaptureColor(Sign.Capture, Sign.CaptureText, Sign.Capture.BrickColor)
+			end
+		end)
+		
+		local IsAlly, IsEnemy
+		local IsBuildingAlly
+		local function Change()
+			local InProgress = CaptureValue.Value ~= 0
+			if not IsAlly and not IsEnemy then
+				Sign.Capture.BrickColor = BrickColor.new("Terra Cotta")
+				Sign.CaptureText.SurfaceGui.TextLabel.Text = "CANNOT USE"
+			elseif InProgress then
+				if IsAlly then
+					if IsBuildingAlly then
+						Sign.Capture.BrickColor = BrickColor.new("Grime")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "INTERRUPT"
+					else
+						Sign.Capture.BrickColor = BrickColor.new("Terra Cotta")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "CAPTURING"
+					end
+				else
+					if IsBuildingAlly then
+						Sign.Capture.BrickColor = BrickColor.new("Terra Cotta")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "CAPTURING"
+					else
+						Sign.Capture.BrickColor = BrickColor.new("Grime")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "INTERRUPT"
+					end
+				end
+			else
+				if IsAlly then
+					if IsBuildingAlly then
+						Sign.Capture.BrickColor = BrickColor.new("Terra Cotta")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "SECURED"
+					else
+						SetText(Sign, "CAPTURE", Hover)
+					end
+				else
+					if IsBuildingAlly then
+						SetText(Sign, "CAPTURE", Hover)
+					else
+						Sign.Capture.BrickColor = BrickColor.new("Terra Cotta")
+						Sign.CaptureText.SurfaceGui.TextLabel.Text = "SECURED"
+					end
+				end
+			end
+		end
+		TeamControl(Player, function(A, B) IsAlly, IsEnemy = A, B Change() end)
+		TeamControl(TeamColor, function(A) IsBuildingAlly = A Change() end)
+		
+		CaptureValue.Changed:connect(Change)
+		
+		Sign.Capture.ClickDetector.MouseHoverEnter:connect(function(Player)
+			Hover = true
+			Change()
+			local Sound = Instance.new("Sound", Sign.Capture)
+			Sound.SoundId = "rbxassetid://269463144"
+			Sound.PlayOnRemove = true
+			Sound:Destroy()
+		end)
+		
+		Sign.Capture.ClickDetector.MouseHoverLeave:connect(function(Player)
+			Hover = false
+			Change()
+		end)
+	end
+end]]></ProtectedString>
+				</Properties>
+				<Item class="ParticleEmitter" referent="RBX82A9DCCE2BAF413088B5F06EE461D7D9">
+					<Properties>
+						<Vector3 name="Acceleration">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<ColorSequence name="Color">0 1 1 1 0 1 1 1 1 0 </ColorSequence>
+						<float name="Drag">0</float>
+						<token name="EmissionDirection">1</token>
+						<bool name="Enabled">false</bool>
+						<NumberRange name="Lifetime">0.2 0.4 </NumberRange>
+						<float name="LightEmission">1</float>
+						<bool name="LockedToPart">false</bool>
+						<string name="Name">ParticleEmitter</string>
+						<float name="Rate">20</float>
+						<NumberRange name="RotSpeed">-50 50 </NumberRange>
+						<NumberRange name="Rotation">0 360 </NumberRange>
+						<NumberSequence name="Size">0 1.625 0.5 0.253117 1.875 0.5625 1 0.8125 0.4375 </NumberSequence>
+						<NumberRange name="Speed">20 20 </NumberRange>
+						<Content name="Texture"><url>rbxasset://textures/particles/sparkles_main.dds</url></Content>
+						<NumberSequence name="Transparency">0 0 0 0.738155 0.26875 0 1 1 0 </NumberSequence>
+						<float name="VelocityInheritance">0</float>
+						<float name="VelocitySpread">30</float>
+						<float name="ZOffset">0</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

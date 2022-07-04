@@ -1,0 +1,14 @@
+for _, a in pairs(game.Selection:Get()) do
+	v = a.GunValues
+	local Values = require(v)
+	local FireModes = "{"
+	for i, x in pairs(Values.FireModes) do
+		FireModes = FireModes..'"'..x..'"'
+		if i ~= #Values.FireModes then
+			FireModes = FireModes..", "
+		else
+			FireModes = FireModes.."}"
+		end
+	end
+	v.Source = string.format(game.ReplicatedStorage.GunValuesString.Source, FireModes, Values.Damage, Values.FireRate, Values.MaxAmmo, Values.ReloadDelay, Values.Range, Values.Range * 0.5)
+end

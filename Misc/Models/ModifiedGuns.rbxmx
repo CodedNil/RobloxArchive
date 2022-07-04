@@ -1,0 +1,739 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Model" referent="RBXE2795A3D0AF04BEB8F511262C32E7566">
+		<Properties>
+			<CoordinateFrame name="ModelInPrimary">
+				<X>0</X>
+				<Y>0</Y>
+				<Z>0</Z>
+				<R00>1</R00>
+				<R01>0</R01>
+				<R02>0</R02>
+				<R10>0</R10>
+				<R11>1</R11>
+				<R12>0</R12>
+				<R20>0</R20>
+				<R21>0</R21>
+				<R22>1</R22>
+			</CoordinateFrame>
+			<string name="Name">Example Weapons</string>
+			<Ref name="PrimaryPart">null</Ref>
+		</Properties>
+		<Item class="Tool" referent="RBXD61B045E798842C9B627152F9785BF89">
+			<Properties>
+				<bool name="CanBeDropped">true</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<string name="Name">Burst Rifle</string>
+				<Content name="TextureId"><null></null></Content>
+				<string name="ToolTip"></string>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXFC7EBF276C68403EB14DB001F2B4DCC9">
+				<Properties>
+					<string name="Name">GunValues</string>
+					<ProtectedString name="Source">local Values = { }
+
+Values.Damage = 30 -- Damage of the gun
+
+Values.FireRate = 1 -- How many clicks will be handled in a second
+
+Values.ShotsPerClick = 3 -- How many bullets will be shot per click
+
+Values.DelayBetweenShots = 0.01 -- How long the delay between each shot per click is
+
+Values.Automatic = true -- Whether or not holding down the mouse will continue to shoot
+
+Values.MaxAmmo = 12 -- The max ammo the gun has, -1 is infinite
+
+Values.ReloadDelay = 1.5 -- The time it takes to reload
+
+Values.Range = 200 -- The distance the bullet travels
+
+Values.Accuracy = 1.5 -- The accuracy of the bullet ( Higher = less accurate )
+
+Values.MouseIcon = &quot;rbxasset://textures\\GunCursor.png&quot; -- The icon to use for the mouse
+
+Values.BarrelPart = &quot;Handle&quot; -- The name and path of the barrel part relative to the tool
+
+return Values</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBX6598534D240648EF9873A684EBDE0D7B">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>0.85100174</X>
+						<Y>7.40045166</Y>
+						<Z>-24.3650017</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<float name="Elasticity">0.5</float>
+					<float name="Friction">0.300000012</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">256</token>
+					<string name="Name">Handle</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0.5</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Sound" referent="RBX97D2A9BCC5154F47A6920AD2A56493F7">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Reload</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=95309699</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+				<Item class="Sound" referent="RBXA99BC92FFFDB4B5EA224CD0AD4BC13DE">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Fire</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=165946283</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Tool" referent="RBX9F06842CE91D42098A468CC80DF81E61">
+			<Properties>
+				<bool name="CanBeDropped">true</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<string name="Name">Machine Gun</string>
+				<Content name="TextureId"><null></null></Content>
+				<string name="ToolTip"></string>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXB39F31EFB92D4C63B045E05CDF6672E5">
+				<Properties>
+					<string name="Name">GunValues</string>
+					<ProtectedString name="Source">local Values = { }
+
+Values.Damage = 25 -- Damage of the gun
+
+Values.FireRate = 10 -- How many clicks will be handled in a second
+
+Values.ShotsPerClick = 1 -- How many bullets will be shot per click
+
+Values.DelayBetweenShots = 0 -- How long the delay between each shot per click is
+
+Values.Automatic = true -- Whether or not holding down the mouse will continue to shoot
+
+Values.MaxAmmo = 32 -- The max ammo the gun has, -1 is infinite
+
+Values.ReloadDelay = 3 -- The time it takes to reload
+
+Values.Range = 150 -- The distance the bullet travels
+
+Values.Accuracy = 2.5 -- The accuracy of the bullet ( Higher = less accurate )
+
+Values.MouseIcon = &quot;rbxasset://textures\\GunCursor.png&quot; -- The icon to use for the mouse
+
+Values.BarrelPart = &quot;Handle&quot; -- The name and path of the barrel part relative to the tool
+
+return Values</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBXE1C06292A0784DE5A17CF76E147CBC5E">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>0.85100174</X>
+						<Y>7.40045166</Y>
+						<Z>-24.3650017</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<float name="Elasticity">0.5</float>
+					<float name="Friction">0.300000012</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">256</token>
+					<string name="Name">Handle</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0.5</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Sound" referent="RBXED55B2FCA90F4D0B8E2E4336F3FE968D">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Reload</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=95309699</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+				<Item class="Sound" referent="RBX8917777890264874922757499E9D6604">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Fire</string>
+						<float name="Pitch">1.29999995</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=130783911</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Tool" referent="RBXA6F669D3487142B0B45AD951D0B55A16">
+			<Properties>
+				<bool name="CanBeDropped">true</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<string name="Name">Pistol</string>
+				<Content name="TextureId"><null></null></Content>
+				<string name="ToolTip"></string>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX73D2E95B6DCD4E83AC9B478940A0F3D3">
+				<Properties>
+					<string name="Name">GunValues</string>
+					<ProtectedString name="Source">local Values = { }
+
+Values.Damage = 35 -- Damage of the gun
+
+Values.FireRate = 2 -- How many clicks will be handled in a second
+
+Values.ShotsPerClick = 1 -- How many bullets will be shot per click
+
+Values.DelayBetweenShots = 0 -- How long the delay between each shot per click is
+
+Values.Automatic = false -- Whether or not holding down the mouse will continue to shoot
+
+Values.MaxAmmo = 15 -- The max ammo the gun has, -1 is infinite
+
+Values.ReloadDelay = 2 -- The time it takes to reload
+
+Values.Range = 200 -- The distance the bullet travels
+
+Values.Accuracy = 1.5 -- The accuracy of the bullet ( Higher = less accurate )
+
+Values.MouseIcon = &quot;rbxasset://textures\\GunCursor.png&quot; -- The icon to use for the mouse
+
+Values.BarrelPart = &quot;Handle&quot; -- The name and path of the barrel part relative to the tool
+
+return Values</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBX51A0F1D20FCA4FD4ACD931C0B6C972E6">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>0.85100174</X>
+						<Y>7.40045166</Y>
+						<Z>-24.3650017</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<float name="Elasticity">0.5</float>
+					<float name="Friction">0.300000012</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">256</token>
+					<string name="Name">Handle</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0.5</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Sound" referent="RBX41EA61C817F24998B09CEF29026A7D9E">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Reload</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=95309699</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+				<Item class="Sound" referent="RBX0487ED71AD09418AA7A7FF2B2B1B4AA9">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Fire</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=174295284</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Tool" referent="RBXC3479279D35149A9B844497F407F9B85">
+			<Properties>
+				<bool name="CanBeDropped">true</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<string name="Name">Shotgun</string>
+				<Content name="TextureId"><null></null></Content>
+				<string name="ToolTip"></string>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXD26EA1FD4DDF474694AE126F56A67799">
+				<Properties>
+					<string name="Name">GunValues</string>
+					<ProtectedString name="Source">local Values = { }
+
+Values.Damage = 35 -- Damage of the gun
+
+Values.FireRate = 1 -- How many clicks will be handled in a second
+
+Values.ShotsPerClick = 4 -- How many bullets will be shot per click
+
+Values.DelayBetweenShots = 0 -- How long the delay between each shot per click is
+
+Values.Automatic = false -- Whether or not holding down the mouse will continue to shoot
+
+Values.MaxAmmo = 12 -- The max ammo the gun has, -1 is infinite
+
+Values.ReloadDelay = 2 -- The time it takes to reload
+
+Values.Range = 100 -- The distance the bullet travels
+
+Values.Accuracy = 3.5 -- The accuracy of the bullet ( Higher = less accurate )
+
+Values.MouseIcon = &quot;rbxasset://textures\\GunCursor.png&quot; -- The icon to use for the mouse
+
+Values.BarrelPart = &quot;Handle&quot; -- The name and path of the barrel part relative to the tool
+
+return Values</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBXF6E75070B5AC46368E0A5122790668EF">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>0.85100174</X>
+						<Y>7.40045166</Y>
+						<Z>-24.3650017</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<float name="Elasticity">0.5</float>
+					<float name="Friction">0.300000012</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">256</token>
+					<string name="Name">Handle</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0.5</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Sound" referent="RBX58A4A7F531B34E668B383557A8B13E5D">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Reload</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=95309699</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+				<Item class="Sound" referent="RBX242C5754E54641379F4D455B64F64F72">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Fire</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=182289949</url></Content>
+						<float name="Volume">0.800000012</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Tool" referent="RBX3E267D40452A4B39AAA51840A8AE3A66">
+			<Properties>
+				<bool name="CanBeDropped">true</bool>
+				<bool name="Enabled">true</bool>
+				<CoordinateFrame name="Grip">
+					<X>0</X>
+					<Y>0</Y>
+					<Z>0</Z>
+					<R00>1</R00>
+					<R01>0</R01>
+					<R02>0</R02>
+					<R10>0</R10>
+					<R11>1</R11>
+					<R12>0</R12>
+					<R20>0</R20>
+					<R21>0</R21>
+					<R22>1</R22>
+				</CoordinateFrame>
+				<bool name="ManualActivationOnly">false</bool>
+				<string name="Name">Sniper</string>
+				<Content name="TextureId"><null></null></Content>
+				<string name="ToolTip"></string>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX956A4E08AD1B43CC9E80E4263677621E">
+				<Properties>
+					<string name="Name">GunValues</string>
+					<ProtectedString name="Source">local Values = { }
+
+Values.Damage = 95 -- Damage of the gun
+
+Values.FireRate = 0.5 -- How many clicks will be handled in a second
+
+Values.ShotsPerClick = 1 -- How many bullets will be shot per click
+
+Values.DelayBetweenShots = 0 -- How long the delay between each shot per click is
+
+Values.Automatic = false -- Whether or not holding down the mouse will continue to shoot
+
+Values.MaxAmmo = 2 -- The max ammo the gun has, -1 is infinite
+
+Values.ReloadDelay = 3 -- The time it takes to reload
+
+Values.Range = 400 -- The distance the bullet travels
+
+Values.Accuracy = 0.5 -- The accuracy of the bullet ( Higher = less accurate )
+
+Values.MouseIcon = &quot;rbxasset://textures\\GunCursor.png&quot; -- The icon to use for the mouse
+
+Values.BarrelPart = &quot;Handle&quot; -- The name and path of the barrel part relative to the tool
+
+return Values</ProtectedString>
+				</Properties>
+			</Item>
+			<Item class="Part" referent="RBX9AED31F600FE4110B8E5505C7C6D8FC8">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<int name="BrickColor">199</int>
+					<CoordinateFrame name="CFrame">
+						<X>0.85100174</X>
+						<Y>7.40045166</Y>
+						<Z>-24.3650017</Z>
+						<R00>-4.37113883e-008</R00>
+						<R01>0</R01>
+						<R02>-1</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>1</R20>
+						<R21>0</R21>
+						<R22>-4.37113883e-008</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">false</bool>
+					<float name="Elasticity">0.5</float>
+					<float name="Friction">0.300000012</float>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<token name="Material">256</token>
+					<string name="Name">Handle</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">3</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>0.5</X>
+						<Y>0.5</Y>
+						<Z>0.5</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Sound" referent="RBX5F7F61305C9F461CB7BD814AEDD8CF7A">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Reload</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=95309699</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+				<Item class="Sound" referent="RBX5A80446DA8E44FA49F87125FAECFA8E7">
+					<Properties>
+						<bool name="Looped">false</bool>
+						<string name="Name">Fire</string>
+						<float name="Pitch">1</float>
+						<bool name="PlayOnRemove">false</bool>
+						<Content name="SoundId"><url>http://www.roblox.com/asset/?id=193444173</url></Content>
+						<float name="Volume">0.5</float>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+	</Item>
+</roblox>

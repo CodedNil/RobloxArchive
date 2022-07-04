@@ -1,0 +1,10 @@
+local Plugin = PluginManager():CreatePlugin()
+local MainParts = {}
+local Negate1 = {}
+local Negate2 = {}
+Plugin:Union({Center, unpack(New:GetChildren())
+
+for _, v in pairs(workspace:GetChildren()) do
+	if (v.Position - workspace.CentralPart.Position).magnitude < 15 then
+		if v.BrickColor == BrickColor.new("Pastel brown") and v.Transparency = 0.5 then
+			

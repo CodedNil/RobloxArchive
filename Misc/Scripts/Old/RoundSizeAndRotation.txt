@@ -1,0 +1,13 @@
+local AverageSize, Total = Vector3.new(), 0
+for _, v in pairs(game.Selection:Get()) do
+	v.CFrame = v.CFrame + Vector3.new(0, 1000, 0)
+	AverageSize = AverageSize + v.Size
+	Total = Total + 1
+	v.Size = Vector3.new(10, 10, 10)
+	v.Rotation = Vector3.new()
+	v.BrickColor = BrickColor.new("Moss")
+	v.Position = Vector3.new(math.floor(v.Position.X * 10 + 0.5)/10, math.floor(v.Position.Y * 10 + 0.5)/10, math.floor(v.Position.Z * 10 + 0.5)/10)
+	v.CFrame = v.CFrame - Vector3.new(0, 1000, 0)
+end
+
+print(AverageSize/Total)

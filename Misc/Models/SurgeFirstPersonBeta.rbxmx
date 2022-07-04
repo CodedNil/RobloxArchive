@@ -1,0 +1,88 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Script" referent="RBXA4C26A7259E84929B2691C837E8B47D4">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">SurgeFirstPersonServer</string>
+			<string name="ScriptGuid">{EBC53BF8-CF1F-4911-8CF3-FBABBB22076D}</string>
+			<ProtectedString name="Source"><![CDATA[script.SurgeFirstPerson:Clone().Parent = game.StarterPlayer.StarterPlayerScripts
+for _, v in pairs(game.Players:GetPlayers()) do
+	script.SurgeFirstPerson:Clone().Parent = v:WaitForChild("PlayerScripts")
+end]]></ProtectedString>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="LocalScript" referent="RBX35FBB2425292430DAC202E73E15BBAA5">
+			<Properties>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">SurgeFirstPerson</string>
+				<string name="ScriptGuid">{634CDFBE-ECCC-4A0E-B7A2-85184092CFE5}</string>
+				<ProtectedString name="Source"><![CDATA[repeat wait() until _G.SRequire
+local Core = _G.SRequire("S2.0 Core", "Core")
+local KeybindUtil = _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+local PoseUtil = _G.SRequire("S2.0 PoseUtil", "PoseUtil")
+local TweenService = game:GetService("TweenService")
+local TINew = TweenInfo.new
+
+local Player = game.Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Camera = workspace.Camera
+repeat wait() until Player.Character
+local Character = Player.Character
+
+local function FPSPart(Part)
+	Part.LocalTransparencyModifier = 0
+	Part.Changed:Connect(function()
+		Part.LocalTransparencyModifier = 0
+	end)
+end
+
+local function NewCharacter(Character)
+	local Humanoid = Character:WaitForChild("Humanoid")
+	local Head = Character:WaitForChild("Head")
+	local Root = Character:WaitForChild("HumanoidRootPart")
+	local UpperTorso = Character:WaitForChild("UpperTorso")
+	
+	local LeftUpperArm = Character:WaitForChild("LeftUpperArm")
+	local LeftLowerArm = Character:WaitForChild("LeftLowerArm")
+	local LeftHand = Character:WaitForChild("LeftHand")
+	
+	local RightUpperArm = Character:WaitForChild("RightUpperArm")
+	local RightLowerArm = Character:WaitForChild("RightLowerArm")
+	local RightHand = Character:WaitForChild("RightHand")
+	
+	local LeftShoulder = LeftUpperArm:WaitForChild("LeftShoulder")
+	local LeftElbow = LeftLowerArm:WaitForChild("LeftElbow")
+	local LeftWrist = LeftHand:WaitForChild("LeftWrist")
+	
+	local RightShoulder = RightUpperArm:WaitForChild("RightShoulder")
+	local RightElbow = RightLowerArm:WaitForChild("RightElbow")
+	local RightWrist = RightHand:WaitForChild("RightWrist")
+	
+	FPSPart(LeftUpperArm)
+	FPSPart(LeftLowerArm)
+	FPSPart(LeftHand)
+	
+	FPSPart(RightUpperArm)
+	FPSPart(RightLowerArm)
+	FPSPart(RightHand)
+	
+	game:GetService("RunService").Stepped:connect(function()
+		if LeftShoulder and LeftElbow and LeftWrist then
+            local CameraDirection = Root.CFrame:toObjectSpace(Camera.CFrame).lookVector.unit
+
+		    LeftShoulder.Transform = CFrame.new(1, 0.5, 0) * CFrame.Angles(math.rad(90) + math.asin(CameraDirection.y), 0, 0)
+		    LeftElbow.Transform = CFrame.Angles(0, 0, 0)
+		    LeftWrist.Transform = CFrame.Angles(0, 0, 0)
+		end
+	end)
+end
+Player.CharacterAdded:Connect(NewCharacter)
+NewCharacter(Character)]]></ProtectedString>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

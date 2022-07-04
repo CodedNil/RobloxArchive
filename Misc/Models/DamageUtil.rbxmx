@@ -1,0 +1,127 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX30CE9BABDF3F4AB28A4B622BF13B8B2F">
+		<Properties>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">DamageUtil</string>
+			<ProtectedString name="Source"><![CDATA[local Module, Players, ReplicatedStorage, Config = { }, game:GetService( "Players" ), game:GetService( "ReplicatedStorage" ), _G.S20.Config
+
+local function TableContainsValue( Table, Value )
+	
+	for a = 1, #Table do
+		
+		if Table[ a ] == Value then
+			
+			return true
+			
+		end
+		
+	end
+	
+	return false
+	
+end
+
+function Module.CheckTeamkill( P1, P2 )
+	
+	if Config.AllowTeamKill or ( Config.AllowNeutralTeamKill and ( P1.Neutral or P2.Neutral ) ) then
+		
+		return true
+		
+	end
+	
+	if P1.TeamColor == P2.TeamColor or ( P1.Neutral and P2.Neutral ) then
+		
+		return false
+		
+	end
+	
+	local CanKill = true
+	
+	for a = 1, #Config.AllowTeamKillFor do
+		
+		if TableContainsValue( Config.AllowTeamKillFor[ a ], P1.TeamColor ) and TableContainsValue( Config.AllowTeamKillFor[ a ], P2.TeamColor ) then
+			
+			CanKill = false
+			
+		end
+		
+	end
+	
+	return CanKill
+	
+end
+
+function Module.Damage( User, Hit, Damage, Distance, DistanceModifier )
+	
+	if not Hit or not Hit.Parent then return end
+	
+	local Humanoid = Hit.Parent:FindFirstChild( "Humanoid" ) or Hit.Parent.Parent:FindFirstChild( "Humanoid" ) or Hit.Parent:FindFirstChild( "Health" ) or Hit.Parent.Parent:FindFirstChild( "Health" )
+	
+	if not Humanoid or not Humanoid.Parent or ( Humanoid:IsA( "Humanoid" ) and Humanoid.MaxHealth <= 0 ) then
+		
+		return
+		
+	end
+	
+	local hitName, Target = Hit.Name:lower( ), Players:GetPlayerFromCharacter( Humanoid.Parent )
+	
+	local CanTeamKill = true
+	
+	if Target then
+		
+		CanTeamKill = Module.CheckTeamkill( User, Target )
+		
+	end
+	
+	if CanTeamKill then
+		
+		if hitName == "head" then
+			
+			Damage = Damage * Config.HeadDamageMultiplier
+			
+		elseif string.find( hitName, "leg" ) or string.find( hitName, "arm" ) then
+			
+			Damage = Damage * Config.LimbDamageMultiplier
+			
+		end
+		
+		if Distance then
+			
+			Distance = Distance * ( DistanceModifier or Config.DistanceDamageMultiplier )
+			
+			Damage = Damage * ( 1 - Distance )
+			
+		end
+		
+		if Damage == 0 then
+			
+			return
+			
+		end
+		
+		if _G.SIsServer then
+			
+			ReplicatedStorage.Util.SvrDamageObj:Fire( User, Humanoid, Damage )
+			
+		else
+			
+			ReplicatedStorage.Util.DamageObj:FireServer( User, Humanoid, Damage )
+			
+		end
+		
+		return Humanoid
+		
+	else
+		
+		return false
+		
+	end
+	
+end
+
+return Module]]></ProtectedString>
+		</Properties>
+	</Item>
+</roblox>

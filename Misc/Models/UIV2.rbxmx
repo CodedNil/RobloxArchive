@@ -1,0 +1,207 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX2BDEEB9F3CEA409B828C194CBC94720A">
+		<Properties>
+			<string name="Name">UserInterface</string>
+			<ProtectedString name="Source"><![CDATA[local module = {}
+
+function module.Create()
+	local self = {}
+	
+	local Player = game.Players.LocalPlayer
+	local Character = Player.Character
+	local Mouse = Player:GetMouse()
+	self.Humanoid = Character:WaitForChild("Humanoid")
+	
+	local HurtImage = "http://www.roblox.com/asset/?id=34854607"
+	game:GetService("ContentProvider"):Preload(HurtImage)
+	
+	local Resolution = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY)
+	local Scale = (Resolution.X/1600 + Resolution.Y/900)/2
+	
+	local UserInterface = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+	UserInterface.Name = "UserInterface"
+	local BackpackGui = Instance.new("Frame", UserInterface)
+	BackpackGui.BackgroundTransparency = 1
+	BackpackGui.Position = UDim2.new(0.5, 0, 0.93, 0)
+	BackpackGui.Size = UDim2.new(0, 0, 0, 0)
+	BackpackGui.Name = "Backpack"
+	local HealthGui = Instance.new("Frame", UserInterface)
+	HealthGui.BackgroundTransparency = 1
+	HealthGui.Position = UDim2.new(0.5, 0, 0.93, 0)
+	HealthGui.Size = UDim2.new(0, 0, 0, 0)
+	HealthGui.Name = "Health"
+	local ShieldGui = Instance.new("Frame", UserInterface)
+	ShieldGui.BackgroundTransparency = 1
+	ShieldGui.Position = UDim2.new(0.5, 0, 0.93, 0)
+	ShieldGui.Size = UDim2.new(0, 0, 0, 0)
+	ShieldGui.Name = "Shield"
+	local HurtOverlay = Instance.new("ImageLabel", UserInterface)
+	HurtOverlay.BackgroundTransparency = 1
+	HurtOverlay.Image = HurtImage
+	HurtOverlay.Position = UDim2.new(-10, 0, -10, 0)
+	HurtOverlay.Size = UDim2.new(20, 0, 20, 0)
+	HurtOverlay.Visible = false
+	HurtOverlay.Name = "HurtOverlay"
+	
+	local function GetCurve(Number, Limit)
+		local Offset = Number * (1/Limit) - 0.5
+		local Sine = math.sin(Number/Limit * math.pi) * 0.05
+		return Offset, Sine
+	end
+	
+	local function SetupBackpack(Amount)
+		BackpackGui:ClearAllChildren()
+		local RealNum = 1
+		for i = 10 - Amount/2 + 0.5, 10 + Amount/2 - 0.5 do
+			local Offset, Sine = GetCurve(i, 20)
+			local Frame = Instance.new("Frame", BackpackGui)
+			Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+			Frame.BackgroundTransparency = 0.4
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(0, 40 * Scale, 0, 40 * Scale)
+			Frame.Position = UDim2.new(0, ((Offset * 20 * 45) - 20) * Scale, 0, (((Sine - 1/20) * -1800) - 50) * Scale)
+			Frame.Rotation = math.deg(Offset)
+			local Text = Instance.new("TextLabel", Frame)
+			Text.BackgroundTransparency = 1
+			Text.Position = UDim2.new(0.1, 0, 0.1, 0)
+			Text.Size = UDim2.new(0.2, 0, 0.2, 0)
+			Text.TextColor3 = Color3.new(1, 1, 1)
+			Text.TextTransparency = 0.4
+			Text.Text = RealNum
+			RealNum = RealNum + 1
+		end
+	end
+	
+	local HealthBars = {}
+	local function SetupHealth()
+		HealthGui:ClearAllChildren()
+		local RealNum = 1
+		for i = 10 - 9/2 + 0.5, 10 + 9/2 - 0.5 do
+			local Offset, Sine = GetCurve(i, 20)
+			local Frame = Instance.new("Frame", HealthGui)
+			Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+			Frame.BackgroundTransparency = 0.4
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(0, 44 * Scale, 0, 14 * Scale)
+			Frame.Position = UDim2.new(0, ((Offset * 20 * 43) -22) * Scale, 0, (((Sine - 1/20) * -1800) - 7) * Scale)
+			Frame.Rotation = math.deg(Offset)
+		end
+		for i = 10 - 9/2 + 0.5, 10 + 9/2 - 0.5 do
+			local Offset, Sine = GetCurve(i, 20)
+			local Frame = Instance.new("Frame", HealthGui)
+			Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(0, 44 * Scale, 0, 8 * Scale)
+			Frame.Position = UDim2.new(0, ((Offset * 20 * 43) -22) * Scale, 0, (((Sine - 1/20) * -1800) - 4) * Scale)
+			Frame.Rotation = math.deg(Offset)
+			HealthBars[RealNum] = {Frame, Frame.Size, Frame.Position}
+			RealNum = RealNum + 1
+		end
+	end
+	
+	function AnimateHurtOverlay()
+		local Position = UDim2.new(-10, 0, -10, 0)
+		local Size = UDim2.new(20, 0, 20, 0)
+		HurtOverlay.Size = UDim2.new(1, 0, 1, 0)
+		HurtOverlay.Position = UDim2.new(0, 0, 0, 0)
+		HurtOverlay.Visible = true
+		HurtOverlay:TweenSizeAndPosition(Size, Position, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 10, false, function()
+			HurtOverlay.Visible = false
+		end)
+	end
+	
+	local LastPercent = 1
+	local function UpdateHealth(Health)
+		local Percent = Health/self.Humanoid.MaxHealth
+		local Color = Vector3.new(0.1568, 0.4981, 0.2784) * Percent
+		Color = Color + Vector3.new(0.7686, 0.1098, 0.1568) * (1 - Percent)
+		for i, v in ipairs(HealthBars) do
+			local Lower = math.min(Health, (i - 1)/#HealthBars * self.Humanoid.MaxHealth)
+			local Upper = math.min(self.Humanoid.MaxHealth, i/#HealthBars * self.Humanoid.MaxHealth)
+			local Current = Health - Lower
+			local Percent = math.min(Current/(Upper - Lower), 1)
+			v[1].Size = UDim2.new(0, v[2].X.Offset * Percent, 0, v[2].Y.Offset)
+			v[1].Position = UDim2.new(0, v[3].X.Offset, 0, v[3].Y.Offset - ((1 - Percent) * 4) * Scale)
+			v[1].BackgroundColor3 = Color3.new(Color.x, Color.y, Color.z)
+		end
+		if Percent - LastPercent < -0.1 then
+			AnimateHurtOverlay()
+		end
+		LastPercent = Percent
+	end
+	
+	local ShieldBars = {}
+	local function SetupShield()
+		ShieldGui:ClearAllChildren()
+		local RealNum = 1
+		for i = 10 - 9/2 + 0.5, 10 + 9/2 - 0.5 do
+			local Offset, Sine = GetCurve(i, 20)
+			local Frame = Instance.new("Frame", ShieldGui)
+			Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+			Frame.BackgroundTransparency = 0.4
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(0, 43 * Scale, 0, 14 * Scale)
+			Frame.Position = UDim2.new(0, ((Offset * 20 * 42) -22) * Scale, 0, (((Sine - 1/20) * -1800) + 10) * Scale)
+			Frame.Rotation = math.deg(Offset)
+		end
+		for i = 10 - 9/2 + 0.5, 10 + 9/2 - 0.5 do
+			local Offset, Sine = GetCurve(i, 20)
+			local Frame = Instance.new("Frame", ShieldGui)
+			Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+			Frame.BorderSizePixel = 0
+			Frame.Size = UDim2.new(0, 43 * Scale, 0, 8 * Scale)
+			Frame.Position = UDim2.new(0, ((Offset * 20 * 42) -22) * Scale, 0, (((Sine - 1/20) * -1800) + 13) * Scale)
+			Frame.Rotation = math.deg(Offset)
+			ShieldBars[RealNum] = {Frame, Frame.Size, Frame.Position}
+			RealNum = RealNum + 1
+		end
+	end
+	
+	local function UpdateShield(Shield)
+		local Percent = Shield/100
+		local Color = Vector3.new(0.0431, 0.5803, 0.6392) * Percent
+		Color = Color + Vector3.new(0.5215, 0.0431, 0.6392) * (1 - Percent)
+		for i, v in ipairs(ShieldBars) do
+			local Lower = math.min(Shield, (i - 1)/#ShieldBars * 100)
+			local Upper = math.min(self.Humanoid.MaxHealth, i/#ShieldBars * 100)
+			local Current = Shield - Lower
+			local Percent = math.min(Current/(Upper - Lower), 1)
+			v[1].Size = UDim2.new(0, v[2].X.Offset * Percent, 0, v[2].Y.Offset)
+			v[1].Position = UDim2.new(0, v[3].X.Offset, 0, v[3].Y.Offset - ((1 - Percent) * 4) * Scale)
+			v[1].BackgroundColor3 = Color3.new(Color.x, Color.y, Color.z)
+		end
+	end
+	
+	function self.Update(Humanoid)
+		self.Humanoid = Humanoid
+		self.Humanoid.HealthChanged:connect(UpdateHealth)
+		UpdateHealth(self.Humanoid.Health)
+		UpdateShield(70)
+	end
+	
+	SetupBackpack(9)
+	SetupHealth()
+	SetupShield()
+	
+	local LastResolution = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY)
+	game:GetService("RunService").Stepped:connect(function()
+		if LastResolution ~= Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY) then
+			Scale = (Mouse.ViewSizeX/1600 + Mouse.ViewSizeY/900)/2
+			SetupBackpack(9)
+			SetupHealth()
+			SetupShield()
+			UpdateHealth(self.Humanoid.Health)
+			UpdateShield(70)
+			LastResolution = Vector2.new(Mouse.ViewSizeX, Mouse.ViewSizeY)
+		end
+	end)
+	
+	return self
+end
+
+return module]]></ProtectedString>
+		</Properties>
+	</Item>
+</roblox>

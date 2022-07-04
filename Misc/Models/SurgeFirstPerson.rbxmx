@@ -1,0 +1,488 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="LocalScript" referent="RBX373A2B0B13A248BE934684ABE1E6C588">
+		<Properties>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">SurgeFirstPerson</string>
+			<string name="ScriptGuid"></string>
+			<ProtectedString name="Source"><![CDATA[repeat wait() until _G.SRequire
+local Core = _G.SRequire("S2.0 Core", "Core")
+local KeybindUtil =  _G.SRequire("S2.0 KeybindUtil", "KeybindUtil")
+local PoseUtil =  _G.SRequire( "S2.0 PoseUtil", "PoseUtil" )
+local Tween = require(script.TweenModule)
+
+local Player = game.Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Camera = workspace.Camera
+repeat wait() until Player.Character
+local Character = Player.Character
+
+local HeadCF = CFrame.new(0, 1.5, 0)
+local BaseA = CFrame.new(-1.5, -1.2, 0) * CFrame.Angles(math.rad(90), 0, 0)
+local BaseB = CFrame.new(1.5, -1, 0) * CFrame.Angles(math.rad(90), 0, 0)
+local HoldPoseLeft = CFrame.new(0.3, 1.5, -0.3) * CFrame.Angles(0, 0, math.rad(-65))
+local HoldPoseRight = CFrame.new(0.4, 0.25, -0.3) * CFrame.Angles(0, 0, math.rad(21))
+local AimPoseLeft = CFrame.new(-0.1, 1.2, 0.1) * CFrame.Angles(0, 0, math.rad(-35))
+local AimPoseRight = CFrame.new(0.3, 0.707, -0.01) * CFrame.Angles(0, 0, math.rad(50))
+local SprintPoseLeft = CFrame.new(0, 0.63, 0) * CFrame.Angles(math.rad(45), math.rad(-30), math.rad(-25))
+local SprintPoseRight = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(30), 0, math.rad(55))
+local SafetyPoseLeft = CFrame.new(0, 0.7, 0) * CFrame.Angles(math.rad(20), math.rad(-30), math.rad(-25))
+local SafetyPoseRight = CFrame.new(-0.8, 0.5, -0.3) * CFrame.Angles(math.rad(5), 0, math.rad(80))
+
+local BaseAC = HeadCF * CFrame.new(-1.5, -1.2, 0) * CFrame.Angles(math.rad(90), 0, 0)
+local BaseBC = HeadCF * CFrame.new(1.5, -1, 0) * CFrame.Angles(math.rad(90), 0, 0)
+
+local GripDown = CFrame.new(0, -1, 0)
+local GripCFrame = CFrame.new(0, -0.2, 0) * CFrame.Angles(0, math.rad(20), 0)
+local MainAnim = CFrame.new(1.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0) * AimPoseRight:inverse() * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
+local WeaponGrips = {}
+
+local FirstPersonEvent = game.ReplicatedStorage:WaitForChild("FirstPersonEvent")
+FirstPersonEvent.OnClientEvent:connect(function(LeftWeld, RightWeld, Grip, Pose, WeaponGrip)
+	if LeftWeld and LeftWeld.Parent and RightWeld and (LeftWeld.Parent.Position - Camera.CFrame.p).magnitude < 100 then
+		LeftWeld.C0 = BaseAC
+		RightWeld.C0 = BaseBC
+		if Pose == 1 then
+			LeftWeld.C1 = HoldPoseLeft
+			RightWeld.C1 = HoldPoseRight
+			if Grip then
+				Grip.C1 = GripCFrame
+			end
+		elseif Pose == 2 then
+			LeftWeld.C1 = AimPoseLeft
+			RightWeld.C1 = AimPoseRight
+			if Grip then
+				Grip.C1 = WeaponGrip
+			end
+		elseif Pose == 3 then
+			LeftWeld.C1 = SprintPoseLeft
+			RightWeld.C1 = SprintPoseRight
+			if Grip then
+				Grip.C1 = GripCFrame
+			end
+		elseif Pose == 4 then
+			LeftWeld.C1 = SafetyPoseLeft
+			RightWeld.C1 = SafetyPoseRight
+			if Grip then
+				Grip.C1 = GripCFrame
+			end
+		end
+	end
+end)
+
+local Draw = Instance.new("Sound", Player.PlayerGui)
+Draw.SoundId = "rbxassetid://169799883"
+
+local Sway, CSway, SwayAdd = 0, 0, 0
+
+local LastSprint = false
+local CurrentLeft, CurrentRight, CurrentGrip = HoldPoseLeft, HoldPoseRight, GripCFrame
+local UniqueID = 0
+local LastPose = 1
+
+local CFNew, CFAng, CFN, rad, asin, random, sin, abs, floor, insert = CFrame.new, CFrame.Angles, CFrame.new(), math.rad, math.asin, math.random, math.sin, math.abs, math.floor, table.insert
+local UIS = game:GetService("UserInputService")
+local RenderStepped, Heartbeat = game:GetService("RunService").RenderStepped, game:GetService("RunService").Heartbeat
+local Freefall, Jumping, RunningNoPhysics = Enum.HumanoidStateType.Freefall, Enum.HumanoidStateType.Jumping, Enum.HumanoidStateType.RunningNoPhysics
+
+local FirstPersonEvent = game.ReplicatedStorage:WaitForChild("FirstPersonEvent")
+
+local Head, Torso, LeftArm, RightArm, Humanoid, LeftWeld, RightWeld, Grip
+local FirstPerson, State, Selected, SelectedAim, Aiming, Sensitivity, FOVBoost
+
+local function Update()
+	if not FirstPerson then
+		local Grip = RightArm:FindFirstChild("RightGrip")
+		if Grip then
+			Grip.C1 = GripCFrame
+		end
+	end
+	local Sprinting = Core.ActualSprinting()
+	if LastSprint ~= Sprinting then
+		LastSprint = Sprinting
+		if Sprinting then
+			Tween.TweenNumber(Camera, "FieldOfView", 80, 0.2, true)
+		else
+			Tween.TweenNumber(Camera, "FieldOfView", 70, 0.2, true)
+		end
+	end
+	
+	local HumanoidState = Humanoid:GetState()
+	if HumanoidState == Freefall or HumanoidState == Jumping then
+		State = "Jumping"
+	elseif Sprinting then
+		State = "Running"
+	elseif Aiming then
+		State = "Aiming"
+	elseif Humanoid.MoveDirection.magnitude > 0 then
+		State = "Walking"
+	else
+		State = "Idling"
+	end
+	
+	local StartPose = LastPose
+	if Selected then
+		if State == "Jumping" or Sprinting then
+			if LastPose ~= 3 then
+				LastPose = 3
+				FirstPersonEvent:FireServer(LeftWeld, RightWeld, Grip, 3)
+				Tween.TweenCFrame(LeftWeld, "C1", SprintPoseLeft, 0.2, true)
+				Tween.TweenCFrame(RightWeld, "C1", SprintPoseRight, 0.2, true)
+				Tween.TweenCFrame(Grip, "C1", GripCFrame, 0.2, true)
+			end
+		elseif FireMode == "Safety" then
+			if LastPose ~= 4 then
+				LastPose = 4
+				FirstPersonEvent:FireServer(LeftWeld, RightWeld, Grip, 4)
+				Tween.TweenCFrame(LeftWeld, "C1", SafetyPoseLeft, 0.2, true)
+				Tween.TweenCFrame(RightWeld, "C1", SafetyPoseRight, 0.2, true)
+				Tween.TweenCFrame(Grip, "C1", GripCFrame, 0.2, true)
+			end
+		elseif Aiming then
+			if LastPose ~= 2 then
+				LastPose = 2
+				FirstPersonEvent:FireServer(LeftWeld, RightWeld, Grip, 2, WeaponGrip)
+				Tween.TweenCFrame(LeftWeld, "C1", AimPoseLeft, 0.2, true)
+				Tween.TweenCFrame(RightWeld, "C1", AimPoseRight, 0.2, true)
+				Tween.TweenCFrame(Grip, "C1", WeaponGrip, 0.2, true)
+				
+				_G.MouseSensitivity(Sensitivity)
+				Tween.TweenNumber(Camera, "FieldOfView", 70 - FOVBoost, 0.2, true)
+				Core.ShowCursor = false
+				Update()
+			end
+		elseif LastPose ~= 1 then
+			LastPose = 1
+			FirstPersonEvent:FireServer(LeftWeld, RightWeld, Grip, 1)
+			Tween.TweenCFrame(LeftWeld, "C1", HoldPoseLeft, 0.2, true)
+			Tween.TweenCFrame(RightWeld, "C1", HoldPoseRight, 0.2, true)
+			Tween.TweenCFrame(Grip, "C1", GripCFrame, 0.2, true)
+		end
+	end
+	if StartPose == 2 and LastPose ~= 2 then
+		_G.MouseSensitivity(1)
+		Tween.TweenNumber(Camera, "FieldOfView", 70, 0.2, true)
+		Core.ShowCursor = true
+		Update()
+	end
+end
+
+local function NewCharacter(Character)
+	Head = Character:WaitForChild("Head")
+	Torso = Character:WaitForChild("Torso")
+	LeftArm = Character:WaitForChild("Left Arm")
+	RightArm = Character:WaitForChild("Right Arm")
+	Humanoid = Character:WaitForChild("Humanoid")
+	
+	LeftArm.LocalTransparencyModifier = 0
+	LeftArm.Changed:connect(function()
+		LeftArm.LocalTransparencyModifier = 0
+	end)
+	RightArm.LocalTransparencyModifier = 0
+	RightArm.Changed:connect(function()
+		RightArm.LocalTransparencyModifier = 0
+	end)
+	
+	Torso.ChildAdded:connect(function(Child)
+		if Child.Name == "Left_Weld" then
+			LeftWeld = Child
+		elseif Child.Name == "Right_Weld" then
+			RightWeld = Child
+		end
+		LastPose = 0
+		Update()
+	end)
+	
+	Humanoid.StateChanged:connect(function(Old, New)
+		if New ~= RunningNoPhysics then
+			State = New
+			Update()
+		end
+	end)
+	
+	Humanoid.Running:connect(function()
+		Update()
+	end)
+	
+	Selected = false
+end
+Player.CharacterAdded:connect(NewCharacter)
+NewCharacter(Character)
+
+Core.WeaponSelected.Event:connect(function(StatObj)
+	if not StatObj or not StatObj.Parent then return end
+	local Tool = StatObj.Parent
+	
+	LeftWeld = Torso:WaitForChild("Left_Weld")
+	RightWeld = Torso:WaitForChild("Right_Weld")
+	
+	LastPose = 0
+	
+	Grip = RightArm:WaitForChild("RightGrip")
+	Grip.C1 = GripCFrame
+	
+	Draw:Play()
+	
+	Selected = true
+	SelectedAim = Tool:FindFirstChild("AimPart")
+	if not WeaponGrips[Tool.Name] and SelectedAim then
+		local HandleCFrame = (Head.CFrame * GripDown) * MainAnim
+		local HandleOffset = SelectedAim.CFrame:toObjectSpace(Tool.Handle.CFrame)
+		WeaponGrips[Tool.Name] = (Head.CFrame * HandleOffset):toObjectSpace(HandleCFrame)
+	end
+	WeaponGrip = WeaponGrips[Tool.Name]
+	
+	local Values = Core.GetGunStats(StatObj)
+	Sensitivity = Values.Sensitivity or 0.5
+	FOVBoost = Values.FOVBoost or 20
+	
+	FireMode = Core.GetFireMode(Core.GetWeapon(StatObj)).Name
+	Update()
+end)
+
+Core.WeaponDeselected.Event:connect(function(StatObj)
+	if not StatObj or not StatObj.Parent then return end
+	
+	Selected = false
+	SelectedAim = nil
+	
+	if Aiming then
+		_G.MouseSensitivity(1)
+		Tween.TweenNumber(Camera, "FieldOfView", 70, 0.2, true)
+		Aiming = false
+		Core.ShowCursor = true
+		Update()
+	end
+end)
+
+function _G.ZoomChanged(Zoom)
+	if Zoom > 1 and FirstPerson then
+		FirstPerson = false
+		if Aiming then
+			_G.MouseSensitivity(1)
+			Tween.TweenNumber(Camera, "FieldOfView", 70, 0.2, true)
+			Aiming = false
+			Core.ShowCursor = true
+			Update()
+		end
+	elseif Zoom < 1 and not FirstPerson then
+		FirstPerson = true
+	end
+end
+
+PoseUtil.PoseChanged:connect(function(NPlr, Pose, State, Instant)
+	if Pose == "Sprinting" and NPlr == Player then
+		Update()
+	end
+end)
+
+Core.FireModeChanged.Event:connect(function(Module)
+	local Weapon = Core.GetWeapon(Module)
+	FireMode = Core.GetFireMode(Weapon).Name
+	Aiming = false
+	Update()
+end)
+
+KeybindUtil.AddBind("s2_Aim", function(Began, Handled)
+	if Began and FirstPerson and not Handled and SelectedAim and FireMode ~= "Safety" then
+		Aiming = true
+		Update()
+	elseif not Began and Aiming then
+		Aiming = false
+		Update()
+	end
+end, Enum.UserInputType.MouseButton2, Enum.KeyCode.ButtonR1, nil, false, true, true, false)
+
+local SwayIdling, SwayWalking, SwayRunning, SwayJumping = {}, {}, {}, {}
+local CSwayIdling, CSwayWalking, CSwayRunning, CSwayJumping = 1, 1, 1, 1
+
+local function FillTable(Table, Num, Amount)
+	local CurrentSway = 0
+	for i = 1, 1000 do
+		if Num == 1 then
+			insert(Table, CFNew(rad(sin(CurrentSway))/2, rad(sin(CurrentSway * 2.5))/2, 0))
+		elseif Num == 2 then
+			insert(Table, CFNew(rad(sin(CurrentSway)) * 2, rad(abs(sin(CurrentSway))) * 2, 0) * CFAng(0, rad(sin(CurrentSway))/3, 0))
+		else
+			insert(Table, CFNew(sin(CurrentSway)/6, abs(sin(CurrentSway))/5 - 0.1, 0) * CFAng(0, -rad(sin(CurrentSway)) * 7, 0))
+		end
+		CurrentSway = CurrentSway + Amount
+		if floor(sin(CurrentSway) * 100 + 0.5)/100 == 0 then
+			break
+		end
+	end
+end
+FillTable(SwayIdling, 1, 0.04)
+FillTable(SwayWalking, 2, 0.12)
+FillTable(SwayRunning, 3, 0.18)
+FillTable(SwayJumping, 4, 0.06)
+
+local RFPS, CSway = 0, CFNew()
+spawn(function()
+	while true do
+		Heartbeat:wait()
+		if Selected then
+			if State == "Idling" then
+				CSway = SwayIdling[CSwayIdling]
+				CSwayIdling = CSwayIdling + 1
+				if CSwayIdling == #SwayIdling then
+					CSwayIdling = 1
+				end
+			elseif State == "Walking" then
+				CSway = SwayWalking[CSwayWalking]
+				CSwayWalking = CSwayWalking + 1
+				if CSwayWalking == #SwayWalking then
+					CSwayWalking = 1
+				end
+			elseif State == "Running" then
+				CSway = SwayRunning[CSwayRunning]
+				CSwayRunning = CSwayRunning + 1
+				if CSwayRunning == #SwayRunning then
+					CSwayRunning = 1
+				end
+			elseif State == "Jumping" then
+				CSway = SwayJumping[CSwayJumping]
+				CSwayJumping = CSwayJumping + 1
+				if CSwayJumping == #SwayJumping then
+					CSwayJumping = 1
+				end
+			elseif State == "Aiming" then
+				CSway = CFN
+			end
+		end
+	end
+end)
+
+while true do
+	local Step = RenderStepped:wait()
+	if Selected then
+		RFPS = (1/Step + RFPS)/2
+		if RFPS < 40 then
+			wait(0.1)
+		end
+		if FirstPerson then
+			local Ang = HeadCF * CFAng(asin(_G.CameraYaw), 0, 0)
+			LeftWeld.C0 = Ang * CSway * BaseA
+			RightWeld.C0 = Ang * CSway * BaseB
+		else
+			LeftWeld.C0 = HeadCF * CSway * BaseA
+			RightWeld.C0 = HeadCF * CSway * BaseB
+		end
+	end
+end]]></ProtectedString>
+		</Properties>
+		<Item class="ModuleScript" referent="RBXFD8FFB4E56CB4EA48750A8BAE6209C9C">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">TweenModule</string>
+				<string name="ScriptGuid"></string>
+				<ProtectedString name="Source"><![CDATA[local Module, Tweening = { }, { }
+
+local Color3new, BrickColornew, CFramenew, Vector3new = Color3.new, BrickColor.new, CFrame.new, Vector3.new
+
+local NumberLerp = function ( Start, End, Delta ) return Start + Delta * ( End - Start ) end
+
+local CFrameLerp, Vector3Lerp = CFramenew( ).lerp, Vector3new( ).Lerp
+
+local Color3Lerp = function ( ... ) local curLerp = Vector3Lerp( ... ) return Color3new( curLerp.X, curLerp.Y, curLerp.Z ) end
+
+local BrickColorLerp = function ( ... ) local curLerp = Vector3Lerp( ... ) return BrickColornew( curLerp.X, curLerp.Y, curLerp.Z ) end
+
+local RenderStepped = game:GetService( "RunService" ).Heartbeat
+
+function Module.DoTween( LerpFunc, Obj, Type, End, Speed, Overrideable, Callback )
+	
+	if Obj[ Type ] == End then
+		
+		return
+		
+	end
+	
+	
+	local Cur = ( not Overrideable ) or tick( )
+	
+	Tweening[ Obj ] = Tweening[ Obj ] or { }
+	
+	if Tweening[ Obj ][ Type ] == true then
+		
+		return
+	
+	else
+		
+		Tweening[ Obj ][ Type ] = Cur
+		
+	end
+	
+	Speed = Speed * 30
+	
+	local Start = Obj[ Type ]
+	
+	if LerpFunc == Color3Lerp or LerpFunc == BrickColorLerp then
+		
+		Start = Vector3new( Start.r, Start.g, Start.b )
+		
+		End = Vector3new( End.r, End.g, End.b )
+		
+	end
+	
+	for a = 1, Speed do
+		
+		if Tweening[ Obj ][ Type ] ~= Cur then
+			
+			return
+			
+		end
+		
+		Obj[ Type ] = LerpFunc( Start, End, a / Speed )
+		
+		RenderStepped:wait( )
+		
+	end
+	
+	if Tweening[ Obj ][ Type ] == Cur then
+		
+		Tweening[ Obj ][ Type ] = nil
+		
+		if Callback then Callback( ) end
+		
+	end
+	
+end
+
+function Module.TweenNumber( ... )
+	
+	coroutine.wrap( Module.DoTween )( NumberLerp, ... )
+	
+end
+
+function Module.TweenCFrame( ... )
+	
+	coroutine.wrap( Module.DoTween )( CFrameLerp, ... )
+	
+end
+
+function Module.TweenVector3( ... )
+	
+	coroutine.wrap( Module.DoTween )( Vector3Lerp, ... )
+	
+end
+
+function Module.TweenColor3( ... )
+	
+	coroutine.wrap( Module.DoTween )( Color3Lerp, ... )
+	
+end
+
+function Module.TweenBrickColor( ... )
+	
+	coroutine.wrap( Module.DoTween )( BrickColorLerp, ... )
+	
+end
+
+return Module]]></ProtectedString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

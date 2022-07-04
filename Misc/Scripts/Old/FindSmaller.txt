@@ -1,0 +1,38 @@
+local Model = game.Selection:Get()[1]
+local Name = Model.Name
+local Changed, Cancel = false, false
+
+game.Selection.SelectionChanged:connect(function()
+	if #game.Selection:Get() == 0 then
+		Changed = true
+	end
+end)
+
+Model.Changed:connect(function(Property)
+	if Property == "Name" then
+		Cancel = true
+		Model.Name = Name
+	end
+end)
+
+for _, a in pairs(Model:GetChildren()) do
+	if a.Name ~= "False" and a.Name ~= "True" then
+		Model.Archivable = false
+		local Color = a.BrickColor
+		a.BrickColor = BrickColor.new("Bright red")
+		repeat wait() until Changed or Model.Archivable == true or Cancel
+		if Cancel then
+			a.BrickColor = Color
+			break
+		end
+		if Changed then
+			Changed = false
+			game.Selection:Set({Model})
+			a.BrickColor = BrickColor.new("Bright orange")
+			a.Name = "False"
+		else 
+			a.BrickColor = Color
+			a.Name = "True"
+		end
+	end
+end
