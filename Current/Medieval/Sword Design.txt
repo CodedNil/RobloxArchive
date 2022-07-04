@@ -1,0 +1,6 @@
+width - has profile taper
+has tapering along entire length until a point
+point is a percentage of the way down where the point starts
+after point it thins to a point with a curve
+
+depth - has distal taper
